@@ -2,8 +2,7 @@ import Quick
 import MoyaX
 import Nimble
 
-extension MoyaX.ParameterEncoding: Equatable {
-}
+extension MoyaX.ParameterEncoding: Equatable {}
 
 public func ==(lhs: MoyaX.ParameterEncoding, rhs: MoyaX.ParameterEncoding) -> Bool {
     switch (lhs, rhs) {
@@ -23,13 +22,14 @@ public func ==(lhs: MoyaX.ParameterEncoding, rhs: MoyaX.ParameterEncoding) -> Bo
 class EndpointSpec: QuickSpec {
     override func spec() {
         describe("an endpoint") {
-            var endpoint: Endpoint<GitHub>!
+            var endpoint: Endpoint!
 
             beforeEach {
                 let target: GitHub = .Zen
                 let parameters = ["Nemesis": "Harvey"]
                 let headerFields = ["Title": "Dominar"]
-                endpoint = Endpoint<GitHub>(URL: url(target), sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
+
+                endpoint = Endpoint(URL: url(target), sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
             }
 
             it("returns a new endpoint for endpointByAddingParameters") {

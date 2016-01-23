@@ -6,10 +6,10 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXP
     private let stubScheduler: DateSchedulerType?
 
     /// Initializes a reactive provider.
-    public init(endpointClosure: EndpointClosure = MoyaXProvider.DefaultEndpointMapping,
-        requestClosure: RequestClosure = MoyaXProvider.DefaultRequestMapping,
-        stubClosure: StubClosure = MoyaXProvider.NeverStub,
-        manager: Manager = ReactiveCocoaMoyaXProvider<Target>.DefaultAlamofireManager(),
+    public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
+        requestClosure: RequestClosure = DefaultRequestMapping,
+        stubClosure: StubClosure = NeverStub,
+        manager: Manager = DefaultAlamofireManager(),
         plugins: [PluginType] = [], stubScheduler: DateSchedulerType? = nil) {
             self.stubScheduler = stubScheduler
             super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)

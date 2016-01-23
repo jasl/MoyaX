@@ -7,7 +7,7 @@ class MoyaXProviderSpec: QuickSpec {
     override func spec() {
         var provider: MoyaXProvider<GitHub>!
         beforeEach {
-            provider = MoyaXProvider<GitHub>(stubClosure: MoyaXProvider.ImmediatelyStub)
+            provider = MoyaXProvider<GitHub>(stubClosure: MoyaX.ImmediatelyStub)
         }
 
         it("returns stubbed data for zen request") {
@@ -67,7 +67,7 @@ class MoyaXProviderSpec: QuickSpec {
                 return nil
             }
 
-            let provider = MoyaXProvider<HTTPBin>(stubClosure: MoyaXProvider.ImmediatelyStub, plugins: [plugin])
+            let provider = MoyaXProvider<HTTPBin>(stubClosure: MoyaX.ImmediatelyStub, plugins: [plugin])
             let target: HTTPBin = .BasicAuth
             provider.request(target) { _ in  }
 
@@ -81,7 +81,7 @@ class MoyaXProviderSpec: QuickSpec {
                 return NSURLCredential(user: "user", password: "passwd", persistence: .None)
             }
 
-            let provider = MoyaXProvider<HTTPBin>(stubClosure: MoyaXProvider.ImmediatelyStub, plugins: [plugin])
+            let provider = MoyaXProvider<HTTPBin>(stubClosure: MoyaX.ImmediatelyStub, plugins: [plugin])
             let target: HTTPBin = .BasicAuth
             provider.request(target) { _ in  }
 
@@ -103,7 +103,7 @@ class MoyaXProviderSpec: QuickSpec {
                 }
             }
 
-            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaXProvider.ImmediatelyStub, plugins: [plugin])
+            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaX.ImmediatelyStub, plugins: [plugin])
             let target: GitHub = .Zen
             provider.request(target) { _ in  }
 
@@ -118,7 +118,7 @@ class MoyaXProviderSpec: QuickSpec {
                 }
             }
 
-            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaXProvider.ImmediatelyStub, plugins: [plugin])
+            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaX.ImmediatelyStub, plugins: [plugin])
             let target: GitHub = .Zen
             provider.request(target) { _ in  }
 
@@ -126,8 +126,7 @@ class MoyaXProviderSpec: QuickSpec {
         }
 
         it("delays execution when appropriate") {
-            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaXProvider.DelayedStub(2))
-
+            let provider = MoyaXProvider<GitHub>(stubClosure: MoyaX.DelayedStub(2))
             let startDate = NSDate()
             var endDate: NSDate?
             let target: GitHub = .Zen
@@ -152,7 +151,7 @@ class MoyaXProviderSpec: QuickSpec {
                     executed = true
                     done(endpoint.urlRequest)
                 }
-                provider = MoyaXProvider<GitHub>(requestClosure: endpointResolution, stubClosure: MoyaXProvider.ImmediatelyStub)
+                provider = MoyaXProvider<GitHub>(requestClosure: endpointResolution, stubClosure: MoyaX.ImmediatelyStub)
             }
 
             it("executes the endpoint resolver") {
@@ -166,7 +165,7 @@ class MoyaXProviderSpec: QuickSpec {
         describe("with stubbed errors") {
             var provider: MoyaXProvider<GitHub>!
             beforeEach {
-                provider = MoyaXProvider(endpointClosure: failureEndpointClosure, stubClosure: MoyaXProvider.ImmediatelyStub)
+                provider = MoyaXProvider(endpointClosure: failureEndpointClosure, stubClosure: MoyaX.ImmediatelyStub)
             }
 
             it("returns stubbed data for zen request") {

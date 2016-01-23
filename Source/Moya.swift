@@ -2,7 +2,7 @@ import Foundation
 import Result
 
 /// Closure to be executed when a request has completed.
-public typealias Completion = (result: Result<MoyaX.Response, MoyaX.Error>) -> ()
+public typealias Completion = (result: Result<Response, Error>) -> ()
 
 /// Represents an HTTP method.
 public enum Method: String {
@@ -39,7 +39,7 @@ public class MoyaXProvider<Target: TargetType> {
     public typealias RequestClosure = (Endpoint<Target>, NSURLRequest -> Void) -> Void
 
     /// Closure that decides if/how a request should be stubbed.
-    public typealias StubClosure = Target -> MoyaX.StubBehavior
+    public typealias StubClosure = Target -> StubBehavior
 
     public let endpointClosure: EndpointClosure
     public let requestClosure: RequestClosure
@@ -51,10 +51,10 @@ public class MoyaXProvider<Target: TargetType> {
     public let plugins: [PluginType]
 
     /// Initializes a provider.
-    public init(endpointClosure: EndpointClosure = MoyaXProvider.DefaultEndpointMapping,
-        requestClosure: RequestClosure = MoyaXProvider.DefaultRequestMapping,
-        stubClosure: StubClosure = MoyaXProvider.NeverStub,
-        manager: Manager = MoyaXProvider<Target>.DefaultAlamofireManager(),
+    public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
+        requestClosure: RequestClosure = DefaultRequestMapping,
+        stubClosure: StubClosure = NeverStub,
+        manager: Manager = DefaultAlamofireManager(),
         plugins: [PluginType] = []) {
 
             self.endpointClosure = endpointClosure
@@ -93,7 +93,7 @@ public class MoyaXProvider<Target: TargetType> {
 
     /// When overriding this method, take care to `notifyPluginsOfImpendingStub` and to perform the stub using the `createStubFunction` method.
     /// Note: this was previously in an extension, however it must be in the original class declaration to allow subclasses to override.
-    internal func stubRequest(target: Target, request: NSURLRequest, completion: MoyaX.Completion, endpoint: Endpoint<Target>, stubBehavior: MoyaX.StubBehavior) -> CancellableToken {
+    internal func stubRequest(target: Target, request: NSURLRequest, completion: Completion, endpoint: Endpoint<Target>, stubBehavior: StubBehavior) -> CancellableToken {
         let cancellableToken = CancellableToken { }
         notifyPluginsOfImpendingStub(request, target: target)
         let plugins = self.plugins
@@ -117,47 +117,41 @@ public class MoyaXProvider<Target: TargetType> {
 
 /// Mark: Defaults
 
-public extension MoyaXProvider {
+// These functions are default mappings to MoyaProvider's properties: endpoints, requests, manager, etc.
 
-    // These functions are default mappings to MoyaXProvider's properties: endpoints, requests, manager, etc.
+public func DefaultEndpointMapping<Target: TargetType>(target: Target) -> Endpoint<Target> {
+    let url = target.baseURL.URLByAppendingPathComponent(target.path).absoluteString
+    return Endpoint(URL: url, sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: target.method, parameters: target.parameters)
+}
 
-    public final class func DefaultEndpointMapping(target: Target) -> Endpoint<Target> {
-        let url = target.baseURL.URLByAppendingPathComponent(target.path).absoluteString
-        return Endpoint(URL: url, sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: target.method, parameters: target.parameters)
-    }
+public func DefaultRequestMapping<Target: TargetType>(endpoint: Endpoint<Target>, closure: NSURLRequest -> Void) {
+    return closure(endpoint.urlRequest)
+}
 
-    public final class func DefaultRequestMapping(endpoint: Endpoint<Target>, closure: NSURLRequest -> Void) {
-        return closure(endpoint.urlRequest)
-    }
+public func DefaultAlamofireManager() -> Manager {
+    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+    configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
 
-    public final class func DefaultAlamofireManager() -> Manager {
-        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-        configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
-
-        let manager = Manager(configuration: configuration)
-        manager.startRequestsImmediately = false
-        return manager
-    }
+    let manager = Manager(configuration: configuration)
+    manager.startRequestsImmediately = false
+    return manager
 }
 
 /// Mark: Stubbing
 
-public extension MoyaXProvider {
+// Swift won't let us put the StubBehavior enum inside the provider class, so we'll
+// at least add some class functions to allow easy access to common stubbing closures.
 
-    // Swift won't let us put the StubBehavior enum inside the provider class, so we'll
-    // at least add some class functions to allow easy access to common stubbing closures.
+public func NeverStub<Target: TargetType>(_: Target) -> StubBehavior {
+    return .Never
+}
 
-    public final class func NeverStub(_: Target) -> MoyaX.StubBehavior {
-        return .Never
-    }
+public func ImmediatelyStub<Target: TargetType>(_: Target) -> StubBehavior {
+    return .Immediate
+}
 
-    public final class func ImmediatelyStub(_: Target) -> MoyaX.StubBehavior {
-        return .Immediate
-    }
-
-    public final class func DelayedStub(seconds: NSTimeInterval)(_: Target) -> MoyaX.StubBehavior {
-        return .Delayed(seconds: seconds)
-    }
+public func DelayedStub<Target: TargetType>(seconds: NSTimeInterval)(_: Target) -> StubBehavior {
+    return .Delayed(seconds: seconds)
 }
 
 internal extension MoyaXProvider {

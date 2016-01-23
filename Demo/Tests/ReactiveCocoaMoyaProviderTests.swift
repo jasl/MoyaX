@@ -8,7 +8,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
     override func spec() {
         var provider: ReactiveCocoaMoyaXProvider<GitHub>!
         beforeEach {
-            provider = ReactiveCocoaMoyaXProvider<GitHub>(stubClosure: MoyaX.ImmediatelyStub)
+            provider = ReactiveCocoaMoyaXProvider<GitHub>(stubBehavior: .Immediate)
         }
 
         describe("provider with RACSignal") {
@@ -59,7 +59,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
         describe("failing") {
             var provider: ReactiveCocoaMoyaXProvider<GitHub>!
             beforeEach {
-                provider = ReactiveCocoaMoyaXProvider<GitHub>(endpointClosure: failureEndpointClosure, stubClosure: MoyaX.ImmediatelyStub)
+                provider = ReactiveCocoaMoyaXProvider<GitHub>(endpointClosure: failureEndpointClosure, stubBehavior: .Immediate)
             }
 
             it("returns the correct error message") {
@@ -104,11 +104,11 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
                 init(endpointClosure: EndpointClosure = MoyaX.DefaultEndpointMapping,
                     requestClosure: RequestClosure = MoyaX.DefaultRequestMapping,
-                    stubClosure: StubClosure = MoyaX.NeverStub,
+                    stubBehavior: StubBehavior = .Never,
                     manager: Manager = Alamofire.Manager.sharedInstance,
                     plugins: [PluginType] = []) {
 
-                        super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)
+                        super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
                 }
 
                 override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -120,7 +120,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             beforeEach {
                 TestCancellable.cancelled = false
 
-                provider = TestProvider<GitHub>(stubClosure: MoyaX.DelayedStub(1))
+                provider = TestProvider<GitHub>(stubBehavior: .Delayed(1))
             }
 
             it("cancels network request when subscription is cancelled") {
@@ -186,11 +186,11 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
                     init(endpointClosure: EndpointClosure = MoyaX.DefaultEndpointMapping,
                         requestClosure: RequestClosure = MoyaX.DefaultRequestMapping,
-                        stubClosure: StubClosure = MoyaX.NeverStub,
+                        stubBehavior: StubBehavior = .Never,
                         manager: Manager = Alamofire.Manager.sharedInstance,
                         plugins: [PluginType] = []) {
 
-                            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)
+                            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
                     }
 
                     override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -202,7 +202,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 beforeEach {
                     TestCancellable.cancelled = false
 
-                    provider = TestProvider<GitHub>(stubClosure: MoyaX.DelayedStub(1))
+                    provider = TestProvider<GitHub>(stubBehavior: .Delayed(1))
                 }
 
                 it("cancels network request when subscription is cancelled") {
@@ -224,7 +224,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             var response: MoyaX.Response? = nil
             beforeEach {
                 testScheduler = TestScheduler()
-                provider = ReactiveCocoaMoyaXProvider<GitHub>(stubClosure: MoyaX.ImmediatelyStub, stubScheduler: testScheduler)
+                provider = ReactiveCocoaMoyaXProvider<GitHub>(stubBehavior: .Immediate, stubScheduler: testScheduler)
                 provider.request(.Zen).startWithNext { next in
                     response = next
                 }

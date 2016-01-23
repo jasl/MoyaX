@@ -6,10 +6,10 @@ public class RxMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Tar
     /// Initializes a reactive provider.
     override public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
         requestClosure: RequestClosure = DefaultRequestMapping,
-        stubClosure: StubClosure = NeverStub,
+        stubBehavior: StubBehavior = .Never,
         manager: Manager = DefaultAlamofireManager(),
         plugins: [PluginType] = []) {
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)
+            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.

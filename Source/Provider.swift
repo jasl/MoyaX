@@ -13,12 +13,9 @@ public class MoyaXProvider<Target: TargetType> {
     /// Closure that resolves an Endpoint into an NSURLRequest.
     public typealias RequestClosure = (Endpoint, NSURLRequest -> Void) -> Void
 
-    /// Closure that decides if/how a request should be stubbed.
-    public typealias StubClosure = Target -> StubBehavior
-
     public let endpointClosure: EndpointClosure
     public let requestClosure: RequestClosure
-    public let stubClosure: StubClosure
+    public let stubBehavior: StubBehavior
     public let manager: Manager
 
     /// A list of plugins
@@ -28,13 +25,13 @@ public class MoyaXProvider<Target: TargetType> {
     /// Initializes a provider.
     public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
                 requestClosure: RequestClosure = DefaultRequestMapping,
-                stubClosure: StubClosure = NeverStub,
+                stubBehavior: StubBehavior = .Never,
                 manager: Manager = DefaultAlamofireManager(),
                 plugins: [PluginType] = []) {
 
         self.endpointClosure = endpointClosure
         self.requestClosure = requestClosure
-        self.stubClosure = stubClosure
+        self.stubBehavior = stubBehavior
         self.manager = manager
         self.plugins = plugins
     }
@@ -48,16 +45,15 @@ public class MoyaXProvider<Target: TargetType> {
     public func request(target: Target, completion: Completion) -> Cancellable {
         let endpoint = self.endpoint(target)
         var cancellableToken = CancellableWrapper()
-        let stubBehavior = self.stubClosure(target)
 
         let performNetworking = { (request: NSURLRequest) in
             if cancellableToken.isCancelled { return }
 
-            switch stubBehavior {
+            switch self.stubBehavior {
             case .Never:
                 cancellableToken.innerCancellable = self.sendRequest(target, request: request, completion: completion)
             default:
-                cancellableToken.innerCancellable = self.stubRequest(target, request: request, completion: completion, endpoint: endpoint, stubBehavior: stubBehavior)
+                cancellableToken.innerCancellable = self.stubRequest(target, request: request, completion: completion, endpoint: endpoint)
             }
         }
 
@@ -68,12 +64,12 @@ public class MoyaXProvider<Target: TargetType> {
 
     /// When overriding this method, take care to `notifyPluginsOfImpendingStub` and to perform the stub using the `createStubFunction` method.
     /// Note: this was previously in an extension, however it must be in the original class declaration to allow subclasses to override.
-    internal func stubRequest(target: Target, request: NSURLRequest, completion: Completion, endpoint: Endpoint, stubBehavior: StubBehavior) -> CancellableToken {
+    internal func stubRequest(target: Target, request: NSURLRequest, completion: Completion, endpoint: Endpoint) -> CancellableToken {
         let cancellableToken = CancellableToken { }
         notifyPluginsOfImpendingStub(request, target: target)
         let plugins = self.plugins
         let stub: () -> () = createStubFunction(cancellableToken, forTarget: target, withCompletion: completion, endpoint: endpoint, plugins: plugins)
-        switch stubBehavior {
+        switch self.stubBehavior {
         case .Immediate:
             stub()
         case .Delayed(let delay):

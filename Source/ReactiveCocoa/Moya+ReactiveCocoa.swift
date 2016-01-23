@@ -8,11 +8,11 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXP
     /// Initializes a reactive provider.
     public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
         requestClosure: RequestClosure = DefaultRequestMapping,
-        stubClosure: StubClosure = NeverStub,
+        stubBehavior: StubBehavior = .Never,
         manager: Manager = DefaultAlamofireManager(),
         plugins: [PluginType] = [], stubScheduler: DateSchedulerType? = nil) {
             self.stubScheduler = stubScheduler
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)
+            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.
@@ -38,9 +38,9 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXP
         }
     }
 
-    override func stubRequest(target: Target, request: NSURLRequest, completion: Completion, endpoint: Endpoint, stubBehavior: StubBehavior) -> CancellableToken {
+    override func stubRequest(target: Target, request: NSURLRequest, completion: MoyaX.Completion, endpoint: Endpoint) -> CancellableToken {
         guard let stubScheduler = self.stubScheduler else {
-            return super.stubRequest(target, request: request, completion: completion, endpoint: endpoint, stubBehavior: stubBehavior)
+            return super.stubRequest(target, request: request, completion: completion, endpoint: endpoint)
         }
         notifyPluginsOfImpendingStub(request, target: target)
         var dis: Disposable? = .None
@@ -49,7 +49,7 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXP
         }
         let stub = createStubFunction(token, forTarget: target, withCompletion: completion, endpoint: endpoint, plugins: plugins)
 
-        switch stubBehavior {
+        switch self.stubBehavior {
         case .Immediate:
             dis = stubScheduler.schedule(stub)
         case .Delayed(let seconds):

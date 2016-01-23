@@ -8,7 +8,7 @@ public enum Method: String {
 public enum StubBehavior {
     case Never
     case Immediate
-    case Delayed(seconds: NSTimeInterval)
+    case Delayed(NSTimeInterval)
 }
 
 /// Protocol to define the base URL, path, method, parameters and sample data for a target.
@@ -45,18 +45,4 @@ public func DefaultAlamofireManager() -> Manager {
     let manager = Manager(configuration: configuration)
     manager.startRequestsImmediately = false
     return manager
-}
-
-/// Mark: Stubbing
-
-public func NeverStub<Target: TargetType>(_: Target) -> StubBehavior {
-    return .Never
-}
-
-public func ImmediatelyStub<Target: TargetType>(_: Target) -> StubBehavior {
-    return .Immediate
-}
-
-public func DelayedStub<Target: TargetType>(seconds: NSTimeInterval)(_: Target) -> StubBehavior {
-    return .Delayed(seconds: seconds)
 }

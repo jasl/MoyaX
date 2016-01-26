@@ -16,7 +16,7 @@ class ViewController: UITableViewController {
 
             var success = true
             var message = "Unable to fetch from GitHub"
-            
+
             switch result {
             case let .Success(response):
                 do {
@@ -38,7 +38,7 @@ class ViewController: UITableViewController {
                 message = error.description
                 success = false
             }
-            
+
             if !success {
                 let alertController = UIAlertController(title: "GitHub Fetch", message: message, preferredStyle: .Alert)
                 let ok = UIAlertAction(title: "OK", style: .Default, handler: { (action) -> Void in
@@ -104,4 +104,3 @@ class ViewController: UITableViewController {
         return cell
     }
 }
-

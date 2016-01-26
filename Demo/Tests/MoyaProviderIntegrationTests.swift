@@ -19,26 +19,26 @@ class MoyaXProviderIntegrationTests: QuickSpec {
     override func spec() {
         let userMessage = NSString(data: GitHub.UserProfile("ashfurrow").sampleData, encoding: NSUTF8StringEncoding)
         let zenMessage = NSString(data: GitHub.Zen.sampleData, encoding: NSUTF8StringEncoding)
-        
+
         beforeEach {
             OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/zen"}) { _ in
                 return OHHTTPStubsResponse(data: GitHub.Zen.sampleData, statusCode: 200, headers: nil).responseTime(0.5)
             }
-            
+
             OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/users/ashfurrow"}) { _ in
                 return OHHTTPStubsResponse(data: GitHub.UserProfile("ashfurrow").sampleData, statusCode: 200, headers: nil).responseTime(0.5)
             }
-            
+
             OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/basic-auth/user/passwd"}) { _ in
                 return OHHTTPStubsResponse(data: HTTPBin.BasicAuth.sampleData, statusCode: 200, headers: nil)
             }
-            
+
         }
-        
+
         afterEach {
             OHHTTPStubs.removeAllStubs()
         }
-        
+
         describe("valid endpoints") {
             describe("with live data") {
                 describe("a provider") {
@@ -46,7 +46,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                     beforeEach {
                         provider = MoyaXProvider<GitHub>()
                     }
-                    
+
                     it("returns real data for zen request") {
                         var message: String?
 
@@ -58,10 +58,10 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 done()
                             }
                         }
-                        
+
                         expect(message) == zenMessage
                     }
-                    
+
                     it("returns real data for user profile request") {
                         var message: String?
 
@@ -74,10 +74,10 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 done()
                             }
                         }
-                        
+
                         expect(message) == userMessage
                     }
-                    
+
                     it("returns an error when cancelled") {
                         var receivedError: ErrorType?
 
@@ -91,7 +91,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             }
                             token.cancel()
                         }
-                        
+
                         expect(receivedError).toNot( beNil() )
                     }
 
@@ -106,7 +106,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                         expect(manager.called) == true
                     }
                 }
-                
+
                 describe("a provider with credential plugin") {
                     it("credential closure returns nil") {
                         var called = false
@@ -114,17 +114,17 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             called = true
                             return nil
                         }
-                        
+
                         let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
                         expect(provider.plugins.count).to(equal(1))
 
                         waitUntil { done in
                             provider.request(.BasicAuth) { _ in done() }
                         }
-                        
+
                         expect(called) == true
                     }
-                    
+
                     it("credential closure returns valid username and password") {
                         var called = false
                         var returnedData: NSData?
@@ -132,7 +132,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             called = true
                             return NSURLCredential(user: "user", password: "passwd", persistence: .None)
                         }
-                        
+
                         let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
                         let target = HTTPBin.BasicAuth
 
@@ -144,12 +144,12 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 done()
                             }
                         }
-                        
+
                         expect(called) == true
                         expect(returnedData) == target.sampleData
                     }
                 }
-                
+
                 describe("a provider with network activity plugin") {
                     it("notifies at the beginning of network requests") {
                         var called = false
@@ -158,15 +158,15 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 called = true
                             }
                         }
-                        
+
                         let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
-                        
+
                         expect(called) == true
                     }
-                    
+
                     it("notifies at the end of network requests") {
                         var called = false
                         let plugin = NetworkActivityPlugin { change in
@@ -174,16 +174,16 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 called = true
                             }
                         }
-                        
+
                         let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
-                        
+
                         expect(called) == true
                     }
                 }
-                
+
                 describe("a provider with network logger plugin") {
                     var log = ""
                     var plugin: NetworkLoggerPlugin!
@@ -199,7 +199,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                     }
 
                     it("logs the request") {
-                        
+
                         let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(GitHub.Zen) { _ in done() }
@@ -214,13 +214,13 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                         expect(log).to( contain("\"Content-Length\" = 43;") )
                     }
                 }
-                
+
                 describe("a reactive provider with RACSignal") {
                     var provider: ReactiveCocoaMoyaXProvider<GitHub>!
                     beforeEach {
                         provider = ReactiveCocoaMoyaXProvider<GitHub>()
                     }
-                    
+
                     it("returns some data for zen request") {
                         var message: String?
 
@@ -233,10 +233,10 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 done()
                             }
                         }
-                        
+
                         expect(message) == zenMessage
                     }
-                    
+
                     it("returns some data for user profile request") {
                         var message: String?
 
@@ -250,18 +250,18 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                                 done()
                             }
                         }
-                        
+
                         expect(message) == userMessage
                     }
                 }
             }
-            
+
             describe("a reactive provider with SignalProducer") {
                 var provider: ReactiveCocoaMoyaXProvider<GitHub>!
                 beforeEach {
                     provider = ReactiveCocoaMoyaXProvider<GitHub>()
                 }
-                
+
                 it("returns some data for zen request") {
                     var message: String?
 
@@ -271,10 +271,10 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             done()
                         }
                     }
-                    
+
                     expect(message) == zenMessage
                 }
-                
+
                 it("returns some data for user profile request") {
                     var message: String?
 
@@ -285,7 +285,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             done()
                         }
                     }
-                    
+
                     expect(message) == userMessage
                 }
             }

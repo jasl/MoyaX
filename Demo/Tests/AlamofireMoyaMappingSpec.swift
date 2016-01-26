@@ -7,27 +7,27 @@ final class AlamofireMoyaXMappingSpec: QuickSpec {
     override func spec() {
 
         describe("translates parameter encoding to alamofire parameter encoding") {
-            
+
             it("converts to alamofire URL encoding") {
                 let alamofireEncoding = MoyaX.ParameterEncoding.URL.toAlamofire
-                
+
                 if case .URL = alamofireEncoding {
                     expect(true).to(beTrue())
                 } else {
                     fail("Expected url encoding, got \(alamofireEncoding)")
                 }
             }
-            
+
             it("converts to alamofire JSON encoding") {
                 let alamofireEncoding = MoyaX.ParameterEncoding.JSON.toAlamofire
-                
+
                 if case .JSON = alamofireEncoding {
                     expect(true).to(beTrue())
                 } else {
                     fail("Expected json encoding, got \(alamofireEncoding)")
                 }
             }
-            
+
             it("converts to alamofire PropertyList encoding") {
                 let alamofireEncoding = MoyaX.ParameterEncoding.PropertyList(NSPropertyListFormat.BinaryFormat_v1_0, 0).toAlamofire
 
@@ -38,16 +38,16 @@ final class AlamofireMoyaXMappingSpec: QuickSpec {
                     fail("Expected property list encoding, got \(alamofireEncoding)")
                 }
             }
-            
+
             it("converts to alamofire Custom encoding") {
                 var called: Bool = false
-                
+
                 let closure: (URLRequestConvertible, [String: AnyObject]?) -> (NSMutableURLRequest, NSError?) = { req, params in
                     called = true
                     return (NSMutableURLRequest(), nil)
                 }
                 let alamofireEncoding = MoyaX.ParameterEncoding.Custom(closure).toAlamofire
-                
+
                 if case let .Custom(closure) = alamofireEncoding {
                     let req = NSURLRequest()
                     closure(req, nil)

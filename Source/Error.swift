@@ -37,7 +37,7 @@ public enum MoyaXErrorCode: Int {
 
 @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")
 public extension Error {
-    
+
     // Used to convert MoyaXError to NSError for RACSignal
     var nsError: NSError {
         switch self {

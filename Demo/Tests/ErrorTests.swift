@@ -13,57 +13,56 @@ class ErrorTests: QuickSpec {
         }
 
         describe("should convert to NSError") {
-            
             it("should convert ImageMapping error to NSError") {
-                
+
                 let error = Error.ImageMapping(response).nsError
-                
+
                 expect(error.domain) == MoyaXErrorDomain
                 expect(error.code) == MoyaXErrorCode.ImageMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
-            
+
             it("should convert JSONMapping error to NSError") {
-                
+
                 let error = Error.JSONMapping(response).nsError
-                
+
                 expect(error.domain) == MoyaXErrorDomain
                 expect(error.code) == MoyaXErrorCode.JSONMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
-            
+
             it("should convert StringMapping error to NSError") {
-                
+
                 let error = Error.StringMapping(response).nsError
-                
+
                 expect(error.domain) == MoyaXErrorDomain
                 expect(error.code) == MoyaXErrorCode.StringMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
-            
+
             it("should convert StatusCode error to NSError") {
-                
+
                 let error = Error.StatusCode(response).nsError
-                
+
                 expect(error.domain) == MoyaXErrorDomain
                 expect(error.code) == MoyaXErrorCode.StatusCode.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
-            
+
             it("should convert Data error to NSError") {
-                
+
                 let error = Error.Data(response).nsError
-                
+
                 expect(error.domain) == MoyaXErrorDomain
                 expect(error.code) == MoyaXErrorCode.Data.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
-            
+
             it("should convert Underlying error to NSError") {
-                
+
                 let nsError = NSError(domain: "Domain", code: 200, userInfo: ["data" : "some data"])
                 let error = Error.Underlying(nsError).nsError
-                
+
                 expect(error.domain) == "Domain"
                 expect(error.code) == 200
                 expect(error.userInfo as? [String : String]) == ["data" : "some data"]

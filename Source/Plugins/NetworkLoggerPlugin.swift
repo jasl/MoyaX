@@ -10,7 +10,7 @@ public final class NetworkLoggerPlugin: PluginType {
     private let terminator = "\n"
     private let output: (items: Any..., separator: String, terminator: String) -> Void
     private let responseDataFormatter: ((NSData) -> (NSData))?
-    
+
     /// If true, also logs response body data.
     public let verbose: Bool
 
@@ -31,7 +31,7 @@ public final class NetworkLoggerPlugin: PluginType {
             outputItems(logNetworkResponse(nil, data: nil, target: target))
         }
     }
-    
+
     private func outputItems(items: [String]) {
         if verbose {
             items.forEach { output(items: $0, separator: separator, terminator: terminator) }
@@ -52,7 +52,7 @@ private extension NetworkLoggerPlugin {
     private func format(loggerId: String, date: String, identifier: String, message: String) -> String {
         return "\(loggerId): [\(date)] \(identifier): \(message)"
     }
-    
+
     func logNetworkRequest(request: NSURLRequest?) -> [String] {
 
         var output = [String]()

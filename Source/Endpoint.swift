@@ -57,10 +57,10 @@ public class Endpoint<Target> {
 
         return Endpoint(URL: URL, sampleResponseClosure: sampleResponseClosure, method: method, parameters: parameters, parameterEncoding: parameterEncoding, httpHeaderFields: newHTTPHeaderFields)
     }
-    
+
     /// Convenience method for creating a new Endpoint with the same properties as the receiver, but with another parameter encoding.
     public func endpointByAddingParameterEncoding(newParameterEncoding: MoyaX.ParameterEncoding) -> Endpoint<Target> {
-        
+
         return Endpoint(URL: URL, sampleResponseClosure: sampleResponseClosure, method: method, parameters: parameters, parameterEncoding: newParameterEncoding, httpHeaderFields: httpHeaderFields)
     }
 }

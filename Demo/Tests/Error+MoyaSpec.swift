@@ -7,7 +7,7 @@ public func beOfSameErrorType(expectedValue: Error) -> MatcherFunc<Error> {
             guard let actualValue = try actualExpression.evaluate() else {
                 return false
             }
-            
+
             switch actualValue {
             case .ImageMapping:
                 switch expectedValue {

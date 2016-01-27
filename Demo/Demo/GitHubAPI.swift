@@ -1,5 +1,5 @@
 import Foundation
-import Moya
+import MoyaX
 
 // MARK: - Provider setup
 
@@ -13,8 +13,7 @@ private func JSONResponseDataFormatter(data: NSData) -> NSData {
     }
 }
 
-let GitHubProvider = MoyaProvider<GitHub>(plugins: [NetworkLoggerPlugin(verbose: true, responseDataFormatter: JSONResponseDataFormatter)])
-
+let GitHubProvider = MoyaXProvider<GitHub>(plugins: [NetworkLoggerPlugin(verbose: true, responseDataFormatter: JSONResponseDataFormatter)])
 
 // MARK: - Provider support
 
@@ -42,7 +41,7 @@ extension GitHub: TargetType {
             return "/users/\(name.URLEscapedString)/repos"
         }
     }
-    public var method: Moya.Method {
+    public var method: MoyaX.Method {
         return .GET
     }
     public var parameters: [String: AnyObject]? {

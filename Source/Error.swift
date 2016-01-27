@@ -9,9 +9,9 @@ public enum Error: ErrorType {
     case Underlying(ErrorType)
 }
 
-public extension Moya.Error {
+public extension Error {
     /// Depending on error type, returns a Response object.
-    var response: Moya.Response? {
+    var response: Response? {
         switch self {
         case .ImageMapping(let response): return response
         case .JSONMapping(let response): return response
@@ -24,10 +24,10 @@ public extension Moya.Error {
 }
 
 @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")
-public let MoyaErrorDomain = "Moya"
+public let MoyaXErrorDomain = "MoyaX"
 
 @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")
-public enum MoyaErrorCode: Int {
+public enum MoyaXErrorCode: Int {
     case ImageMapping = 0
     case JSONMapping
     case StringMapping
@@ -38,19 +38,19 @@ public enum MoyaErrorCode: Int {
 @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")
 public extension Error {
     
-    // Used to convert MoyaError to NSError for RACSignal
+    // Used to convert MoyaXError to NSError for RACSignal
     var nsError: NSError {
         switch self {
         case .ImageMapping(let response):
-            return NSError(domain: MoyaErrorDomain, code: MoyaErrorCode.ImageMapping.rawValue, userInfo: ["data" : response])
+            return NSError(domain: MoyaXErrorDomain, code: MoyaXErrorCode.ImageMapping.rawValue, userInfo: ["data" : response])
         case .JSONMapping(let response):
-            return NSError(domain: MoyaErrorDomain, code: MoyaErrorCode.JSONMapping.rawValue, userInfo: ["data" : response])
+            return NSError(domain: MoyaXErrorDomain, code: MoyaXErrorCode.JSONMapping.rawValue, userInfo: ["data" : response])
         case .StringMapping(let response):
-            return NSError(domain: MoyaErrorDomain, code: MoyaErrorCode.StringMapping.rawValue, userInfo: ["data" : response])
+            return NSError(domain: MoyaXErrorDomain, code: MoyaXErrorCode.StringMapping.rawValue, userInfo: ["data" : response])
         case .StatusCode(let response):
-            return NSError(domain: MoyaErrorDomain, code: MoyaErrorCode.StatusCode.rawValue, userInfo: ["data" : response])
+            return NSError(domain: MoyaXErrorDomain, code: MoyaXErrorCode.StatusCode.rawValue, userInfo: ["data" : response])
         case .Data(let response):
-            return NSError(domain: MoyaErrorDomain, code: MoyaErrorCode.Data.rawValue, userInfo: ["data" : response])
+            return NSError(domain: MoyaXErrorDomain, code: MoyaXErrorCode.Data.rawValue, userInfo: ["data" : response])
         case .Underlying(let error):
             return error as NSError
         }

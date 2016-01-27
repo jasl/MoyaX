@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0630A3171BE1C84500AD4789"
-               BuildableName = "Moya.framework"
-               BlueprintName = "Moya OSX"
-               ReferencedContainer = "container:Moya.xcodeproj">
+               BlueprintIdentifier = "554B101F1BE7F13600F3D266"
+               BuildableName = "MoyaX.framework"
+               BlueprintName = "ReactiveMoyaX watchOS"
+               ReferencedContainer = "container:MoyaX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -45,10 +45,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0630A3171BE1C84500AD4789"
-            BuildableName = "Moya.framework"
-            BlueprintName = "Moya OSX"
-            ReferencedContainer = "container:Moya.xcodeproj">
+            BlueprintIdentifier = "554B101F1BE7F13600F3D266"
+            BuildableName = "MoyaX.framework"
+            BlueprintName = "ReactiveMoyaX watchOS"
+            ReferencedContainer = "container:MoyaX.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -63,10 +63,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0630A3171BE1C84500AD4789"
-            BuildableName = "Moya.framework"
-            BlueprintName = "Moya OSX"
-            ReferencedContainer = "container:Moya.xcodeproj">
+            BlueprintIdentifier = "554B101F1BE7F13600F3D266"
+            BuildableName = "MoyaX.framework"
+            BlueprintName = "ReactiveMoyaX watchOS"
+            ReferencedContainer = "container:MoyaX.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
    </ProfileAction>

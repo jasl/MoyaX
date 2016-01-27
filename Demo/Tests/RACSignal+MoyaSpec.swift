@@ -1,5 +1,5 @@
 import Quick
-import Moya
+import MoyaX
 import ReactiveCocoa
 import Nimble
 
@@ -34,7 +34,7 @@ private func signalSendingData(data: NSData, statusCode: Int = 200) -> RACSignal
     }
 }
 
-class RACSignalMoyaSpec: QuickSpec {
+class RACSignalMoyaXSpec: QuickSpec {
     override func spec() {
         describe("status codes filtering") {
             it("filters out unrequested status codes") {
@@ -180,8 +180,8 @@ class RACSignalMoyaSpec: QuickSpec {
                 })
                 
                 expect(receivedError).toNot(beNil())
-                expect(receivedError?.domain) == MoyaErrorDomain
-                expect(receivedError?.code).to(equal(MoyaErrorCode.ImageMapping.rawValue))
+                expect(receivedError?.domain) == MoyaXErrorDomain
+                expect(receivedError?.code).to(equal(MoyaXErrorCode.ImageMapping.rawValue))
             }
         }
         
@@ -246,8 +246,8 @@ class RACSignalMoyaSpec: QuickSpec {
                 })
                 
                 expect(receivedError).toNot(beNil())
-                expect(receivedError?.domain) == MoyaErrorDomain
-                expect(receivedError?.code).to(equal(MoyaErrorCode.StringMapping.rawValue))
+                expect(receivedError?.domain) == MoyaXErrorDomain
+                expect(receivedError?.code).to(equal(MoyaXErrorCode.StringMapping.rawValue))
             }
         }
     }

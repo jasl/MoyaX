@@ -3,7 +3,7 @@ import Result
 
 /// Logs network activity (outgoing requests and incoming responses).
 public final class NetworkLoggerPlugin: PluginType {
-    private let loggerId = "Moya_Logger"
+    private let loggerId = "MoyaX_Logger"
     private let dateFormatString = "dd/MM/yyyy HH:mm:ss"
     private let dateFormatter = NSDateFormatter()
     private let separator = ", "
@@ -24,7 +24,7 @@ public final class NetworkLoggerPlugin: PluginType {
         outputItems(logNetworkRequest(request.request))
     }
 
-    public func didReceiveResponse(result: Result<Moya.Response, Moya.Error>, target: TargetType) {
+    public func didReceiveResponse(result: Result<Response, Error>, target: TargetType) {
         if case .Success(let response) = result {
             outputItems(logNetworkResponse(response.response, data: response.data, target: target))
         } else {

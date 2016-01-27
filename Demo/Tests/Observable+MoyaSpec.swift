@@ -1,5 +1,5 @@
 import Quick
-import Moya
+import MoyaX
 import RxSwift
 import Nimble
 
@@ -29,7 +29,7 @@ private func observableSendingData(data: NSData, statusCode: Int = 200) -> Obser
     return Observable.just(Response(statusCode: statusCode, data: data, response: nil))
 }
 
-class ObservableMoyaSpec: QuickSpec {
+class ObservableMoyaXSpec: QuickSpec {
     override func spec() {
         describe("status codes filtering") {
             it("filters out unrequested status codes") {

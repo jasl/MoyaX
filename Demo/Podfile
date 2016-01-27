@@ -4,9 +4,9 @@ use_frameworks!
 
 # Our Libraries
 def libraries
-  pod 'Moya', :path => "../"
-  pod 'Moya/ReactiveCocoa', :path => "../"
-  pod 'Moya/RxSwift', :path => "../"
+  pod 'MoyaX', :path => "../"
+  pod 'MoyaX/ReactiveCocoa', :path => "../"
+  pod 'MoyaX/RxSwift', :path => "../"
 end
 
 # Test Libraries

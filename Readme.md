@@ -1,14 +1,18 @@
-[![Build Status](https://travis-ci.org/Moya/Moya.svg?branch=master)](https://travis-ci.org/Moya/Moya) [![codecov.io](https://codecov.io/github/Moya/Moya/coverage.svg?branch=master)](https://codecov.io/github/Moya/Moya?branch=master)
+[![Build Status](https://travis-ci.org/jasl/MoyaX.svg?branch=master)](https://travis-ci.org/jasl/MoyaX)
+[![codecov.io](https://codecov.io/github/jasl/MoyaX/coverage.svg?branch=master)](https://codecov.io/github/jasl/MoyaX?branch=master)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
-![Moya Logo](web/moya_logo_github.png)
+![MoyaX Logo](web/moya_logo_github.png)
+
+MoyaX - a fork of [Moya](https://github.com/Moya/Moya)
+====
 
 You're a smart developer. You probably use [Alamofire](https://github.com/Alamofire/Alamofire) to abstract away access to
 NSURLSession and all those nasty details you don't really care about. But then,
 like lots of smart developers, you write ad hoc network abstraction layers. They
 are probably called "APIManager" or "NetworkModel", and they always end in tears.
 
-![Moya Overview](web/diagram.png)
+![MoyaX Overview](web/diagram.png)
 
 Ad hoc network layers are common in iOS apps. They're bad for a few reasons:
 
@@ -16,7 +20,7 @@ Ad hoc network layers are common in iOS apps. They're bad for a few reasons:
 - Makes it hard to maintain existing apps ("oh my god, this mess...")
 - Makes it hard to write unit tests ("how do I do this again?")
 
-So the basic idea of Moya is that we want some network abstraction layer that
+So the basic idea of MoyaX is that we want some network abstraction layer that
 sufficiently encapsulates actually calling Alamofire directly. It should be simple
 enough that common things are easy, but comprehensive enough that complicated things
 are also easy.
@@ -24,7 +28,7 @@ are also easy.
 > If you use Alamofire to abstract away `NSURLSession`, why not use something
 to abstract away the nitty gritty of URLs, parameters, etc?
 
-Some awesome features of Moya:
+Some awesome features of MoyaX:
 
 - Compile-time checking for correct API endpoint accesses.
 - Lets you define a clear usage of different endpoints with associated enum values.
@@ -38,9 +42,7 @@ There's a sample project in the Demo directory. Have fun!
 Project Status
 --------------
 
-This project is actively under development, and is being used in [Artsy's
-new auction app](https://github.com/Artsy/eidolon). We consider it
-ready for production use.
+This project is actively under development.
 
 Currently, we support Xcode 7 and Swift 2.
 
@@ -48,36 +50,36 @@ Installation
 ------------
 
 ### CocoaPods
-Just add `pod 'Moya'` to your Podfile and go!
+Just add `pod 'MoyaX'` to your Podfile and go!
 
-In any file you'd like to use Moya in, don't forget to
-import the framework with `import Moya`.
+In any file you'd like to use MoyaX in, don't forget to
+import the framework with `import MoyaX`.
 
 For RxSwift or ReactiveCocoa extensions, this project will include
 them as dependencies. You can do this via CocoaPods subspecs.
 
 ```rb
-pod 'Moya/RxSwift'
-pod 'Moya/ReactiveCocoa'
+pod 'MoyaX/RxSwift'
+pod 'MoyaX/ReactiveCocoa'
 ```
 
 Then run `pod install`.
 
 ### Carthage
 Carthage users can point to this repository and use whichever
-generated framework they'd like, `Moya`, `RxMoya`, or `ReactiveMoya`.
-The full Moya framework is bundled in each of those frameworks;
+generated framework they'd like, `MoyaX`, `RxMoyaX`, or `ReactiveMoyaX`.
+The full MoyaX framework is bundled in each of those frameworks;
 importing more than one framework in a single file will result in
 ambiguous lookups at compile time.
 
 ```
-github "Moya/Moya"
+github "jasl/MoyaX"
 ```
 
 Use
 ---
 
-After [some setup](docs/Examples.md), using Moya is really simple. You can access an API like this:
+After [some setup](docs/Examples.md), using MoyaX is really simple. You can access an API like this:
 
 ```swift
 provider.request(.Zen) { result in
@@ -95,7 +97,7 @@ provider.request(.Zen) { result in
 }
 ```
 
-That's a basic example. Many API requests need parameters. Moya encodes these
+That's a basic example. Many API requests need parameters. MoyaX encodes these
 into the enum you use to access the endpoint, like this:
 
 ```swift
@@ -112,7 +114,7 @@ For examples, see the [documentation](docs/).
 Reactive Extensions
 -------------------
 
-Even cooler are the reactive extensions. Moya provides reactive extensions for
+Even cooler are the reactive extensions. MoyaX provides reactive extensions for
 [ReactiveCocoa](docs/ReactiveCocoa.md) and [RxSwift](docs/RxSwift.md).
 
 ## ReactiveCocoa
@@ -134,7 +136,7 @@ provider.request(.UserProfile("ashfurrow")).start { (event) -> Void in
 }
 ```
 
-##RxSwift
+## RxSwift
 
 For `RxSwift`, it immediately returns an `Observable` that you can subscribe to
 or bind or map or whatever you want to do. To handle errors, for instance,
@@ -166,21 +168,21 @@ responses.
 Community Extensions
 --------------------
 
-Moya has a great community around it and some people have created some very helpful extensions.
+MoyaX has a great community around it and some people have created some very helpful extensions.
 
 - [Moya-ObjectMapper](https://github.com/ivanbruel/Moya-ObjectMapper) - ObjectMapper bindings for Moya for easier JSON serialization
 - [Moya-SwiftyJSONMapper](https://github.com/AvdLee/Moya-SwiftyJSONMapper) - SwiftyJSON bindings for Moya for easier JSON serialization
 - [Moya-Argo](https://github.com/wattson12/Moya-Argo) - Argo bindings for Moya for easier JSON serialization
 - [Moya-ModelMapper](https://github.com/sunshinejr/Moya-ModelMapper) - ModelMapper bindings for Moya for easier JSON serialization 
 
-We appreciate all the work being done by the community around Moya. If you would like to have your extension featured in the list above, simply create a pull request adding your extensions to the list.
+We appreciate all the work being done by the community around MoyaX. If you would like to have your extension featured in the list above, simply create a pull request adding your extensions to the list.
 
 Contributing
 ------------
 
-Hey! Like Moya? Awesome! We could actually really use your help!
+Hey! Like MoyaX? Awesome! We could actually really use your help!
 
-Open source isn't just writing code. Moya could use your help with any of the
+Open source isn't just writing code. MoyaX could use your help with any of the
 following:
 
 - Finding (and reporting!) bugs.
@@ -195,9 +197,9 @@ If any of that sounds cool to you, send a pull request! After a few
 contributions, we'll add you as an admin to the repo so you can merge pull
 requests and help steer the ship :ship:
 
-Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by [its terms](https://github.com/Moya/contributors/blob/master/Code of Conduct.md).
+Please note that this project is released with a Contributor Code of Conduct. By participating in this project you agree to abide by [its terms](https://github.com/MoyaX/contributors/blob/master/Code of Conduct.md).
 
 License
 -------
 
-Moya is released under an MIT license. See LICENSE for more information.
+MoyaX is released under an MIT license. See LICENSE for more information.

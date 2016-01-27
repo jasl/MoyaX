@@ -1,10 +1,10 @@
 import Quick
-import Moya
+import MoyaX
 import Nimble
 import OHHTTPStubs
 import Alamofire
 
-func beIndenticalToResponse(expectedValue: Moya.Response) -> MatcherFunc<Moya.Response> {
+func beIndenticalToResponse(expectedValue: MoyaX.Response) -> MatcherFunc<MoyaX.Response> {
     return MatcherFunc { actualExpression, failureMessage in
         do {
             let instance = try actualExpression.evaluate()
@@ -15,7 +15,7 @@ func beIndenticalToResponse(expectedValue: Moya.Response) -> MatcherFunc<Moya.Re
     }
 }
 
-class MoyaProviderIntegrationTests: QuickSpec {
+class MoyaXProviderIntegrationTests: QuickSpec {
     override func spec() {
         let userMessage = NSString(data: GitHub.UserProfile("ashfurrow").sampleData, encoding: NSUTF8StringEncoding)
         let zenMessage = NSString(data: GitHub.Zen.sampleData, encoding: NSUTF8StringEncoding)
@@ -42,9 +42,9 @@ class MoyaProviderIntegrationTests: QuickSpec {
         describe("valid endpoints") {
             describe("with live data") {
                 describe("a provider") {
-                    var provider: MoyaProvider<GitHub>!
+                    var provider: MoyaXProvider<GitHub>!
                     beforeEach {
-                        provider = MoyaProvider<GitHub>()
+                        provider = MoyaXProvider<GitHub>()
                     }
                     
                     it("returns real data for zen request") {
@@ -97,7 +97,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
 
                     it("uses a custom Alamofire.Manager request generation") {
                         let manager = StubManager()
-                        let provider = MoyaProvider<GitHub>(manager: manager)
+                        let provider = MoyaXProvider<GitHub>(manager: manager)
 
                         waitUntil { done in
                             provider.request(GitHub.Zen) { _ in done() }
@@ -115,7 +115,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
                             return nil
                         }
                         
-                        let provider  = MoyaProvider<HTTPBin>(plugins: [plugin])
+                        let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
                         expect(provider.plugins.count).to(equal(1))
 
                         waitUntil { done in
@@ -133,7 +133,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
                             return NSURLCredential(user: "user", password: "passwd", persistence: .None)
                         }
                         
-                        let provider  = MoyaProvider<HTTPBin>(plugins: [plugin])
+                        let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
                         let target = HTTPBin.BasicAuth
 
                         waitUntil { done in
@@ -159,7 +159,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
                             }
                         }
                         
-                        let provider = MoyaProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
@@ -175,7 +175,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
                             }
                         }
                         
-                        let provider = MoyaProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
@@ -200,7 +200,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
 
                     it("logs the request") {
                         
-                        let provider = MoyaProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(GitHub.Zen) { _ in done() }
                         }
@@ -216,9 +216,9 @@ class MoyaProviderIntegrationTests: QuickSpec {
                 }
                 
                 describe("a reactive provider with RACSignal") {
-                    var provider: ReactiveCocoaMoyaProvider<GitHub>!
+                    var provider: ReactiveCocoaMoyaXProvider<GitHub>!
                     beforeEach {
-                        provider = ReactiveCocoaMoyaProvider<GitHub>()
+                        provider = ReactiveCocoaMoyaXProvider<GitHub>()
                     }
                     
                     it("returns some data for zen request") {
@@ -226,7 +226,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
 
                         waitUntil { done in
                             provider.request(GitHub.Zen).subscribeNext { response in
-                                if let response = response as? Moya.Response {
+                                if let response = response as? MoyaX.Response {
                                     message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
                                 }
 
@@ -243,7 +243,7 @@ class MoyaProviderIntegrationTests: QuickSpec {
                         waitUntil { done in
                             let target: GitHub = .UserProfile("ashfurrow")
                             provider.request(target).subscribeNext { response in
-                                if let response = response as? Moya.Response {
+                                if let response = response as? MoyaX.Response {
                                     message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
                                 }
 
@@ -257,9 +257,9 @@ class MoyaProviderIntegrationTests: QuickSpec {
             }
             
             describe("a reactive provider with SignalProducer") {
-                var provider: ReactiveCocoaMoyaProvider<GitHub>!
+                var provider: ReactiveCocoaMoyaXProvider<GitHub>!
                 beforeEach {
-                    provider = ReactiveCocoaMoyaProvider<GitHub>()
+                    provider = ReactiveCocoaMoyaXProvider<GitHub>()
                 }
                 
                 it("returns some data for zen request") {

@@ -1,7 +1,7 @@
 import Foundation
 import Result
 
-/// A Moya Plugin receives callbacks to perform side effects wherever a request is sent or received.
+/// A MoyaX Plugin receives callbacks to perform side effects wherever a request is sent or received.
 ///
 /// for example, a plugin may be used to
 ///     - log network requests
@@ -11,8 +11,8 @@ public protocol PluginType {
     /// Called immediately before a request is sent over the network (or stubbed).
     func willSendRequest(request: RequestType, target: TargetType)
 
-    // Called after a response has been received, but before the MoyaProvider has invoked its completion handler.
-    func didReceiveResponse(result: Result<Moya.Response, Moya.Error>, target: TargetType)
+    // Called after a response has been received, but before the MoyaXProvider has invoked its completion handler.
+    func didReceiveResponse(result: Result<Response, Error>, target: TargetType)
 }
 
 /// Request type used by willSendRequest plugin function.

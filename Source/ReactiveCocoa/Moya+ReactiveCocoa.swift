@@ -1,22 +1,23 @@
 import Foundation
 import ReactiveCocoa
 
-/// Subclass of MoyaProvider that returns SignalProducer instances when requests are made. Much better than using completion closures.
-public class ReactiveCocoaMoyaProvider<Target where Target: TargetType>: MoyaProvider<Target> {
+/// Subclass of MoyaXProvider that returns SignalProducer instances when requests are made. Much better than using completion closures.
+public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Target> {
     private let stubScheduler: DateSchedulerType?
+
     /// Initializes a reactive provider.
-    public init(endpointClosure: EndpointClosure = MoyaProvider.DefaultEndpointMapping,
-        requestClosure: RequestClosure = MoyaProvider.DefaultRequestMapping,
-        stubClosure: StubClosure = MoyaProvider.NeverStub,
-        manager: Manager = ReactiveCocoaMoyaProvider<Target>.DefaultAlamofireManager(),
+    public init(endpointClosure: EndpointClosure = MoyaXProvider.DefaultEndpointMapping,
+        requestClosure: RequestClosure = MoyaXProvider.DefaultRequestMapping,
+        stubClosure: StubClosure = MoyaXProvider.NeverStub,
+        manager: Manager = ReactiveCocoaMoyaXProvider<Target>.DefaultAlamofireManager(),
         plugins: [PluginType] = [], stubScheduler: DateSchedulerType? = nil) {
             self.stubScheduler = stubScheduler
             super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubClosure: stubClosure, manager: manager, plugins: plugins)
     }
-    
+
     /// Designated request-making method.
     public func request(token: Target) -> SignalProducer<Response, Error> {
-        
+
         // Creates a producer that starts a request each time it's started.
         return SignalProducer { [weak self] observer, requestDisposable in
             let cancellableToken = self?.request(token) { result in
@@ -29,7 +30,7 @@ public class ReactiveCocoaMoyaProvider<Target where Target: TargetType>: MoyaPro
                     observer.sendFailed(error)
                 }
             }
-            
+
             requestDisposable.addDisposable {
                 // Cancel the request
                 cancellableToken?.cancel()
@@ -37,7 +38,7 @@ public class ReactiveCocoaMoyaProvider<Target where Target: TargetType>: MoyaPro
         }
     }
 
-    override func stubRequest(target: Target, request: NSURLRequest, completion: Moya.Completion, endpoint: Endpoint<Target>, stubBehavior: Moya.StubBehavior) -> CancellableToken {
+    override func stubRequest(target: Target, request: NSURLRequest, completion: MoyaX.Completion, endpoint: Endpoint<Target>, stubBehavior: MoyaX.StubBehavior) -> CancellableToken {
         guard let stubScheduler = self.stubScheduler else {
             return super.stubRequest(target, request: request, completion: completion, endpoint: endpoint, stubBehavior: stubBehavior)
         }

@@ -1,7 +1,7 @@
 import Quick
 import Nimble
 @testable
-import Moya
+import MoyaX
 
 class ErrorTests: QuickSpec {
     override func spec() {
@@ -18,8 +18,8 @@ class ErrorTests: QuickSpec {
                 
                 let error = Error.ImageMapping(response).nsError
                 
-                expect(error.domain) == MoyaErrorDomain
-                expect(error.code) == MoyaErrorCode.ImageMapping.rawValue
+                expect(error.domain) == MoyaXErrorDomain
+                expect(error.code) == MoyaXErrorCode.ImageMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
             
@@ -27,8 +27,8 @@ class ErrorTests: QuickSpec {
                 
                 let error = Error.JSONMapping(response).nsError
                 
-                expect(error.domain) == MoyaErrorDomain
-                expect(error.code) == MoyaErrorCode.JSONMapping.rawValue
+                expect(error.domain) == MoyaXErrorDomain
+                expect(error.code) == MoyaXErrorCode.JSONMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
             
@@ -36,8 +36,8 @@ class ErrorTests: QuickSpec {
                 
                 let error = Error.StringMapping(response).nsError
                 
-                expect(error.domain) == MoyaErrorDomain
-                expect(error.code) == MoyaErrorCode.StringMapping.rawValue
+                expect(error.domain) == MoyaXErrorDomain
+                expect(error.code) == MoyaXErrorCode.StringMapping.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
             
@@ -45,8 +45,8 @@ class ErrorTests: QuickSpec {
                 
                 let error = Error.StatusCode(response).nsError
                 
-                expect(error.domain) == MoyaErrorDomain
-                expect(error.code) == MoyaErrorCode.StatusCode.rawValue
+                expect(error.domain) == MoyaXErrorDomain
+                expect(error.code) == MoyaXErrorCode.StatusCode.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
             
@@ -54,8 +54,8 @@ class ErrorTests: QuickSpec {
                 
                 let error = Error.Data(response).nsError
                 
-                expect(error.domain) == MoyaErrorDomain
-                expect(error.code) == MoyaErrorCode.Data.rawValue
+                expect(error.domain) == MoyaXErrorDomain
+                expect(error.code) == MoyaXErrorCode.Data.rawValue
                 expect(error.userInfo as? [String : Response]) == ["data" : response]
             }
             

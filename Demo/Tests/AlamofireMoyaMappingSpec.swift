@@ -1,15 +1,15 @@
 import Quick
 import Nimble
 import Alamofire
-@testable import Moya
+@testable import MoyaX
 
-final class AlamofireMoyaMappingSpec: QuickSpec {
+final class AlamofireMoyaXMappingSpec: QuickSpec {
     override func spec() {
 
         describe("translates parameter encoding to alamofire parameter encoding") {
             
             it("converts to alamofire URL encoding") {
-                let alamofireEncoding = Moya.ParameterEncoding.URL.toAlamofire
+                let alamofireEncoding = MoyaX.ParameterEncoding.URL.toAlamofire
                 
                 if case .URL = alamofireEncoding {
                     expect(true).to(beTrue())
@@ -19,7 +19,7 @@ final class AlamofireMoyaMappingSpec: QuickSpec {
             }
             
             it("converts to alamofire JSON encoding") {
-                let alamofireEncoding = Moya.ParameterEncoding.JSON.toAlamofire
+                let alamofireEncoding = MoyaX.ParameterEncoding.JSON.toAlamofire
                 
                 if case .JSON = alamofireEncoding {
                     expect(true).to(beTrue())
@@ -29,7 +29,7 @@ final class AlamofireMoyaMappingSpec: QuickSpec {
             }
             
             it("converts to alamofire PropertyList encoding") {
-                let alamofireEncoding = Moya.ParameterEncoding.PropertyList(NSPropertyListFormat.BinaryFormat_v1_0, 0).toAlamofire
+                let alamofireEncoding = MoyaX.ParameterEncoding.PropertyList(NSPropertyListFormat.BinaryFormat_v1_0, 0).toAlamofire
 
                 if case let .PropertyList(format, writeOptions) = alamofireEncoding {
                     expect(format) == NSPropertyListFormat.BinaryFormat_v1_0
@@ -46,7 +46,7 @@ final class AlamofireMoyaMappingSpec: QuickSpec {
                     called = true
                     return (NSMutableURLRequest(), nil)
                 }
-                let alamofireEncoding = Moya.ParameterEncoding.Custom(closure).toAlamofire
+                let alamofireEncoding = MoyaX.ParameterEncoding.Custom(closure).toAlamofire
                 
                 if case let .Custom(closure) = alamofireEncoding {
                     let req = NSURLRequest()

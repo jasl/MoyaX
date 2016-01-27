@@ -1,5 +1,5 @@
 import Nimble
-import Moya
+import MoyaX
 
 public func beOfSameErrorType(expectedValue: Error) -> MatcherFunc<Error> {
     return MatcherFunc { actualExpression, failureMessage in

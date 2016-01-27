@@ -1,18 +1,18 @@
 import Quick
 import Nimble
-import Moya
+import MoyaX
 import RxSwift
 import Alamofire
 
-class RxSwiftMoyaProviderSpec: QuickSpec {
+class RxSwiftMoyaXProviderSpec: QuickSpec {
     override func spec() {
         
         describe("provider with Observable") {
             
-            var provider: RxMoyaProvider<GitHub>!
+            var provider: RxMoyaXProvider<GitHub>!
             
             beforeEach {
-                provider = RxMoyaProvider(stubClosure: MoyaProvider.ImmediatelyStub)
+                provider = RxMoyaXProvider(stubClosure: MoyaXProvider.ImmediatelyStub)
             }
             
             it("returns a Response object") {
@@ -50,17 +50,17 @@ class RxSwiftMoyaProviderSpec: QuickSpec {
         }
         
         describe("failing") {
-            var provider: RxMoyaProvider<GitHub>!
+            var provider: RxMoyaXProvider<GitHub>!
             beforeEach {
-                provider = RxMoyaProvider<GitHub>(endpointClosure: failureEndpointClosure, stubClosure: MoyaProvider.ImmediatelyStub)
+                provider = RxMoyaXProvider<GitHub>(endpointClosure: failureEndpointClosure, stubClosure: MoyaXProvider.ImmediatelyStub)
             }
             
             it("returns the correct error message") {
-                var receivedError: Moya.Error?
+                var receivedError: MoyaX.Error?
                 
                 waitUntil { done in
                     _ = provider.request(.Zen).subscribeError { (error) -> Void in
-                        receivedError = error as? Moya.Error
+                        receivedError = error as? MoyaX.Error
                         done()
                     }
                 }

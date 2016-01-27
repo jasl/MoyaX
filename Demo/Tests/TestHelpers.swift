@@ -1,4 +1,4 @@
-import Moya
+import MoyaX
 import Foundation
 
 extension String {
@@ -22,7 +22,7 @@ extension GitHub: TargetType {
             return "/users/\(name.URLEscapedString)"
         }
     }
-    var method: Moya.Method {
+    var method: MoyaX.Method {
         return .GET
     }
     var parameters: [String: AnyObject]? {
@@ -58,7 +58,7 @@ enum HTTPBin: TargetType {
         }
     }
 
-    var method: Moya.Method {
+    var method: MoyaX.Method {
         return .GET
     }
     var parameters: [String: AnyObject]? {

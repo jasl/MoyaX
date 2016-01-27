@@ -1,11 +1,11 @@
 import Quick
-import Moya
+import MoyaX
 import Nimble
 
-extension Moya.ParameterEncoding: Equatable {
+extension MoyaX.ParameterEncoding: Equatable {
 }
 
-public func ==(lhs: Moya.ParameterEncoding, rhs: Moya.ParameterEncoding) -> Bool {
+public func ==(lhs: MoyaX.ParameterEncoding, rhs: MoyaX.ParameterEncoding) -> Bool {
     switch (lhs, rhs) {
     case (.URL, .URL):
         return true
@@ -29,7 +29,7 @@ class EndpointSpec: QuickSpec {
                 let target: GitHub = .Zen
                 let parameters = ["Nemesis": "Harvey"]
                 let headerFields = ["Title": "Dominar"]
-                endpoint = Endpoint<GitHub>(URL: url(target), sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: Moya.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
+                endpoint = Endpoint<GitHub>(URL: url(target), sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
             }
             
             it("returns a new endpoint for endpointByAddingParameters") {
@@ -65,7 +65,7 @@ class EndpointSpec: QuickSpec {
             }
 
             it ("returns a new endpoint for endpointByAddingParameterEncoding") {
-                let parameterEncoding = Moya.ParameterEncoding.JSON
+                let parameterEncoding = MoyaX.ParameterEncoding.JSON
                 let newEndpoint = endpoint.endpointByAddingParameterEncoding(parameterEncoding)
 
                 // Make sure we updated the parameter encoding

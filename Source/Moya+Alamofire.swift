@@ -3,27 +3,6 @@ import Alamofire
 
 public typealias Manager = Alamofire.Manager
 
-/// Choice of parameter encoding.
-public enum ParameterEncoding {
-    case URL
-    case JSON
-    case PropertyList(NSPropertyListFormat, NSPropertyListWriteOptions)
-    case Custom((URLRequestConvertible, [String: AnyObject]?) -> (NSMutableURLRequest, NSError?))
-
-    internal var toAlamofire: Alamofire.ParameterEncoding {
-        switch self {
-        case .URL:
-            return .URL
-        case .JSON:
-            return .JSON
-        case .PropertyList(let format, let options):
-            return .PropertyList(format, options)
-        case .Custom(let closure):
-            return .Custom(closure)
-        }
-    }
-}
-
 /// Make the Alamofire Request type conform to our type, to prevent leaking Alamofire to plugins.
 extension Request: RequestType { }
 
@@ -61,5 +40,4 @@ internal final class CancellableToken: Cancellable , CustomDebugStringConvertibl
         }
         return request.debugDescription
     }
-
 }

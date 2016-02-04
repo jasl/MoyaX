@@ -52,6 +52,15 @@ public protocol TargetType {
     var method: Method { get }
     var parameters: [String: AnyObject]? { get }
     var sampleData: NSData { get }
+
+    func toEndpoint() -> Endpoint
+}
+
+public extension TargetType {
+    func toEndpoint() -> Endpoint {
+        let url = self.baseURL.URLByAppendingPathComponent(self.path).absoluteString
+        return Endpoint(URL: url, sampleResponseClosure: {.NetworkResponse(200, self.sampleData)}, method: self.method, parameters: self.parameters)
+    }
 }
 
 /// Protocol to define the opaque type returned from a request

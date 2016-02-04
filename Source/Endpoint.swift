@@ -14,12 +14,12 @@ public enum EndpointSampleResponse {
 public class Endpoint {
     public typealias SampleResponseClosure = () -> EndpointSampleResponse
 
-    public let URL: String
-    public let method: Method
-    public let sampleResponseClosure: SampleResponseClosure
-    public let parameters: [String: AnyObject]?
-    public let parameterEncoding: ParameterEncoding
-    public let httpHeaderFields: [String: String]?
+    public var URL: String
+    public var method: Method
+    public var sampleResponseClosure: SampleResponseClosure
+    public var parameters: [String: AnyObject]?
+    public var parameterEncoding: ParameterEncoding
+    public var httpHeaderFields: [String: String]?
 
     /// Main initializer for Endpoint.
     public init(URL: String,
@@ -35,31 +35,6 @@ public class Endpoint {
         self.parameters = parameters
         self.parameterEncoding = parameterEncoding
         self.httpHeaderFields = httpHeaderFields
-    }
-
-    /// Convenience method for creating a new Endpoint with the same properties as the receiver, but with added parameters.
-    public func endpointByAddingParameters(parameters: [String: AnyObject]) -> Endpoint {
-        var newParameters = self.parameters ?? [String: AnyObject]()
-        for (key, value) in parameters {
-            newParameters[key] = value
-        }
-
-        return Endpoint(URL: URL, sampleResponseClosure: sampleResponseClosure, method: method, parameters: newParameters, parameterEncoding: parameterEncoding, httpHeaderFields: httpHeaderFields)
-    }
-
-    /// Convenience method for creating a new Endpoint with the same properties as the receiver, but with added HTTP header fields.
-    public func endpointByAddingHTTPHeaderFields(httpHeaderFields: [String: String]) -> Endpoint {
-        var newHTTPHeaderFields = self.httpHeaderFields ?? [String: String]()
-        for (key, value) in httpHeaderFields {
-            newHTTPHeaderFields[key] = value
-        }
-
-        return Endpoint(URL: URL, sampleResponseClosure: sampleResponseClosure, method: method, parameters: parameters, parameterEncoding: parameterEncoding, httpHeaderFields: newHTTPHeaderFields)
-    }
-
-    /// Convenience method for creating a new Endpoint with the same properties as the receiver, but with another parameter encoding.
-    public func endpointByAddingParameterEncoding(newParameterEncoding: ParameterEncoding) -> Endpoint {
-        return Endpoint(URL: URL, sampleResponseClosure: sampleResponseClosure, method: method, parameters: parameters, parameterEncoding: newParameterEncoding, httpHeaderFields: httpHeaderFields)
     }
 
     public var urlRequest: NSURLRequest { return self.toMutableURLRequest().0 }

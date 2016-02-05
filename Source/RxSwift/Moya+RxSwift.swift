@@ -5,11 +5,10 @@ import RxSwift
 public class RxMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Target> {
     /// Initializes a reactive provider.
     override public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
-        requestClosure: RequestClosure = DefaultRequestMapping,
-        stubBehavior: StubBehavior = .Never,
-        manager: Manager = DefaultAlamofireManager(),
-        plugins: [PluginType] = []) {
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
+                         requestClosure: RequestClosure = DefaultRequestMapping,
+                         manager: Manager = DefaultAlamofireManager(),
+                         plugins: [PluginType] = []) {
+            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.

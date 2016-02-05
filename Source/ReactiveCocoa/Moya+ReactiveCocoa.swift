@@ -3,16 +3,13 @@ import ReactiveCocoa
 
 /// Subclass of MoyaXProvider that returns SignalProducer instances when requests are made. Much better than using completion closures.
 public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Target> {
-    private let stubScheduler: DateSchedulerType?
 
     /// Initializes a reactive provider.
     public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
-        requestClosure: RequestClosure = DefaultRequestMapping,
-        stubBehavior: StubBehavior = .Never,
-        manager: Manager = DefaultAlamofireManager(),
-        plugins: [PluginType] = [], stubScheduler: DateSchedulerType? = nil) {
-            self.stubScheduler = stubScheduler
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, stubBehavior: stubBehavior, manager: manager, plugins: plugins)
+                requestClosure: RequestClosure = DefaultRequestMapping,
+                manager: Manager = DefaultAlamofireManager(),
+                plugins: [PluginType] = []) {
+            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.
@@ -36,29 +33,6 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXP
                 cancellableToken?.cancel()
             }
         }
-    }
-
-    override func stubRequest(target: Target, request: NSURLRequest, completion: MoyaX.Completion, endpoint: Endpoint) -> CancellableToken {
-        guard let stubScheduler = self.stubScheduler else {
-            return super.stubRequest(target, request: request, completion: completion, endpoint: endpoint)
-        }
-        notifyPluginsOfImpendingStub(request, target: target)
-        var dis: Disposable? = .None
-        let token = CancellableToken {
-            dis?.dispose()
-        }
-        let stub = createStubFunction(token, forTarget: target, withCompletion: completion, endpoint: endpoint, plugins: plugins)
-
-        switch self.stubBehavior {
-        case .Immediate:
-            dis = stubScheduler.schedule(stub)
-        case .Delayed(let seconds):
-            let date = NSDate(timeIntervalSinceNow: seconds)
-            dis = stubScheduler.scheduleAfter(date, action: stub)
-        case .Never:
-            fatalError("Attempted to stub request when behavior requested was never stub!")
-        }
-        return token
     }
 
     @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")

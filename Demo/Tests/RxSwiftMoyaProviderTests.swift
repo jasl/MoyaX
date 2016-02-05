@@ -12,7 +12,13 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
             var provider: RxMoyaXProvider<GitHub>!
 
             beforeEach {
-                provider = RxMoyaXProvider(stubBehavior: .Immediate)
+                provider = RxMoyaXProvider()
+
+                setupOHHTTPStubs()
+            }
+
+            afterEach {
+                unloadOHHTTPStubs()
             }
 
             it("returns a Response object") {
@@ -22,19 +28,7 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     called = true
                 }
 
-                expect(called).to(beTruthy())
-            }
-
-            it("returns stubbed data for zen request") {
-                var message: String?
-
-                let target: GitHub = .Zen
-                _ = provider.request(target).subscribeNext { (response) -> Void in
-                    message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
-                }
-
-                let sampleString = NSString(data: (target.sampleData as NSData), encoding: NSUTF8StringEncoding)
-                expect(message).to(equal(sampleString))
+                expect(called).toEventually(beTruthy())
             }
 
             it("returns correct data for user profile request") {
@@ -45,14 +39,16 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     receivedResponse = try! NSJSONSerialization.JSONObjectWithData(response.data, options: []) as? NSDictionary
                 }
 
-                expect(receivedResponse).toNot(beNil())
+                expect(receivedResponse).toEventuallyNot(beNil())
             }
         }
 
         describe("failing") {
             var provider: RxMoyaXProvider<GitHub>!
             beforeEach {
-                provider = RxMoyaXProvider<GitHub>(endpointClosure: failureEndpointClosure, stubBehavior: .Immediate)
+                provider = RxMoyaXProvider<GitHub>()
+
+                setupOHHTTPStubsWithFailure()
             }
 
             it("returns the correct error message") {
@@ -81,7 +77,7 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     errored = true
                 }
 
-                expect(errored).to(beTruthy())
+                expect(errored).toEventually(beTruthy())
             }
         }
     }

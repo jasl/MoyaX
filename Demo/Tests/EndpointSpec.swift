@@ -29,7 +29,7 @@ class EndpointSpec: QuickSpec {
                 let parameters = ["Nemesis": "Harvey"]
                 let headerFields = ["Title": "Dominar"]
 
-                endpoint = Endpoint(URL: url(target), sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
+                endpoint = Endpoint(URL: url(target), method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
             }
 
             it("returns a correct URL request") {

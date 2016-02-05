@@ -1,36 +1,21 @@
 import Foundation
 
-/// Used for stubbing responses.
-public enum EndpointSampleResponse {
-
-    /// The network returned a response, including status code and data.
-    case NetworkResponse(Int, NSData)
-
-    /// The network failed to send the request, or failed to retrieve a response (eg a timeout).
-    case NetworkError(ErrorType)
-}
-
 /// Class for reifying a target of the Target enum unto a concrete Endpoint.
 public class Endpoint {
-    public typealias SampleResponseClosure = () -> EndpointSampleResponse
-
     public var URL: String
     public var method: Method
-    public var sampleResponseClosure: SampleResponseClosure
     public var parameters: [String: AnyObject]?
     public var parameterEncoding: ParameterEncoding
     public var httpHeaderFields: [String: String]?
 
     /// Main initializer for Endpoint.
     public init(URL: String,
-                sampleResponseClosure: SampleResponseClosure,
                 method: Method = Method.GET,
                 parameters: [String: AnyObject]? = nil,
                 parameterEncoding: ParameterEncoding = .URL,
                 httpHeaderFields: [String: String]? = nil) {
 
         self.URL = URL
-        self.sampleResponseClosure = sampleResponseClosure
         self.method = method
         self.parameters = parameters
         self.parameterEncoding = parameterEncoding

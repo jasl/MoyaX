@@ -39,19 +39,12 @@ public enum ParameterEncoding {
     case Custom((NSMutableURLRequest, [String: AnyObject]?) -> (NSMutableURLRequest, NSError?))
 }
 
-public enum StubBehavior {
-    case Never
-    case Immediate
-    case Delayed(NSTimeInterval)
-}
-
 /// Protocol to define the base URL, path, method, parameters and sample data for a target.
 public protocol TargetType {
     var baseURL: NSURL { get }
     var path: String { get }
     var method: Method { get }
     var parameters: [String: AnyObject]? { get }
-    var sampleData: NSData { get }
 
     func toEndpoint() -> Endpoint
 }
@@ -59,7 +52,7 @@ public protocol TargetType {
 public extension TargetType {
     func toEndpoint() -> Endpoint {
         let url = self.baseURL.URLByAppendingPathComponent(self.path).absoluteString
-        return Endpoint(URL: url, sampleResponseClosure: {.NetworkResponse(200, self.sampleData)}, method: self.method, parameters: self.parameters)
+        return Endpoint(URL: url, method: self.method, parameters: self.parameters)
     }
 }
 
@@ -74,7 +67,7 @@ public protocol Cancellable {
 
 public func DefaultEndpointMapping<Target: TargetType>(target: Target) -> Endpoint {
     let url = target.baseURL.URLByAppendingPathComponent(target.path).absoluteString
-    return Endpoint(URL: url, sampleResponseClosure: {.NetworkResponse(200, target.sampleData)}, method: target.method, parameters: target.parameters)
+    return Endpoint(URL: url, method: target.method, parameters: target.parameters)
 }
 
 public func DefaultRequestMapping(endpoint: Endpoint, closure: NSURLRequest -> Void) {

@@ -20,9 +20,6 @@
 		067D49851C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496C1C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift */; };
 		067D49861C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496C1C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift */; };
 		067D49871C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496C1C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift */; };
-		067D49881C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496D1C0D3886005BBA79 /* MoyaProviderSpec.swift */; };
-		067D49891C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496D1C0D3886005BBA79 /* MoyaProviderSpec.swift */; };
-		067D498A1C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496D1C0D3886005BBA79 /* MoyaProviderSpec.swift */; };
 		067D498B1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496E1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift */; };
 		067D498C1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496E1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift */; };
 		067D498D1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */ = {isa = PBXBuildFile; fileRef = 067D496E1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift */; };
@@ -77,7 +74,6 @@
 		067D496A1C0D3886005BBA79 /* ErrorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ErrorTests.swift; sourceTree = "<group>"; };
 		067D496B1C0D3886005BBA79 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		067D496C1C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoyaProviderIntegrationTests.swift; sourceTree = "<group>"; };
-		067D496D1C0D3886005BBA79 /* MoyaProviderSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MoyaProviderSpec.swift; sourceTree = "<group>"; };
 		067D496E1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkLogginPluginSpec.swift; sourceTree = "<group>"; };
 		067D496F1C0D3886005BBA79 /* Observable+MoyaSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Observable+MoyaSpec.swift"; sourceTree = "<group>"; };
 		067D49701C0D3886005BBA79 /* RACSignal+MoyaSpec.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RACSignal+MoyaSpec.swift"; sourceTree = "<group>"; };
@@ -158,7 +154,6 @@
 				067D49691C0D3886005BBA79 /* Error+MoyaSpec.swift */,
 				067D496A1C0D3886005BBA79 /* ErrorTests.swift */,
 				067D496C1C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift */,
-				067D496D1C0D3886005BBA79 /* MoyaProviderSpec.swift */,
 				067D496E1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift */,
 				067D496F1C0D3886005BBA79 /* Observable+MoyaSpec.swift */,
 				067D49701C0D3886005BBA79 /* RACSignal+MoyaSpec.swift */,
@@ -618,7 +613,6 @@
 				067D498C1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */,
 				067D49861C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */,
 				067D49801C0D3886005BBA79 /* ErrorTests.swift in Sources */,
-				067D49891C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */,
 				067D499E1C0D3886005BBA79 /* TestHelpers.swift in Sources */,
 				067D498F1C0D3886005BBA79 /* Observable+MoyaSpec.swift in Sources */,
 				067D497A1C0D3886005BBA79 /* EndpointSpec.swift in Sources */,
@@ -637,7 +631,6 @@
 				067D498D1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */,
 				067D49871C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */,
 				067D49811C0D3886005BBA79 /* ErrorTests.swift in Sources */,
-				067D498A1C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */,
 				067D499F1C0D3886005BBA79 /* TestHelpers.swift in Sources */,
 				067D49901C0D3886005BBA79 /* Observable+MoyaSpec.swift in Sources */,
 				067D497B1C0D3886005BBA79 /* EndpointSpec.swift in Sources */,
@@ -666,7 +659,6 @@
 				067D498B1C0D3886005BBA79 /* NetworkLogginPluginSpec.swift in Sources */,
 				067D49851C0D3886005BBA79 /* MoyaProviderIntegrationTests.swift in Sources */,
 				067D497F1C0D3886005BBA79 /* ErrorTests.swift in Sources */,
-				067D49881C0D3886005BBA79 /* MoyaProviderSpec.swift in Sources */,
 				067D499D1C0D3886005BBA79 /* TestHelpers.swift in Sources */,
 				067D498E1C0D3886005BBA79 /* Observable+MoyaSpec.swift in Sources */,
 				067D49791C0D3886005BBA79 /* EndpointSpec.swift in Sources */,

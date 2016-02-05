@@ -2,24 +2,24 @@ import Foundation
 
 /// Class for reifying a target of the Target enum unto a concrete Endpoint.
 public class Endpoint {
-    public var URL: String
+    public var URL: NSURL
     public var method: Method
     public var parameters: [String: AnyObject]?
     public var parameterEncoding: ParameterEncoding
-    public var httpHeaderFields: [String: String]?
+    public var headerFields: [String: String]?
 
     /// Main initializer for Endpoint.
-    public init(URL: String,
+    public init(URL: NSURL,
                 method: Method = Method.GET,
                 parameters: [String: AnyObject]? = nil,
                 parameterEncoding: ParameterEncoding = .URL,
-                httpHeaderFields: [String: String]? = nil) {
+                headerFields: [String: String]? = nil) {
 
         self.URL = URL
         self.method = method
         self.parameters = parameters
         self.parameterEncoding = parameterEncoding
-        self.httpHeaderFields = httpHeaderFields
+        self.headerFields = headerFields
     }
 
     public var mutableURLRequest: NSMutableURLRequest { return self.convertToMutableURLRequest().0 }
@@ -27,11 +27,9 @@ public class Endpoint {
     /// Copied from Alamofire ParameterEncoding.swift
 
     public func convertToMutableURLRequest() -> (NSMutableURLRequest, NSError?) {
-        let request: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URL)!)
-
-        var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URL)!)
+        var mutableURLRequest = NSMutableURLRequest(URL: self.URL)
         mutableURLRequest.HTTPMethod = self.method.rawValue
-        mutableURLRequest.allHTTPHeaderFields = self.httpHeaderFields
+        mutableURLRequest.allHTTPHeaderFields = self.headerFields
 
         guard let parameters = self.parameters where !parameters.isEmpty else {
             return (mutableURLRequest, nil)

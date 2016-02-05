@@ -6,11 +6,11 @@ import Foundation
 
 final class NetworkLogginPluginSpec: QuickSpec {
     override func spec() {
-        let testStreamRequest = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
+        let testStreamRequest = NSMutableURLRequest(URL: GitHub.Zen.fullURL)
         testStreamRequest.allHTTPHeaderFields = ["Content-Type" : "application/json"]
         testStreamRequest.HTTPBodyStream = NSInputStream(data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!)
 
-        let testBodyRequest = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
+        let testBodyRequest = NSMutableURLRequest(URL: GitHub.Zen.fullURL)
         testBodyRequest.allHTTPHeaderFields = ["Content-Type" : "application/json"]
         testBodyRequest.HTTPBody = "cool body".dataUsingEncoding(NSUTF8StringEncoding)
 
@@ -59,7 +59,7 @@ final class NetworkLogginPluginSpec: QuickSpec {
         }
 
         it("outputs the reponse data") {
-            let response = Response(statusCode: 200, data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!, response: NSURLResponse(URL: NSURL(string: url(GitHub.Zen))!, MIMEType: nil, expectedContentLength: 0, textEncodingName: nil))
+            let response = Response(statusCode: 200, data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!, response: NSURLResponse(URL: GitHub.Zen.fullURL, MIMEType: nil, expectedContentLength: 0, textEncodingName: nil))
             let result: Result<MoyaX.Response, MoyaX.Error> = .Success(response)
 
             plugin.didReceiveResponse(result, target: GitHub.Zen)
@@ -70,7 +70,7 @@ final class NetworkLogginPluginSpec: QuickSpec {
         }
 
         it("outputs the formatted response data") {
-            let response = Response(statusCode: 200, data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!, response: NSURLResponse(URL: NSURL(string: url(GitHub.Zen))!, MIMEType: nil, expectedContentLength: 0, textEncodingName: nil))
+            let response = Response(statusCode: 200, data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!, response: NSURLResponse(URL: GitHub.Zen.fullURL, MIMEType: nil, expectedContentLength: 0, textEncodingName: nil))
             let result: Result<MoyaX.Response, MoyaX.Error> = .Success(response)
 
             pluginWithResponseDataFormatter.didReceiveResponse(result, target: GitHub.Zen)

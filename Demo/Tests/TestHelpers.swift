@@ -65,8 +65,8 @@ func setupOHHTTPStubsWithFailure(withDelay responseTime: Double = 0.5) {
     }
 }
 
-func url(route: TargetType) -> String {
-    return route.baseURL.URLByAppendingPathComponent(route.path).absoluteString
+func url(route: TargetType) -> NSURL {
+    return route.baseURL.URLByAppendingPathComponent(route.path)
 }
 
 enum HTTPBin: TargetType {

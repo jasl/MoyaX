@@ -29,14 +29,14 @@ class EndpointSpec: QuickSpec {
                 let parameters = ["Nemesis": "Harvey"]
                 let headerFields = ["Title": "Dominar"]
 
-                endpoint = Endpoint(URL: url(target), method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, httpHeaderFields: headerFields)
+                endpoint = Endpoint(URL: url(target), method: MoyaX.Method.GET, parameters: parameters, parameterEncoding: .JSON, headerFields: headerFields)
             }
 
             it("returns a correct URL request") {
                 let request = endpoint.mutableURLRequest
                 expect(request.URL!.absoluteString).to(equal("https://api.github.com/zen"))
                 expect(NSString(data: request.HTTPBody!, encoding: 4)).to(equal("{\"Nemesis\":\"Harvey\"}"))
-                let titleObject: AnyObject? = endpoint.httpHeaderFields?["Title"]
+                let titleObject: AnyObject? = endpoint.headerFields?["Title"]
                 let title = titleObject as? String
                 expect(title).to(equal("Dominar"))
             }

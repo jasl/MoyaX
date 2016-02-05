@@ -20,8 +20,8 @@ public final class NetworkLoggerPlugin: PluginType {
         self.responseDataFormatter = responseDataFormatter
     }
 
-    public func willSendRequest(request: RequestType, target: TargetType) {
-        outputItems(logNetworkRequest(request.request))
+    public func willSendRequest(request: NSMutableURLRequest, target: TargetType) {
+        outputItems(logNetworkRequest(request))
     }
 
     public func didReceiveResponse(result: Result<Response, Error>, target: TargetType) {

@@ -95,12 +95,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             }
 
             class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
-                init(endpointClosure: EndpointClosure = MoyaX.DefaultEndpointMapping,
-                     requestClosure: RequestClosure = MoyaX.DefaultRequestMapping,
-                     manager: Manager = Alamofire.Manager.sharedInstance,
+                init(manager: Manager = Alamofire.Manager.sharedInstance,
                      plugins: [PluginType] = []) {
 
-                        super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
+                        super.init(manager: manager, plugins: plugins)
                 }
 
                 override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -178,12 +176,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
 
                 class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
-                    init(endpointClosure: EndpointClosure = MoyaX.DefaultEndpointMapping,
-                         requestClosure: RequestClosure = MoyaX.DefaultRequestMapping,
-                         manager: Manager = Alamofire.Manager.sharedInstance,
+                    init(manager: Manager = Alamofire.Manager.sharedInstance,
                          plugins: [PluginType] = []) {
 
-                            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
+                            super.init(manager: manager, plugins: plugins)
                     }
 
                     override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {

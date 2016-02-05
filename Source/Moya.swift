@@ -65,15 +65,6 @@ public protocol Cancellable {
 
 // These functions are default mappings to MoyaProvider's properties: endpoints, requests, manager, etc.
 
-public func DefaultEndpointMapping<Target: TargetType>(target: Target) -> Endpoint {
-    let url = target.baseURL.URLByAppendingPathComponent(target.path).absoluteString
-    return Endpoint(URL: url, method: target.method, parameters: target.parameters)
-}
-
-public func DefaultRequestMapping(endpoint: Endpoint, closure: NSURLRequest -> Void) {
-    return closure(endpoint.urlRequest)
-}
-
 public func DefaultAlamofireManager() -> Manager {
     let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
     configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders

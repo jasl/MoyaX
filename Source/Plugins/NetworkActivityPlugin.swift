@@ -19,7 +19,7 @@ public final class NetworkActivityPlugin: PluginType {
     // MARK: Plugin
 
     /// Called by the provider as soon as the request is about to start
-    public func willSendRequest(request: RequestType, target: TargetType) {
+    public func willSendRequest(request: NSMutableURLRequest, target: TargetType) {
         networkActivityClosure(change: .Began)
     }
 

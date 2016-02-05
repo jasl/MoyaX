@@ -4,11 +4,9 @@ import RxSwift
 /// Subclass of MoyaXProvider that returns Observable instances when requests are made. Much better than using completion closures.
 public class RxMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Target> {
     /// Initializes a reactive provider.
-    override public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
-                         requestClosure: RequestClosure = DefaultRequestMapping,
-                         manager: Manager = DefaultAlamofireManager(),
+    override public init(manager: Manager = DefaultAlamofireManager(),
                          plugins: [PluginType] = []) {
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
+            super.init(manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.

@@ -6,15 +6,6 @@ public typealias Completion = (result: Result<Response, Error>) -> ()
 
 /// Request provider class. Requests should be made through this class only.
 public class MoyaXProvider<Target: TargetType> {
-
-    /// Closure that defines the endpoints for the provider.
-    public typealias EndpointClosure = Target -> Endpoint
-
-    /// Closure that resolves an Endpoint into an NSURLRequest.
-    public typealias RequestClosure = (Endpoint, NSURLRequest -> Void) -> Void
-
-    public let endpointClosure: EndpointClosure
-    public let requestClosure: RequestClosure
     public let manager: Manager
 
     /// A list of plugins
@@ -22,45 +13,30 @@ public class MoyaXProvider<Target: TargetType> {
     public let plugins: [PluginType]
 
     /// Initializes a provider.
-    public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
-                requestClosure: RequestClosure = DefaultRequestMapping,
-                manager: Manager = DefaultAlamofireManager(),
+    public init(manager: Manager = DefaultAlamofireManager(),
                 plugins: [PluginType] = []) {
-
-        self.endpointClosure = endpointClosure
-        self.requestClosure = requestClosure
         self.manager = manager
         self.plugins = plugins
     }
 
     /// Designated request-making method. Returns a Cancellable token to cancel the request later.
     public func request(target: Target, completion: Completion) -> Cancellable {
-        let endpoint = self.endpointClosure(target)
-        var cancellableToken = CancellableWrapper()
+        let endpoint = target.toEndpoint()
+        let request = endpoint.toMutableURLRequest().0
 
-        let performNetworking = { (request: NSURLRequest) in
-            if cancellableToken.isCancelled { return }
+        self.plugins.forEach { $0.willSendRequest(request, target: target) }
 
-            cancellableToken.innerCancellable = self.sendRequest(target, request: request, completion: completion)
-        }
-
-        requestClosure(endpoint, performNetworking)
-
-        return cancellableToken
+        return self.sendRequest(target, request: request, completion: completion)
     }
 
     func sendRequest(target: Target, request: NSURLRequest, completion: Completion) -> CancellableToken {
         let alamoRequest = manager.request(request)
-        let plugins = self.plugins
-
-        // Give plugins the chance to alter the outgoing request
-        plugins.forEach { $0.willSendRequest(alamoRequest, target: target) }
 
         // Perform the actual request
         alamoRequest.response { (_, response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> () in
             let result = convertResponseToResult(response, data: data, error: error)
             // Inform all plugins about the response
-            plugins.forEach { $0.didReceiveResponse(result, target: target) }
+            self.plugins.forEach { $0.didReceiveResponse(result, target: target) }
             completion(result: result)
         }
 

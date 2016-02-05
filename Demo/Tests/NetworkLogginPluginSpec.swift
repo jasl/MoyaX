@@ -2,9 +2,18 @@ import Quick
 import Nimble
 import MoyaX
 import Result
+import Foundation
 
 final class NetworkLogginPluginSpec: QuickSpec {
     override func spec() {
+        let testStreamRequest = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
+        testStreamRequest.allHTTPHeaderFields = ["Content-Type" : "application/json"]
+        testStreamRequest.HTTPBodyStream = NSInputStream(data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!)
+
+        let testBodyRequest = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
+        testBodyRequest.allHTTPHeaderFields = ["Content-Type" : "application/json"]
+        testBodyRequest.HTTPBody = "cool body".dataUsingEncoding(NSUTF8StringEncoding)
+
 
         var log = ""
         let plugin = NetworkLoggerPlugin(verbose: true, output: { printing in
@@ -29,7 +38,7 @@ final class NetworkLogginPluginSpec: QuickSpec {
 
         it("outputs all request fields with body") {
 
-            plugin.willSendRequest(TestBodyRequest(), target: GitHub.Zen)
+            plugin.willSendRequest(testBodyRequest, target: GitHub.Zen)
 
             expect(log).to( contain("Request:") )
             expect(log).to( contain("{ URL: https://api.github.com/zen }") )
@@ -40,20 +49,13 @@ final class NetworkLogginPluginSpec: QuickSpec {
 
         it("outputs all request fields with stream") {
 
-            plugin.willSendRequest(TestStreamRequest(), target: GitHub.Zen)
+            plugin.willSendRequest(testStreamRequest, target: GitHub.Zen)
 
             expect(log).to( contain("Request:") )
             expect(log).to( contain("{ URL: https://api.github.com/zen }") )
             expect(log).to( contain("Request Headers: [\"Content-Type\": \"application/json\"]") )
             expect(log).to( contain("HTTP Request Method: GET") )
             expect(log).to( contain("Request Body Stream:") )
-        }
-
-        it("will output invalid request when reguest is nil") {
-
-            plugin.willSendRequest(TestNilRequest(), target: GitHub.Zen)
-
-            expect(log).to( contain("Request: (invalid request)") )
         }
 
         it("outputs the reponse data") {
@@ -86,55 +88,5 @@ final class NetworkLogginPluginSpec: QuickSpec {
 
             expect(log).to( contain("Response: Received empty network response for Zen.") )
         }
-    }
-}
-
-private class TestStreamRequest: RequestType {
-    var request: NSURLRequest? {
-        let r = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
-        r.allHTTPHeaderFields = ["Content-Type" : "application/json"]
-        r.HTTPBodyStream = NSInputStream(data: "cool body".dataUsingEncoding(NSUTF8StringEncoding)!)
-
-        return r
-    }
-
-    func authenticate(user user: String, password: String, persistence: NSURLCredentialPersistence) -> Self {
-        return self
-    }
-
-    func authenticate(usingCredential credential: NSURLCredential) -> Self {
-        return self
-    }
-}
-
-private class TestBodyRequest: RequestType {
-    var request: NSURLRequest? {
-        let r = NSMutableURLRequest(URL: NSURL(string: url(GitHub.Zen))!)
-        r.allHTTPHeaderFields = ["Content-Type" : "application/json"]
-        r.HTTPBody = "cool body".dataUsingEncoding(NSUTF8StringEncoding)
-
-        return r
-    }
-
-    func authenticate(user user: String, password: String, persistence: NSURLCredentialPersistence) -> Self {
-        return self
-    }
-
-    func authenticate(usingCredential credential: NSURLCredential) -> Self {
-        return self
-    }
-}
-
-private class TestNilRequest: RequestType {
-    var request: NSURLRequest? {
-        return nil
-    }
-
-    func authenticate(user user: String, password: String, persistence: NSURLCredentialPersistence) -> Self {
-        return self
-    }
-
-    func authenticate(usingCredential credential: NSURLCredential) -> Self {
-        return self
     }
 }

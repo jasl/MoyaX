@@ -95,49 +95,6 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                     }
                 }
 
-                describe("a provider with credential plugin") {
-                    it("credential closure returns nil") {
-                        var called = false
-                        let plugin = CredentialsPlugin { _ in
-                            called = true
-                            return nil
-                        }
-
-                        let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
-                        expect(provider.plugins.count).to(equal(1))
-
-                        waitUntil { done in
-                            provider.request(.BasicAuth) { _ in done() }
-                        }
-
-                        expect(called) == true
-                    }
-
-                    it("credential closure returns valid username and password") {
-                        var called = false
-                        var returnedData: NSData?
-                        let plugin = CredentialsPlugin { _ in
-                            called = true
-                            return NSURLCredential(user: "user", password: "passwd", persistence: .None)
-                        }
-
-                        let provider  = MoyaXProvider<HTTPBin>(plugins: [plugin])
-                        let target = HTTPBin.BasicAuth
-
-                        waitUntil { done in
-                            provider.request(target) { result in
-                                if case let .Success(response) = result {
-                                    returnedData = response.data
-                                }
-                                done()
-                            }
-                        }
-
-                        expect(called) == true
-                        expect(returnedData) == "{\"authenticated\": true, \"user\": \"user\"}".dataUsingEncoding(NSUTF8StringEncoding)
-                    }
-                }
-
                 describe("a provider with network activity plugin") {
                     it("notifies at the beginning of network requests") {
                         var called = false

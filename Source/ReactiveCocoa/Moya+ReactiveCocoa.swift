@@ -5,11 +5,9 @@ import ReactiveCocoa
 public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXProvider<Target> {
 
     /// Initializes a reactive provider.
-    public init(endpointClosure: EndpointClosure = DefaultEndpointMapping,
-                requestClosure: RequestClosure = DefaultRequestMapping,
-                manager: Manager = DefaultAlamofireManager(),
+    public init(manager: Manager = DefaultAlamofireManager(),
                 plugins: [PluginType] = []) {
-            super.init(endpointClosure: endpointClosure, requestClosure: requestClosure, manager: manager, plugins: plugins)
+            super.init(manager: manager, plugins: plugins)
     }
 
     /// Designated request-making method.

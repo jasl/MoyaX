@@ -3,9 +3,6 @@ import Alamofire
 
 public typealias Manager = Alamofire.Manager
 
-/// Make the Alamofire Request type conform to our type, to prevent leaking Alamofire to plugins.
-extension Request: RequestType { }
-
 /// Internal token that can be used to cancel requests
 internal final class CancellableToken: Cancellable , CustomDebugStringConvertible {
     let cancelAction: () -> Void

@@ -23,15 +23,15 @@ extension Request: AlamofireRequestType {}
 internal final class CancellableToken: Cancellable , CustomDebugStringConvertible {
     let cancelAction: () -> Void
     let request : Request?
-    private(set) var canceled: Bool = false
+    private(set) var isCanceled: Bool = false
 
     private var lock: OSSpinLock = OS_SPINLOCK_INIT
 
     func cancel() {
         OSSpinLockLock(&lock)
         defer { OSSpinLockUnlock(&lock) }
-        guard !canceled else { return }
-        canceled = true
+        guard !isCanceled else { return }
+        isCanceled = true
         cancelAction()
     }
 

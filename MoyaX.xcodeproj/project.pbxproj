@@ -130,7 +130,8 @@
 		0676A6961BFE80D3001C7F55 /* Observable+Moya.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E51BFE80D3001C7F55 /* Observable+Moya.swift */; };
 		0676A6991BFE80D3001C7F55 /* Observable+Moya.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E51BFE80D3001C7F55 /* Observable+Moya.swift */; };
 		231DF371347002382DFA6C4D /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF90015D0760FF10F8672 /* Provider.swift */; };
-		31A9D01F31376ACD47D0490F /* AlamofireBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9D39AC07928150B63263D /* AlamofireBackend.swift */; };
+		31A9D5F2519B3CB583905D34 /* StubBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9D7497DB1D0B8C3B77D81 /* StubBackend.swift */; };
+		31A9DEC310FF844D7ED8FEC9 /* AlamofireBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9D75A219887A1F27166E1 /* AlamofireBackend.swift */; };
 		554B100F1BE7EEA500F3D266 /* MoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3021BE1C60200AD4789 /* MoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		554B10101BE7EEAD00F3D266 /* ReactiveMoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3031BE1C60200AD4789 /* ReactiveMoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		554B10111BE7EEB000F3D266 /* RxMoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3041BE1C60200AD4789 /* RxMoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -172,7 +173,8 @@
 		091F0D441BDE9A01009D0A49 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		091F0D831BDE9D4D009D0A49 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		231DF90015D0760FF10F8672 /* Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
-		31A9D39AC07928150B63263D /* AlamofireBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireBackend.swift; sourceTree = "<group>"; };
+		31A9D7497DB1D0B8C3B77D81 /* StubBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubBackend.swift; sourceTree = "<group>"; };
+		31A9D75A219887A1F27166E1 /* AlamofireBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlamofireBackend.swift; sourceTree = "<group>"; };
 		554B0FB91BE7ED4D00F3D266 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		554B0FC91BE7ED7C00F3D266 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		554B0FD31BE7ED8700F3D266 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -305,7 +307,7 @@
 				0676A5DD1BFE80D3001C7F55 /* ReactiveCocoa */,
 				0676A5E31BFE80D3001C7F55 /* RxSwift */,
 				231DF90015D0760FF10F8672 /* Provider.swift */,
-				31A9D39AC07928150B63263D /* AlamofireBackend.swift */,
+				31A9DC47B8BF156341CD2701 /* Backends */,
 			);
 			path = Source;
 			sourceTree = "<group>";
@@ -376,6 +378,15 @@
 				554B10391BE7F27C00F3D266 /* Alamofire.framework */,
 			);
 			name = "Dependency Frameworks";
+			sourceTree = "<group>";
+		};
+		31A9DC47B8BF156341CD2701 /* Backends */ = {
+			isa = PBXGroup;
+			children = (
+				31A9D75A219887A1F27166E1 /* AlamofireBackend.swift */,
+				31A9D7497DB1D0B8C3B77D81 /* StubBackend.swift */,
+			);
+			path = Backends;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1147,7 +1158,8 @@
 				0676A6161BFE80D3001C7F55 /* Plugin.swift in Sources */,
 				0676A60A1BFE80D3001C7F55 /* Moya.swift in Sources */,
 				231DF371347002382DFA6C4D /* Provider.swift in Sources */,
-				31A9D01F31376ACD47D0490F /* AlamofireBackend.swift in Sources */,
+				31A9DEC310FF844D7ED8FEC9 /* AlamofireBackend.swift in Sources */,
+				31A9D5F2519B3CB583905D34 /* StubBackend.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

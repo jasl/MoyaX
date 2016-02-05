@@ -46,13 +46,17 @@ public protocol TargetType {
     var method: Method { get }
     var parameters: [String: AnyObject]? { get }
 
+    var fullURL: NSURL { get }
     var endpoint: Endpoint { get }
 }
 
 public extension TargetType {
+    var fullURL: NSURL {
+        return self.baseURL.URLByAppendingPathComponent(self.path)
+    }
+
     var endpoint: Endpoint {
-        let url = self.baseURL.URLByAppendingPathComponent(self.path).absoluteString
-        return Endpoint(URL: url, method: self.method, parameters: self.parameters)
+        return Endpoint(URL: self.fullURL, method: self.method, parameters: self.parameters)
     }
 }
 

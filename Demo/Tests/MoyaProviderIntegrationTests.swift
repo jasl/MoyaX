@@ -30,9 +30,9 @@ class MoyaXProviderIntegrationTests: QuickSpec {
         describe("valid endpoints") {
             describe("with live data") {
                 describe("a provider") {
-                    var provider: MoyaXProvider<GitHub>!
+                    var provider: MoyaXGenericProvider<GitHub>!
                     beforeEach {
-                        provider = MoyaXProvider<GitHub>()
+                        provider = MoyaXGenericProvider<GitHub>()
                     }
 
                     it("returns real data for zen request") {
@@ -82,17 +82,6 @@ class MoyaXProviderIntegrationTests: QuickSpec {
 
                         expect(receivedError).toNot( beNil() )
                     }
-
-                    it("uses a custom Alamofire.Manager request generation") {
-                        let manager = StubManager()
-                        let provider = MoyaXProvider<GitHub>(manager: manager)
-
-                        waitUntil { done in
-                            provider.request(GitHub.Zen) { _ in done() }
-                        }
-
-                        expect(manager.called) == true
-                    }
                 }
 
                 describe("a provider with network activity plugin") {
@@ -104,7 +93,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             }
                         }
 
-                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXGenericProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
@@ -120,7 +109,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                             }
                         }
 
-                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXGenericProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(.Zen) { _ in done() }
                         }
@@ -145,7 +134,7 @@ class MoyaXProviderIntegrationTests: QuickSpec {
 
                     it("logs the request") {
 
-                        let provider = MoyaXProvider<GitHub>(plugins: [plugin])
+                        let provider = MoyaXGenericProvider<GitHub>(plugins: [plugin])
                         waitUntil { done in
                             provider.request(GitHub.Zen) { _ in done() }
                         }
@@ -235,14 +224,5 @@ class MoyaXProviderIntegrationTests: QuickSpec {
                 }
             }
         }
-    }
-}
-
-class StubManager: Manager {
-    var called = false
-
-    override func request(URLRequest: URLRequestConvertible) -> Request {
-        called = true
-        return super.request(URLRequest)
     }
 }

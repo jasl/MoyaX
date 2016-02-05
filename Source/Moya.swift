@@ -56,20 +56,11 @@ public extension TargetType {
     }
 }
 
+public protocol BackendType {
+    func request(request: NSURLRequest, completion: ((response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ())) -> Cancellable
+}
+
 /// Protocol to define the opaque type returned from a request
 public protocol Cancellable {
     func cancel()
-}
-
-/// Mark: Defaults
-
-// These functions are default mappings to MoyaProvider's properties: endpoints, requests, manager, etc.
-
-public func DefaultAlamofireManager() -> Manager {
-    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-    configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
-
-    let manager = Manager(configuration: configuration)
-    manager.startRequestsImmediately = false
-    return manager
 }

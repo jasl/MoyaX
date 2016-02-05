@@ -22,11 +22,11 @@ public class Endpoint {
         self.httpHeaderFields = httpHeaderFields
     }
 
-    public var urlRequest: NSURLRequest { return self.toMutableURLRequest().0 }
+    public var mutableURLRequest: NSMutableURLRequest { return self.convertToMutableURLRequest().0 }
 
     /// Copied from Alamofire ParameterEncoding.swift
 
-    public func toMutableURLRequest() -> (NSMutableURLRequest, NSError?) {
+    public func convertToMutableURLRequest() -> (NSMutableURLRequest, NSError?) {
         let request: NSMutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URL)!)
 
         var mutableURLRequest = NSMutableURLRequest(URL: NSURL(string: URL)!)

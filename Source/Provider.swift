@@ -22,8 +22,8 @@ public class MoyaXProvider {
 
     /// Designated request-making method. Returns a Cancellable token to cancel the request later.
     public func request(target: TargetType, completion: Completion) -> Cancellable {
-        let endpoint = target.toEndpoint()
-        let request = endpoint.toMutableURLRequest().0
+        let endpoint = target.endpoint
+        let request = endpoint.mutableURLRequest
 
         self.plugins.forEach { $0.willSendRequest(request, target: target) }
 

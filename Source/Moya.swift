@@ -46,11 +46,11 @@ public protocol TargetType {
     var method: Method { get }
     var parameters: [String: AnyObject]? { get }
 
-    func toEndpoint() -> Endpoint
+    var endpoint: Endpoint { get }
 }
 
 public extension TargetType {
-    func toEndpoint() -> Endpoint {
+    var endpoint: Endpoint {
         let url = self.baseURL.URLByAppendingPathComponent(self.path).absoluteString
         return Endpoint(URL: url, method: self.method, parameters: self.parameters)
     }

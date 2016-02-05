@@ -33,7 +33,7 @@ class EndpointSpec: QuickSpec {
             }
 
             it("returns a correct URL request") {
-                let request = endpoint.urlRequest
+                let request = endpoint.mutableURLRequest
                 expect(request.URL!.absoluteString).to(equal("https://api.github.com/zen"))
                 expect(NSString(data: request.HTTPBody!, encoding: 4)).to(equal("{\"Nemesis\":\"Harvey\"}"))
                 let titleObject: AnyObject? = endpoint.httpHeaderFields?["Title"]

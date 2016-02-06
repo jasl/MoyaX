@@ -1,7 +1,7 @@
 import Foundation
 
-/// Class for reifying a target of the Target enum unto a concrete Endpoint.
-public class Endpoint {
+/// Struct for reifying a target of the Target enum unto a concrete Endpoint.
+public struct Endpoint {
     public let URL: NSURL
     public let method: Method
 

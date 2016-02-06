@@ -69,7 +69,7 @@ public class StubBackend: BackendType {
         self.stubs = [:]
     }
 
-    public func removeStub(target: TargetType) {
+    public func removeStubTarget(target: TargetType) {
         let action = StubAction(URL: target.fullURL, method: target.method)
 
         self.stubs.removeValueForKey(action)
@@ -110,5 +110,15 @@ public class StubBackend: BackendType {
         case .NetworkError(let error):
             completion(response: nil, data: nil, error: error)
         }
+    }
+}
+
+public class GenericStubBackend<Target: TargetType>: StubBackend {
+    public func stub(target: Target, response: StubResponse, behavior: StubBehavior = .Immediate) {
+        self.stubTarget(target, response: response, behavior: behavior)
+    }
+
+    public func removeStub(target: Target) {
+        self.removeStubTarget(target)
     }
 }

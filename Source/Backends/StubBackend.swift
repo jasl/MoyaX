@@ -53,14 +53,18 @@ internal final class StubCancellableToken: Cancellable {
 
 public class StubBackend: BackendType {
     private var stubs: [StubAction: StubRule]
+    public let defaultBehavior: StubBehavior
 
-    public init() {
+    public init(behavior: StubBehavior = .Immediate) {
         self.stubs = [:]
+        self.defaultBehavior = behavior
     }
 
-    public func stubTarget(target: TargetType, response: StubResponse, behavior: StubBehavior = .Immediate) {
+    public func stubTarget(target: TargetType, response: StubResponse, behavior: StubBehavior?) {
+        let stubBehavior = behavior ?? self.defaultBehavior
+
         let action = StubAction(URL: target.fullURL, method: target.method)
-        let rule = StubRule(URL: target.fullURL, behavior: behavior, response: response)
+        let rule = StubRule(URL: target.fullURL, behavior: stubBehavior, response: response)
 
         self.stubs[action] = rule
     }
@@ -114,7 +118,11 @@ public class StubBackend: BackendType {
 }
 
 public class GenericStubBackend<Target: TargetType>: StubBackend {
-    public func stub(target: Target, response: StubResponse, behavior: StubBehavior = .Immediate) {
+    public override init(behavior: StubBehavior = .Immediate) {
+        super.init(behavior: behavior)
+    }
+
+    public func stub(target: Target, response: StubResponse, behavior: StubBehavior?) {
         self.stubTarget(target, response: response, behavior: behavior)
     }
 

@@ -14,15 +14,33 @@ public enum StubResponse {
 }
 
 public struct StubRule {
-    let endpoint: Endpoint
+    let URL: NSURL
     let behavior: StubBehavior
     let response: StubResponse
 
-    public init(endpoint: Endpoint, behavior: StubBehavior, response: StubResponse) {
-        self.endpoint = endpoint
+    public init(URL: NSURL, behavior: StubBehavior, response: StubResponse) {
+        self.URL = URL
         self.behavior = behavior
         self.response = response
     }
+}
+
+public struct StubAction: Equatable, Hashable {
+    let URL: NSURL
+    let method: Method
+
+    public init(URL: NSURL, method: Method) {
+        self.URL = URL
+        self.method = method
+    }
+
+    public var hashValue: Int {
+        return "\(self.method.rawValue) \(String(self.URL))".hashValue
+    }
+}
+
+public func ==(lhs: StubAction, rhs: StubAction) -> Bool {
+    return lhs.hashValue == rhs.hashValue
 }
 
 internal final class StubCancellableToken: Cancellable {
@@ -34,24 +52,32 @@ internal final class StubCancellableToken: Cancellable {
 }
 
 public class StubBackend: BackendType {
-    private var stubs: [NSURL: StubRule]
+    private var stubs: [StubAction: StubRule]
 
     public init() {
         self.stubs = [:]
     }
 
-    public func stubTarget(target: TargetType, behavior: StubBehavior, response: StubResponse) {
-        let endpoint = target.endpoint
+    public func stubTarget(target: TargetType, response: StubResponse, behavior: StubBehavior = .Immediate) {
+        let action = StubAction(URL: target.fullURL, method: target.method)
+        let rule = StubRule(URL: target.fullURL, behavior: behavior, response: response)
 
-        self.stubs[endpoint.URL] = StubRule(endpoint: endpoint, behavior: behavior, response: response)
+        self.stubs[action] = rule
     }
 
     public func removeAllStubs() {
         self.stubs = [:]
     }
 
+    public func removeStub(target: TargetType) {
+        let action = StubAction(URL: target.fullURL, method: target.method)
+
+        self.stubs.removeValueForKey(action)
+    }
+
     public func request(request: NSURLRequest, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
-        guard let stubRule = self.stubs[request.URL!] else {
+        let action = StubAction(URL: request.URL!, method: Method(rawValue: request.HTTPMethod!)!)
+        guard let stubRule = self.stubs[action] else {
             fatalError("Request not stubbed yet.")
         }
 
@@ -79,7 +105,7 @@ public class StubBackend: BackendType {
 
         switch rule.response {
         case .NetworkResponse(let statusCode, let data):
-            let response = NSHTTPURLResponse(URL: rule.endpoint.URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
+            let response = NSHTTPURLResponse(URL: rule.URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
             completion(response: response, data: data, error: nil)
         case .NetworkError(let error):
             completion(response: nil, data: nil, error: error)

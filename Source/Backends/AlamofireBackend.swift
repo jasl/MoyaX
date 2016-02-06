@@ -1,24 +1,6 @@
 import Foundation
 import Alamofire
 
-public protocol AlamofireRequestType {
-
-    // Note:
-    //
-    // We use this protocol instead of the Alamofire request to avoid leaking that abstraction.
-
-    /// Retrieve an NSURLRequest represetation.
-    var request: NSURLRequest? { get }
-
-    /// Authenticates the request with a username and password.
-    func authenticate(user user: String, password: String, persistence: NSURLCredentialPersistence) -> Self
-
-    /// Authnenticates the request with a NSURLCredential instance.
-    func authenticate(usingCredential credential: NSURLCredential) -> Self
-}
-
-extension Request: AlamofireRequestType {}
-
 /// Internal token that can be used to cancel requests
 internal final class CancellableToken: Cancellable , CustomDebugStringConvertible {
     let cancelAction: () -> Void
@@ -66,9 +48,9 @@ public func DefaultAlamofireManager() -> Manager {
 
 public class AlamofireBackend: BackendType {
     let manager: Manager
-    let willSendRequest: (AlamofireRequestType -> Request)?
+    let willSendRequest: ((Request, TargetType) -> Request)?
 
-    public init(manager: Manager = DefaultAlamofireManager(), willSendRequest: (AlamofireRequestType -> Request)? = nil) {
+    public init(manager: Manager = DefaultAlamofireManager(), willSendRequest: ((Request, TargetType) -> Request)? = nil) {
         self.manager = manager
         self.willSendRequest = willSendRequest
     }
@@ -77,7 +59,7 @@ public class AlamofireBackend: BackendType {
         var alamoRequest = self.manager.request(request)
 
         if let willSendRequest = self.willSendRequest {
-            alamoRequest = willSendRequest(alamoRequest)
+            alamoRequest = willSendRequest(alamoRequest, target)
         }
 
         // Perform the actual request

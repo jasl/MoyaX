@@ -6,21 +6,21 @@ public struct Endpoint {
     public let method: Method
 
     public var parameterEncoding: ParameterEncoding
-    public var parameters: [String: AnyObject]?
-    public var headerFields: [String: String]?
+    public var parameters: [String: AnyObject]
+    public var headerFields: [String: String]
 
     /// Main initializer for Endpoint.
     public init(URL: NSURL,
                 method: Method = Method.GET,
-                parameters: [String: AnyObject]? = nil,
+                parameters: [String: AnyObject] = [:],
                 parameterEncoding: ParameterEncoding = .URL,
-                headerFields: [String: String]? = nil) {
+                headerFields: [String: String] = [:]) {
 
         self.URL = URL
         self.method = method
-        self.parameters = parameters ?? [:]
+        self.parameters = parameters
         self.parameterEncoding = parameterEncoding
-        self.headerFields = headerFields ?? [:]
+        self.headerFields = headerFields
     }
 
     public var mutableURLRequest: NSMutableURLRequest { return self.convertToMutableURLRequest().0 }
@@ -32,7 +32,7 @@ public struct Endpoint {
         mutableURLRequest.HTTPMethod = self.method.rawValue
         mutableURLRequest.allHTTPHeaderFields = self.headerFields
 
-        guard let parameters = self.parameters where !parameters.isEmpty else {
+        if self.parameters.isEmpty {
             return (mutableURLRequest, nil)
         }
 

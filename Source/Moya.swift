@@ -44,19 +44,33 @@ public protocol TargetType {
     var baseURL: NSURL { get }
     var path: String { get }
     var method: Method { get }
-    var parameters: [String: AnyObject]? { get }
+
+    var parameters: [String: AnyObject] { get }
+    var parameterEncoding: ParameterEncoding { get }
+    var headerFields: [String: String] { get }
 
     var fullURL: NSURL { get }
     var endpoint: Endpoint { get }
 }
 
 public extension TargetType {
+    // Default values
+    var parameters: [String: AnyObject] {
+        return [:]
+    }
+    var parameterEncoding: ParameterEncoding {
+        return .URL
+    }
+    var headerFields: [String: String] {
+        return [:]
+    }
+
     var fullURL: NSURL {
         return self.baseURL.URLByAppendingPathComponent(self.path)
     }
 
     var endpoint: Endpoint {
-        return Endpoint(URL: self.fullURL, method: self.method, parameters: self.parameters)
+        return Endpoint(URL: self.fullURL, method: self.method, parameters: self.parameters, parameterEncoding: self.parameterEncoding, headerFields: self.headerFields)
     }
 }
 

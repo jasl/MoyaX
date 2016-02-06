@@ -18,9 +18,9 @@ public struct Endpoint {
 
         self.URL = URL
         self.method = method
-        self.parameters = parameters
+        self.parameters = parameters ?? [:]
         self.parameterEncoding = parameterEncoding
-        self.headerFields = headerFields
+        self.headerFields = headerFields ?? [:]
     }
 
     public var mutableURLRequest: NSMutableURLRequest { return self.convertToMutableURLRequest().0 }

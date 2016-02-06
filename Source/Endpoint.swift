@@ -2,10 +2,11 @@ import Foundation
 
 /// Class for reifying a target of the Target enum unto a concrete Endpoint.
 public class Endpoint {
-    public var URL: NSURL
-    public var method: Method
-    public var parameters: [String: AnyObject]?
+    public let URL: NSURL
+    public let method: Method
+
     public var parameterEncoding: ParameterEncoding
+    public var parameters: [String: AnyObject]?
     public var headerFields: [String: String]?
 
     /// Main initializer for Endpoint.

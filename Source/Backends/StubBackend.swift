@@ -60,7 +60,7 @@ public class StubBackend: BackendType {
         self.defaultBehavior = behavior
     }
 
-    public func stubTarget(target: TargetType, response: StubResponse, behavior: StubBehavior?) {
+    public func stubTarget(target: TargetType, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
         let stubBehavior = behavior ?? self.defaultBehavior
 
         let action = StubAction(URL: target.fullURL, method: target.method)
@@ -122,8 +122,8 @@ public class GenericStubBackend<Target: TargetType>: StubBackend {
         super.init(behavior: behavior)
     }
 
-    public func stub(target: Target, response: StubResponse, behavior: StubBehavior?) {
-        self.stubTarget(target, response: response, behavior: behavior)
+    public func stub(target: Target, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
+        self.stubTarget(target, response: response, withBehavior: behavior)
     }
 
     public func removeStub(target: Target) {

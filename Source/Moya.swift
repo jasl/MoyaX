@@ -61,7 +61,7 @@ public extension TargetType {
 }
 
 public protocol BackendType {
-    func request(request: NSURLRequest, completion: ((response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ())) -> Cancellable
+    func request(request: NSURLRequest, target: TargetType, completion: ((response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ())) -> Cancellable
 }
 
 /// Protocol to define the opaque type returned from a request

@@ -73,7 +73,7 @@ public class AlamofireBackend: BackendType {
         self.willSendRequest = willSendRequest
     }
 
-    public func request(request: NSURLRequest, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
+    public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
         var alamoRequest = self.manager.request(request)
 
         if let willSendRequest = self.willSendRequest {

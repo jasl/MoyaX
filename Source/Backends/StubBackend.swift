@@ -1,5 +1,9 @@
 import Foundation
 
+public protocol TargetWithSampleType: TargetType {
+    var sampleResponse: StubResponse { get }
+}
+
 public enum StubBehavior {
     case Immediate
     case Delayed(NSTimeInterval)
@@ -79,37 +83,46 @@ public class StubBackend: BackendType {
         self.stubs.removeValueForKey(action)
     }
 
-    public func request(request: NSURLRequest, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
-        let action = StubAction(URL: request.URL!, method: Method(rawValue: request.HTTPMethod!)!)
-        guard let stubRule = self.stubs[action] else {
-            fatalError("Request not stubbed yet.")
+    public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
+        let action = StubAction(URL: target.fullURL, method: target.method)
+
+        var sampleResponse = (target as? TargetWithSampleType)?.sampleResponse
+        var behavior = self.defaultBehavior
+
+        if let stubRule = self.stubs[action] {
+            sampleResponse = stubRule.response
+            behavior = stubRule.behavior
+        }
+
+        guard let response = sampleResponse else {
+            fatalError("Target not stubbed yet.")
         }
 
         let cancellableToken = StubCancellableToken()
 
-        switch stubRule.behavior {
+        switch behavior {
         case .Immediate:
-            self.stubResponse(stubRule, cancellableToken: cancellableToken, completion: completion)
+            self.stubResponse(action.URL, response: response, cancellableToken: cancellableToken, completion: completion)
         case .Delayed(let delay):
             let killTimeOffset = Int64(CDouble(delay) * CDouble(NSEC_PER_SEC))
             let killTime = dispatch_time(DISPATCH_TIME_NOW, killTimeOffset)
             dispatch_after(killTime, dispatch_get_main_queue()) {
-                self.stubResponse(stubRule, cancellableToken: cancellableToken, completion: completion)
+                self.stubResponse(action.URL, response: response, cancellableToken: cancellableToken, completion: completion)
             }
         }
 
         return cancellableToken
     }
 
-    func stubResponse(rule: StubRule, cancellableToken: StubCancellableToken, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) {
+    func stubResponse(URL: NSURL, response: StubResponse, cancellableToken: StubCancellableToken, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) {
         if cancellableToken.isCancelled {
             completion(response: nil, data: nil, error: NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil))
             return
         }
 
-        switch rule.response {
+        switch response {
         case .NetworkResponse(let statusCode, let data):
-            let response = NSHTTPURLResponse(URL: rule.URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
+            let response = NSHTTPURLResponse(URL: URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
             completion(response: response, data: data, error: nil)
         case .NetworkError(let error):
             completion(response: nil, data: nil, error: error)

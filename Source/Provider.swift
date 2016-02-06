@@ -37,7 +37,7 @@ public class MoyaXProvider {
 
         self.plugins.forEach { $0.willSendRequest(request, target: target) }
 
-        return self.backend.request(request) { (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) in
+        return self.backend.request(request, target: target) { (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) in
             let result = convertResponseToResult(response, data: data, error: error)
 
             // Inform all plugins about the response

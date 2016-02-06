@@ -4,10 +4,14 @@ import Result
 /// Closure to be executed when a request has completed.
 public typealias Completion = (result: Result<Response, Error>) -> ()
 
-
 /// Request provider class. Requests should be made through this class only.
 public class MoyaXProvider {
+    /// Closure that defines the endpoints for the provider.
+    public typealias WillTransformToRequestClosure = Endpoint -> Endpoint
+
     public let backend: BackendType
+
+    public let willTransformToRequest: WillTransformToRequestClosure?
 
     /// A list of plugins
     /// e.g. for logging, network activity indicator or credentials
@@ -15,14 +19,20 @@ public class MoyaXProvider {
 
     /// Initializes a provider.
     public init(backend: BackendType = AlamofireBackend(),
-                plugins: [PluginType] = []) {
+                plugins: [PluginType] = [],
+                willTransformToRequest: WillTransformToRequestClosure? = nil) {
         self.backend = backend
         self.plugins = plugins
+        self.willTransformToRequest = willTransformToRequest
     }
 
     /// Designated request-making method. Returns a Cancellable token to cancel the request later.
     public func request(target: TargetType, completion: Completion) -> Cancellable {
-        let endpoint = target.endpoint
+        var endpoint: Endpoint = target.endpoint
+        if let willTransformToRequest = self.willTransformToRequest {
+            endpoint = willTransformToRequest(endpoint)
+        }
+
         let request = endpoint.mutableURLRequest
 
         self.plugins.forEach { $0.willSendRequest(request, target: target) }
@@ -40,8 +50,9 @@ public class MoyaXProvider {
 
 public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
     public override init(backend: BackendType = AlamofireBackend(),
-                         plugins: [PluginType] = []) {
-        super.init(backend: backend, plugins: plugins)
+                         plugins: [PluginType] = [],
+                         willTransformToRequest: WillTransformToRequestClosure? = nil) {
+        super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
     }
 
     public func request(target: Target, completion: Completion) -> Cancellable {

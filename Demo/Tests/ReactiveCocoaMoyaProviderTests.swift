@@ -96,9 +96,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
 
             class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
                 override init(backend: BackendType = AlamofireBackend(),
-                              plugins: [PluginType] = []) {
+                              plugins: [PluginType] = [],
+                              willTransformToRequest: WillTransformToRequestClosure? = nil) {
 
-                    super.init(backend: backend, plugins: plugins)
+                    super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
                 }
 
                 override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -177,9 +178,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
 
                 class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
                     override init(backend: BackendType = AlamofireBackend(),
-                                  plugins: [PluginType] = []) {
+                                  plugins: [PluginType] = [],
+                                  willTransformToRequest: WillTransformToRequestClosure? = nil) {
 
-                            super.init(backend: backend, plugins: plugins)
+                            super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
                     }
 
                     override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {

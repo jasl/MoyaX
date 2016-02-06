@@ -6,8 +6,9 @@ public class ReactiveCocoaMoyaXProvider<Target where Target: TargetType>: MoyaXG
 
     /// Initializes a reactive provider.
     public override init(backend: BackendType = AlamofireBackend(),
-                         plugins: [PluginType] = []) {
-        super.init(backend: backend, plugins: plugins)
+                         plugins: [PluginType] = [],
+                         willTransformToRequest: WillTransformToRequestClosure? = nil) {
+        super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
     }
 
     /// Designated request-making method.

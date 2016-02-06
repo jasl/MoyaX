@@ -5,8 +5,9 @@ import RxSwift
 public class RxMoyaXProvider<Target where Target: TargetType>: MoyaXGenericProvider<Target> {
     /// Initializes a reactive provider.
     override public init(backend: BackendType = AlamofireBackend(),
-                         plugins: [PluginType] = []) {
-        super.init(backend: backend, plugins: plugins)
+                         plugins: [PluginType] = [],
+                         willTransformToRequest: WillTransformToRequestClosure? = nil) {
+        super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
     }
 
     /// Designated request-making method.

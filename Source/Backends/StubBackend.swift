@@ -15,6 +15,9 @@ public enum StubResponse {
 
     /// The network failed to send the request, or failed to retrieve a response (eg a timeout).
     case NetworkError(NSError)
+
+    /// You usually don't need this, It's will raise a fetalError
+    case NoStubError
 }
 
 public struct StubRule {
@@ -23,7 +26,7 @@ public struct StubRule {
     let behavior: StubBehavior?
     let conditionalResponse: ConditionalResponseClosure
 
-    public init(URL: NSURL, response: StubResponse, behavior: StubBehavior? = nil) {
+    public init(URL: NSURL, behavior: StubBehavior? = nil, response: StubResponse) {
         self.URL = URL
         self.behavior = behavior
         self.conditionalResponse = { (_, _) in
@@ -31,7 +34,7 @@ public struct StubRule {
         }
     }
 
-    public init(URL: NSURL, conditionalResponse: ConditionalResponseClosure, behavior: StubBehavior? = nil) {
+    public init(URL: NSURL, behavior: StubBehavior? = nil, conditionalResponse: ConditionalResponseClosure) {
         self.URL = URL
         self.behavior = behavior
         self.conditionalResponse = conditionalResponse
@@ -66,11 +69,15 @@ internal final class StubCancellableToken: Cancellable {
 
 public class StubBackend: BackendType {
     private var stubs: [StubAction: StubRule]
-    public let defaultBehavior: StubBehavior
 
-    public init(behavior: StubBehavior = .Immediate) {
+    public let defaultBehavior: StubBehavior
+    public let defaultResponse: StubResponse
+
+    public init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
         self.stubs = [:]
-        self.defaultBehavior = behavior
+
+        self.defaultBehavior = defaultBehavior
+        self.defaultResponse = defaultResponse
     }
 
     public func stubTarget(target: TargetType, rule: StubRule) {
@@ -80,14 +87,14 @@ public class StubBackend: BackendType {
         self.stubs[action] = rule
     }
 
-    public func stubTarget(target: TargetType, conditionalResponse: StubRule.ConditionalResponseClosure, withBehavior behavior: StubBehavior? = nil) {
-        let rule = StubRule(URL: target.fullURL, conditionalResponse: conditionalResponse, behavior: behavior)
+    public func stubTarget(target: TargetType, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
+        let rule = StubRule(URL: target.fullURL, behavior: behavior, conditionalResponse: conditionalResponse)
 
         self.stubTarget(target, rule: rule)
     }
 
-    public func stubTarget(target: TargetType, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
-        let rule = StubRule(URL: target.fullURL, response: response, behavior: behavior)
+    public func stubTarget(target: TargetType, behavior: StubBehavior? = nil, response: StubResponse) {
+        let rule = StubRule(URL: target.fullURL, behavior: behavior, response: response)
 
         self.stubTarget(target, rule: rule)
     }
@@ -105,16 +112,12 @@ public class StubBackend: BackendType {
     public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
         let action = StubAction(URL: target.fullURL, method: target.method)
 
-        var sampleResponse = (target as? TargetWithSampleType)?.sampleResponse
+        var response = (target as? TargetWithSampleType)?.sampleResponse ?? self.defaultResponse
         var behavior = self.defaultBehavior
 
         if let stubRule = self.stubs[action] {
-            sampleResponse = stubRule.conditionalResponse(request: request, target: target)
+            response = stubRule.conditionalResponse(request: request, target: target)
             behavior = stubRule.behavior ?? behavior
-        }
-
-        guard let response = sampleResponse else {
-            fatalError("Target not stubbed yet.")
         }
 
         let cancellableToken = StubCancellableToken()
@@ -145,21 +148,23 @@ public class StubBackend: BackendType {
             completion(response: response, data: data, error: nil)
         case .NetworkError(let error):
             completion(response: nil, data: nil, error: error)
+        case .NoStubError:
+            fatalError("\(String(URL)) not stubbed yet.")
         }
     }
 }
 
 public class GenericStubBackend<Target: TargetType>: StubBackend {
-    public override init(behavior: StubBehavior = .Immediate) {
-        super.init(behavior: behavior)
+    public override init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
+        super.init(defaultBehavior: defaultBehavior, defaultResponse: defaultResponse)
     }
 
-    public func stub(target: Target, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
-        self.stubTarget(target, response: response, withBehavior: behavior)
+    public func stub(target: Target, behavior: StubBehavior? = nil, response: StubResponse) {
+        self.stubTarget(target, behavior: behavior, response: response)
     }
 
-    public func stub(target: Target, conditionalResponse: StubRule.ConditionalResponseClosure, withBehavior behavior: StubBehavior? = nil) {
-        self.stubTarget(target, conditionalResponse: conditionalResponse, withBehavior: behavior)
+    public func stub(target: Target, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
+        self.stubTarget(target, behavior: behavior, conditionalResponse: conditionalResponse)
     }
 
     public func removeStub(target: Target) {

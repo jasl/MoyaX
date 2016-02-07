@@ -7,17 +7,10 @@ import Alamofire
 class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
     override func spec() {
         var provider: ReactiveCocoaMoyaXProvider<GitHub>!
-
         beforeEach {
-            provider = ReactiveCocoaMoyaXProvider<GitHub>()
-
-            setupOHHTTPStubs(withDelay: 0)
+            let backend = StubBackend()
+            provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
         }
-
-        afterEach {
-            unloadOHHTTPStubs()
-        }
-
 
         describe("provider with RACSignal") {
 
@@ -30,7 +23,21 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     }
                 }
 
-                expect(called).toEventually(beTruthy())
+                expect(called).to(beTruthy())
+            }
+
+            it("returns stubbed data for zen request") {
+                var message: String?
+
+                let target: GitHub = .Zen
+                provider.request(target).subscribeNext { (object) -> Void in
+                    if let response = object as? MoyaX.Response {
+                        message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
+                    }
+                }
+
+                _ = target.sampleData as NSData
+                expect(message).toNot(beNil())
             }
 
             it("returns correct data for user profile request") {
@@ -43,16 +50,20 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     }
                 }
 
-                let sampleData = "{\"login\": \"ashfurrow\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!
+                let sampleData = target.sampleData as NSData
                 let sampleResponse = try! NSJSONSerialization.JSONObjectWithData(sampleData, options: []) as! NSDictionary
 
-                expect(receivedResponse).toEventually(equal(sampleResponse))
+                expect(receivedResponse) == sampleResponse
             }
         }
 
         describe("failing") {
+            var provider: ReactiveCocoaMoyaXProvider<GitHub>!
             beforeEach {
-                setupOHHTTPStubsWithFailure()
+                let backend = GenericStubBackend<GitHub>()
+                backend.stub(.Zen, response: .NetworkError(NSError(domain: "com.moya.error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Houston, we have a problem"])))
+
+                provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
             }
 
             it("returns the correct error message") {
@@ -81,7 +92,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     errored = true
                 }
 
-                expect(errored).toEventually(beTruthy())
+                expect(errored).to(beTruthy())
             }
         }
 
@@ -95,11 +106,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             }
 
             class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
-                override init(backend: BackendType = AlamofireBackend(),
-                              plugins: [PluginType] = [],
-                              willTransformToRequest: WillTransformToRequestClosure? = nil) {
+                init(backend: BackendType,
+                     plugins: [PluginType] = []) {
 
-                    super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
+                    super.init(backend: backend, plugins: plugins)
                 }
 
                 override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -111,9 +121,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
             beforeEach {
                 TestCancellable.cancelled = false
 
-                setupOHHTTPStubs(withDelay: 1)
-
-                provider = TestProvider<GitHub>()
+                provider = TestProvider<GitHub>(backend: StubBackend(defaultBehavior: .Delayed(1)))
             }
 
             it("cancels network request when subscription is cancelled") {
@@ -125,7 +133,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
                 disposable.dispose()
 
-                expect(TestCancellable.cancelled).toEventually(beTrue())
+                expect(TestCancellable.cancelled).to(beTrue())
             }
         }
 
@@ -138,7 +146,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     called = true
                 }
 
-                expect(called).toEventually(beTruthy())
+                expect(called).to(beTruthy())
             }
 
             it("returns stubbed data for zen request") {
@@ -149,8 +157,8 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
                 }
 
-                let sampleString = NSString(data: ("Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!), encoding: NSUTF8StringEncoding)
-                expect(message).toEventually(equal(sampleString))
+                let sampleString = NSString(data: (target.sampleData as NSData), encoding: NSUTF8StringEncoding)
+                expect(message).to(equal(sampleString))
             }
 
             it("returns correct data for user profile request") {
@@ -161,13 +169,13 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     receivedResponse = try! NSJSONSerialization.JSONObjectWithData(response.data, options: []) as? NSDictionary
                 }
 
-                let sampleData = "{\"login\": \"ashfurrow\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!
+                let sampleData = target.sampleData as NSData
                 let sampleResponse: NSDictionary = try! NSJSONSerialization.JSONObjectWithData(sampleData, options: []) as! NSDictionary
-                expect(receivedResponse).toEventuallyNot(beNil())
-                expect(receivedResponse).toEventually(equal(sampleResponse))
+                expect(receivedResponse).toNot(beNil())
+                expect(receivedResponse) == sampleResponse
             }
 
-            describe("a subsclassed reactive provider that tracks cancellation") {
+            describe("a subsclassed reactive provider that tracks cancellation with delayed stubs") {
                 struct TestCancellable: Cancellable {
                     static var cancelled = false
 
@@ -177,11 +185,10 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
 
                 class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
-                    override init(backend: BackendType = AlamofireBackend(),
-                                  plugins: [PluginType] = [],
-                                  willTransformToRequest: WillTransformToRequestClosure? = nil) {
+                    init(backend: BackendType,
+                         plugins: [PluginType] = []) {
 
-                            super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
+                        super.init(backend: backend, plugins: plugins)
                     }
 
                     override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
@@ -193,9 +200,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 beforeEach {
                     TestCancellable.cancelled = false
 
-                    provider = TestProvider<GitHub>()
-
-                    setupOHHTTPStubs(withDelay: 3)
+                    provider = TestProvider<GitHub>(backend: StubBackend(defaultBehavior: .Delayed(1)))
                 }
 
                 it("cancels network request when subscription is cancelled") {

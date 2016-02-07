@@ -268,7 +268,6 @@ class SignalProducerMoyaXSpec: QuickSpec {
                 }
 
                 expect(receivedError).toNot(beNil())
-
                 let expectedError = Error.StringMapping(Response(statusCode: 200, data: NSData(), response: nil))
                 expect(receivedError).to(beOfSameErrorType(expectedError))
             }

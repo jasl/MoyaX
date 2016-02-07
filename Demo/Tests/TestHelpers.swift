@@ -1,6 +1,5 @@
 import MoyaX
 import Foundation
-import OHHTTPStubs
 
 extension String {
     var URLEscapedString: String {
@@ -13,7 +12,7 @@ enum GitHub {
     case UserProfile(String)
 }
 
-extension GitHub: TargetType {
+extension GitHub: TargetWithSampleType {
     var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
     var path: String {
         switch self {
@@ -29,47 +28,20 @@ extension GitHub: TargetType {
     var parameters: [String: AnyObject]? {
         return nil
     }
-}
-
-func setupOHHTTPStubs(withDelay responseTime: Double = 0.5) {
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/zen"}) { _ in
-        return OHHTTPStubsResponse(data: "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 200, headers: nil).responseTime(responseTime)
+    var sampleData: NSData {
+        switch self {
+        case .Zen:
+            return "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!
+        case .UserProfile(let name):
+            return "{\"login\": \"\(name)\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!
+        }
     }
-
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/users/ashfurrow"}) { _ in
-        return OHHTTPStubsResponse(data: "{\"login\": \"ashfurrow\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 200, headers: nil).responseTime(responseTime)
-    }
-
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/basic-auth/user/passwd"}) { _ in
-        return OHHTTPStubsResponse(data: "{\"authenticated\": true, \"user\": \"user\"}".dataUsingEncoding(NSUTF8StringEncoding)!, statusCode: 200, headers: nil).responseTime(responseTime)
+    var sampleResponse: StubResponse {
+        return .NetworkResponse(200, self.sampleData)
     }
 }
 
-func unloadOHHTTPStubs() {
-    OHHTTPStubs.removeAllStubs()
-}
-
-func setupOHHTTPStubsWithFailure(withDelay responseTime: Double = 0.5) {
-    let error = NSError(domain: "com.moya.error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Houston, we have a problem"])
-
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/zen"}) { _ in
-        return OHHTTPStubsResponse(error: error).responseTime(responseTime)
-    }
-
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/users/ashfurrow"}) { _ in
-        return OHHTTPStubsResponse(error: error).responseTime(responseTime)
-    }
-
-    OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/basic-auth/user/passwd"}) { _ in
-        return OHHTTPStubsResponse(error: error).responseTime(responseTime)
-    }
-}
-
-func url(route: TargetType) -> NSURL {
-    return route.baseURL.URLByAppendingPathComponent(route.path)
-}
-
-enum HTTPBin: TargetType {
+enum HTTPBin: TargetWithSampleType {
     case BasicAuth
 
     var baseURL: NSURL { return NSURL(string: "http://httpbin.org")! }
@@ -88,5 +60,14 @@ enum HTTPBin: TargetType {
         default:
             return [:]
         }
+    }
+    var sampleData: NSData {
+        switch self {
+        case .BasicAuth:
+            return "{\"authenticated\": true, \"user\": \"user\"}".dataUsingEncoding(NSUTF8StringEncoding)!
+        }
+    }
+    var sampleResponse: StubResponse {
+        return .NetworkResponse(200, self.sampleData)
     }
 }

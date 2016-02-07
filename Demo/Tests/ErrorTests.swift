@@ -5,7 +5,6 @@ import MoyaX
 
 class ErrorTests: QuickSpec {
     override func spec() {
-
         var response: Response!
 
         beforeEach {
@@ -70,7 +69,6 @@ class ErrorTests: QuickSpec {
         }
 
         describe("response computed variable") {
-
             it("should handle ImageMapping error") {
                 let error = Error.ImageMapping(response)
 

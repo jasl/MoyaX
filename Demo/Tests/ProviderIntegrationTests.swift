@@ -1,6 +1,7 @@
 import Quick
 import MoyaX
 import Nimble
+import OHHTTPStubs
 import Alamofire
 
 func beIndenticalToResponse(expectedValue: MoyaX.Response) -> MatcherFunc<MoyaX.Response> {
@@ -14,17 +15,28 @@ func beIndenticalToResponse(expectedValue: MoyaX.Response) -> MatcherFunc<MoyaX.
     }
 }
 
-class MoyaXProviderIntegrationTests: QuickSpec {
+class ProviderIntegrationTests: QuickSpec {
     override func spec() {
-        let userMessage = NSString(data: "{\"login\": \"ashfurrow\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!, encoding: NSUTF8StringEncoding)
-        let zenMessage = NSString(data: "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!, encoding: NSUTF8StringEncoding)
+        let userMessage = NSString(data: GitHub.UserProfile("ashfurrow").sampleData, encoding: NSUTF8StringEncoding)
+        let zenMessage = NSString(data: GitHub.Zen.sampleData, encoding: NSUTF8StringEncoding)
 
         beforeEach {
-            setupOHHTTPStubs()
+            OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/zen"}) { _ in
+                return OHHTTPStubsResponse(data: GitHub.Zen.sampleData, statusCode: 200, headers: nil).responseTime(0.5)
+            }
+
+            OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/users/ashfurrow"}) { _ in
+                return OHHTTPStubsResponse(data: GitHub.UserProfile("ashfurrow").sampleData, statusCode: 200, headers: nil).responseTime(0.5)
+            }
+
+            OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/basic-auth/user/passwd"}) { _ in
+                return OHHTTPStubsResponse(data: HTTPBin.BasicAuth.sampleData, statusCode: 200, headers: nil)
+            }
+
         }
 
         afterEach {
-            unloadOHHTTPStubs()
+            OHHTTPStubs.removeAllStubs()
         }
 
         describe("valid endpoints") {

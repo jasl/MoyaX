@@ -14,7 +14,6 @@ final class NetworkLogginPluginSpec: QuickSpec {
         testBodyRequest.allHTTPHeaderFields = ["Content-Type" : "application/json"]
         testBodyRequest.HTTPBody = "cool body".dataUsingEncoding(NSUTF8StringEncoding)
 
-
         var log = ""
         let plugin = NetworkLoggerPlugin(verbose: true, output: { printing in
             //mapping the Any... from items to a string that can be compared

@@ -12,13 +12,7 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
             var provider: RxMoyaXProvider<GitHub>!
 
             beforeEach {
-                provider = RxMoyaXProvider()
-
-                setupOHHTTPStubs()
-            }
-
-            afterEach {
-                unloadOHHTTPStubs()
+                provider = RxMoyaXProvider(backend: StubBackend())
             }
 
             it("returns a Response object") {
@@ -28,7 +22,19 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     called = true
                 }
 
-                expect(called).toEventually(beTruthy())
+                expect(called).to(beTruthy())
+            }
+
+            it("returns stubbed data for zen request") {
+                var message: String?
+
+                let target: GitHub = .Zen
+                _ = provider.request(target).subscribeNext { (response) -> Void in
+                    message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
+                }
+
+                let sampleString = NSString(data: (target.sampleData as NSData), encoding: NSUTF8StringEncoding)
+                expect(message).to(equal(sampleString))
             }
 
             it("returns correct data for user profile request") {
@@ -39,16 +45,17 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     receivedResponse = try! NSJSONSerialization.JSONObjectWithData(response.data, options: []) as? NSDictionary
                 }
 
-                expect(receivedResponse).toEventuallyNot(beNil())
+                expect(receivedResponse).toNot(beNil())
             }
         }
 
         describe("failing") {
             var provider: RxMoyaXProvider<GitHub>!
             beforeEach {
-                provider = RxMoyaXProvider<GitHub>()
+                let backend = GenericStubBackend<GitHub>()
+                backend.stub(.Zen, response: .NetworkError(NSError(domain: "com.moya.error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Houston, we have a problem"])))
 
-                setupOHHTTPStubsWithFailure()
+                provider = RxMoyaXProvider<GitHub>(backend: backend)
             }
 
             it("returns the correct error message") {
@@ -77,7 +84,7 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
                     errored = true
                 }
 
-                expect(errored).toEventually(beTruthy())
+                expect(errored).to(beTruthy())
             }
         }
     }

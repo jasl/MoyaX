@@ -18,14 +18,23 @@ public enum StubResponse {
 }
 
 public struct StubRule {
+    public typealias ConditionalResponseClosure = (request: NSURLRequest, target: TargetType) -> StubResponse
     let URL: NSURL
     let behavior: StubBehavior
-    let response: StubResponse
+    let conditionalResponse: ConditionalResponseClosure
 
     public init(URL: NSURL, behavior: StubBehavior, response: StubResponse) {
         self.URL = URL
         self.behavior = behavior
-        self.response = response
+        self.conditionalResponse = { (_, _) in
+            return response
+        }
+    }
+
+    public init(URL: NSURL, behavior: StubBehavior, conditionalResponse: ConditionalResponseClosure) {
+        self.URL = URL
+        self.behavior = behavior
+        self.conditionalResponse = conditionalResponse
     }
 }
 
@@ -90,7 +99,7 @@ public class StubBackend: BackendType {
         var behavior = self.defaultBehavior
 
         if let stubRule = self.stubs[action] {
-            sampleResponse = stubRule.response
+            sampleResponse = stubRule.conditionalResponse(request: request, target: target)
             behavior = stubRule.behavior
         }
 

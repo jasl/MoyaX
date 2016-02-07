@@ -20,10 +20,10 @@ public enum StubResponse {
 public struct StubRule {
     public typealias ConditionalResponseClosure = (request: NSURLRequest, target: TargetType) -> StubResponse
     let URL: NSURL
-    let behavior: StubBehavior
+    let behavior: StubBehavior?
     let conditionalResponse: ConditionalResponseClosure
 
-    public init(URL: NSURL, behavior: StubBehavior, response: StubResponse) {
+    public init(URL: NSURL, response: StubResponse, behavior: StubBehavior? = nil) {
         self.URL = URL
         self.behavior = behavior
         self.conditionalResponse = { (_, _) in
@@ -31,7 +31,7 @@ public struct StubRule {
         }
     }
 
-    public init(URL: NSURL, behavior: StubBehavior, conditionalResponse: ConditionalResponseClosure) {
+    public init(URL: NSURL, conditionalResponse: ConditionalResponseClosure, behavior: StubBehavior? = nil) {
         self.URL = URL
         self.behavior = behavior
         self.conditionalResponse = conditionalResponse
@@ -73,13 +73,23 @@ public class StubBackend: BackendType {
         self.defaultBehavior = behavior
     }
 
-    public func stubTarget(target: TargetType, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
-        let stubBehavior = behavior ?? self.defaultBehavior
-
+    public func stubTarget(target: TargetType, rule: StubRule) {
         let action = StubAction(URL: target.fullURL, method: target.method)
-        let rule = StubRule(URL: target.fullURL, behavior: stubBehavior, response: response)
+        let rule = rule
 
         self.stubs[action] = rule
+    }
+
+    public func stubTarget(target: TargetType, conditionalResponse: StubRule.ConditionalResponseClosure, withBehavior behavior: StubBehavior? = nil) {
+        let rule = StubRule(URL: target.fullURL, conditionalResponse: conditionalResponse, behavior: behavior)
+
+        self.stubTarget(target, rule: rule)
+    }
+
+    public func stubTarget(target: TargetType, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
+        let rule = StubRule(URL: target.fullURL, response: response, behavior: behavior)
+
+        self.stubTarget(target, rule: rule)
     }
 
     public func removeAllStubs() {
@@ -100,7 +110,7 @@ public class StubBackend: BackendType {
 
         if let stubRule = self.stubs[action] {
             sampleResponse = stubRule.conditionalResponse(request: request, target: target)
-            behavior = stubRule.behavior
+            behavior = stubRule.behavior ?? behavior
         }
 
         guard let response = sampleResponse else {
@@ -146,6 +156,10 @@ public class GenericStubBackend<Target: TargetType>: StubBackend {
 
     public func stub(target: Target, response: StubResponse, withBehavior behavior: StubBehavior? = nil) {
         self.stubTarget(target, response: response, withBehavior: behavior)
+    }
+
+    public func stub(target: Target, conditionalResponse: StubRule.ConditionalResponseClosure, withBehavior behavior: StubBehavior? = nil) {
+        self.stubTarget(target, conditionalResponse: conditionalResponse, withBehavior: behavior)
     }
 
     public func removeStub(target: Target) {

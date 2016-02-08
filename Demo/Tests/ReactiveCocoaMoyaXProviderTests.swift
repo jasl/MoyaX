@@ -197,6 +197,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
 
                 var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+
                 beforeEach {
                     TestCancellable.cancelled = false
 
@@ -213,6 +214,35 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     disposable.dispose()
 
                     expect(TestCancellable.cancelled).to( beTrue() )
+                }
+            }
+
+            describe("provider with a TestScheduler") {
+                var testScheduler: TestScheduler! = nil
+                var response: MoyaX.Response? = nil
+
+                beforeEach {
+                    testScheduler = TestScheduler()
+
+                    let backend = ReactiveCocoaGenericStubBackend<GitHub>(scheduler: testScheduler)
+                    provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
+
+                    provider.request(.Zen).startWithNext { next in
+                        response = next
+                    }
+                }
+
+                afterEach {
+                    response = nil
+                }
+
+                it("sends the stub when the test scheduler is advanced") {
+                    testScheduler.run()
+                    expect(response).toNot(beNil())
+                }
+
+                it("does not send the stub when the test scheduler is not advanced") {
+                    expect(response).to(beNil())
                 }
             }
         }

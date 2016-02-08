@@ -27,7 +27,7 @@ public class MoyaXProvider {
     }
 
     /// Designated request-making method. Returns a Cancellable token to cancel the request later.
-    public func request(target: TargetType, completion: Completion) -> Cancellable {
+    public func request(target: TargetType, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
         var endpoint: Endpoint = target.endpoint
         if let willTransformToRequest = self.willTransformToRequest {
             endpoint = willTransformToRequest(endpoint)
@@ -37,7 +37,9 @@ public class MoyaXProvider {
 
         self.plugins.forEach { $0.willSendRequest(request, target: target) }
 
-        return self.backend.request(request, target: target) { (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) in
+        let backend = backend ?? self.backend
+
+        return backend.request(request, target: target) { (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) in
             let result = convertResponseToResult(response, data: data, error: error)
 
             // Inform all plugins about the response
@@ -55,12 +57,12 @@ public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
         super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
     }
 
-    public func request(target: Target, completion: Completion) -> Cancellable {
-        return super.request(target, completion: completion)
+    public func request(target: Target, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
+        return super.request(target, withCustomBackend: backend, completion: completion)
     }
 }
 
-internal func convertResponseToResult(response: NSHTTPURLResponse?, data: NSData?, error: NSError?) ->
+func convertResponseToResult(response: NSHTTPURLResponse?, data: NSData?, error: NSError?) ->
         Result<Response, Error> {
     switch (response, data, error) {
     case let (.Some(response), .Some(data), .None):

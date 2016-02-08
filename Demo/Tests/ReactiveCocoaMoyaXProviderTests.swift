@@ -112,7 +112,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     super.init(backend: backend, plugins: plugins)
                 }
 
-                override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
+                override func request(token: Target, withCustomBackend backend: BackendType? = nil, completion: MoyaX.Completion) -> Cancellable {
                     return TestCancellable()
                 }
             }
@@ -191,7 +191,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                         super.init(backend: backend, plugins: plugins)
                     }
 
-                    override func request(token: Target, completion: MoyaX.Completion) -> Cancellable {
+                    override func request(token: Target, withCustomBackend backend: BackendType? = nil, completion: MoyaX.Completion) -> Cancellable {
                         return TestCancellable()
                     }
                 }

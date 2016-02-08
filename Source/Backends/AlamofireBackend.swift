@@ -44,7 +44,6 @@ public func DefaultAlamofireManager() -> Manager {
     configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
 
     let manager = Manager(configuration: configuration)
-    manager.startRequestsImmediately = false
     return manager
 }
 
@@ -53,6 +52,8 @@ public class AlamofireBackend: BackendType {
     let willSendRequest: ((Request, TargetType) -> Request)?
 
     public init(manager: Manager = DefaultAlamofireManager(), willSendRequest: ((Request, TargetType) -> Request)? = nil) {
+        manager.startRequestsImmediately = false
+
         self.manager = manager
         self.willSendRequest = willSendRequest
     }

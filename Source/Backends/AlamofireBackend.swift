@@ -2,18 +2,19 @@ import Foundation
 import Alamofire
 
 /// Internal token that can be used to cancel requests
-internal final class CancellableToken: Cancellable , CustomDebugStringConvertible {
+internal final class CancellableToken: Cancellable, CustomDebugStringConvertible {
     let cancelAction: () -> Void
     let request : Request?
-    private(set) var isCanceled: Bool = false
+    private(set) var isCancelled: Bool = false
 
     private var lock: OSSpinLock = OS_SPINLOCK_INIT
 
     func cancel() {
-        OSSpinLockLock(&lock)
-        defer { OSSpinLockUnlock(&lock) }
-        guard !isCanceled else { return }
-        isCanceled = true
+        OSSpinLockLock(&self.lock)
+        defer { OSSpinLockUnlock(&self.lock) }
+        if self.isCancelled { return }
+
+        self.isCancelled = true
         cancelAction()
     }
 
@@ -30,9 +31,10 @@ internal final class CancellableToken: Cancellable , CustomDebugStringConvertibl
     }
 
     var debugDescription: String {
-        guard let request = self.request else {
+        if self.request == nil {
             return "Empty Request"
         }
+
         return request.debugDescription
     }
 }

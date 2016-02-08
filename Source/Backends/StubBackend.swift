@@ -60,15 +60,31 @@ public func ==(lhs: StubAction, rhs: StubAction) -> Bool {
 }
 
 internal final class StubCancellableToken: Cancellable {
+    let cancelAction: () -> Void
     private(set) var isCancelled = false
 
+    private var lock: OSSpinLock = OS_SPINLOCK_INIT
+
+    init() {
+        self.cancelAction = {}
+    }
+
+    init(action: () -> Void){
+        self.cancelAction = action
+    }
+
     func cancel() {
+        OSSpinLockLock(&self.lock)
+        defer { OSSpinLockUnlock(&self.lock) }
+        if self.isCancelled { return }
+
         self.isCancelled = true
+        self.cancelAction()
     }
 }
 
 public class StubBackend: BackendType {
-    private var stubs: [StubAction: StubRule]
+    internal var stubs: [StubAction: StubRule]
 
     public let defaultBehavior: StubBehavior
     public let defaultResponse: StubResponse

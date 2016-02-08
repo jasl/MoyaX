@@ -1,5 +1,5 @@
 PODS:
-  - Alamofire (3.1.5)
+  - Alamofire (3.2.0)
   - MoyaX (0.0.1):
     - MoyaX/Core (= 0.0.1)
   - MoyaX/Core (0.0.1):
@@ -53,7 +53,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Alamofire: 5f730ba29fd113b7ddd71c1e65d0c630acf5d7b0
+  Alamofire: 4da478599fccddff361205c8929333d7fe18dceb
   MoyaX: 799b2f6006b79811ac3e5d4a49a7ad3d4200d449
   Nimble: 79d40f4d69d47314229bbabacaa02b8838c779b9
   OHHTTPStubs: d2bf6a0f407620d67e75a1d3f12d86a2b1dd15c0

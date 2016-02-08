@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MoyaX"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "Network abstraction layer written in Swift, it's a fork of Moya"
   s.description  = <<-EOS
   MoyaX abstracts network commands using Swift Generics to provide developers

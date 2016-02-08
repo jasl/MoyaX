@@ -35,7 +35,7 @@ public extension TargetType {
     }
 }
 
-public protocol BackendType {
+public protocol BackendType: class {
     func request(request: NSURLRequest, target: TargetType, completion: ((response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ())) -> Cancellable
 }
 

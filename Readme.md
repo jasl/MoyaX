@@ -7,6 +7,10 @@
 MoyaX - a fork of [Moya](https://github.com/Moya/Moya)
 ====
 
+[中文版本介绍](Readme_zh.md)
+
+**Note: MoyaX is under early developing, the readme is outdated and will be update when MoyaX is ready.**
+
 You're a smart developer. You probably use [Alamofire](https://github.com/Alamofire/Alamofire) to abstract away access to
 NSURLSession and all those nasty details you don't really care about. But then,
 like lots of smart developers, you write ad hoc network abstraction layers. They

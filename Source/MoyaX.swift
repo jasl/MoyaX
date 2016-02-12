@@ -4,8 +4,8 @@ import Foundation
 public protocol TargetType {
     var baseURL: NSURL { get }
     var path: String { get }
-    var method: Method { get }
 
+    var method: Method { get }
     var parameters: [String: AnyObject] { get }
     var parameterEncoding: ParameterEncoding { get }
     var headerFields: [String: String] { get }
@@ -16,6 +16,10 @@ public protocol TargetType {
 
 public extension TargetType {
     // Default values
+    var method: Method {
+        return .GET
+    }
+
     var parameters: [String: AnyObject] {
         return [:]
     }

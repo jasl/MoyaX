@@ -13,7 +13,7 @@ MoyaX 虽然已经和 Moya 有极大的不同，但我仍在跟随原始项目�
 
 ## 基本使用
 
-### 声明`Target`
+### 声明 API
 
 实现`TargetType`协议即可，其中包含了描述一个 API端点的必要信息，详情请见 [定义](https://github.com/jasl/MoyaX/blob/master/Source/MoyaX.swift#L4-L36)
 
@@ -166,7 +166,7 @@ var endpoint: Endpoint {
 
 #### ReactiveCocoa 和 RxSwift
 
-目前只实现了泛型版本的`Provider`，和 Moya 一样，对应的类为`ReactiveCocoaMoyaXProvider`和`RxMoyaXProvider`，使用方法同普通`Provider`
+目前只实现了泛型版本的`Provider`，和 Moya 一样，对应的类为`ReactiveCocoaMoyaXProvider`和`RxMoyaXProvider`，使用方法同`MoyaXGenericProvider`
 
 #### 构造函数的可选参数
 
@@ -187,13 +187,13 @@ var endpoint: Endpoint {
 ##### 构造函数的可选参数
 
 - `manager: Manager` 指定 Alamofire 的 Manager 实例
-- `willSendRequest: ((Request, TargetType) -> Request)?` 在请求发送前的预处理函数，完全暴露出了 Alamofire 的`Request`对象
+- `willSendRequest: (Request, TargetType) -> Request` 在请求发送前的预处理函数，完全暴露出了 Alamofire 的`Request`对象
 
 #### `StubBackend`
 
 ##### 传统 Moya 风格的`TargetType`
 
-如果需要 Moya 风格的 Mock，让 API 的声明实现 `TargetWithSampleType` 替代 `TargetType`，并且实现 `var sampleResponse: StubResponse { get }` 属性，当后端为`StubBackend`时，就可以使用 API 声明里的默认响应了。
+如果需要 Moya 风格的 Mock，让 API 的声明实现 `TargetWithSampleType` 替代 `TargetType`，并且实现 `var sampleResponse: StubResponse { get }` 属性，当后端为`StubBackend`时，就可以使用 API 声明里的默认响应了，`StubResponse`见 [定义](https://github.com/jasl/MoyaX/blob/master/Source/Backends/StubBackend.swift#L12-L21)。
 
 ##### 运行时 Stub Target
 
@@ -216,7 +216,7 @@ var endpoint: Endpoint {
 - 可以设置请求头（即`headerFields`字典）。
 - 不再包含`sampleData`，如果需要使用 `TargetWithSampleType`来声明`Targets`，并且`sampleData`被`sampleResponse`取代，其直接接受 [`StubResponse`](https://github.com/jasl/MoyaX/blob/master/Source/Backends/StubBackend.swift#L12-L21)。
 
-### Endpoint取消泛型，并成为结构体
+### `Endpoint`取消泛型，并成为结构体
 
 `Endpoint`的泛型并无意义，故取消。此外其用途是请求过程的中间数据，使用类开销大，也无需考虑线程问题，故改用结构体。
 
@@ -234,7 +234,7 @@ var endpoint: Endpoint {
 
 - 实现自己的后端很容易，实现`BackendType`协议即可
 - 可以增强后端的功能，没有抽象泄漏或者单一职责的负担
-- `Provider`可以复用
+- `Provider`可以全局复用
 
 #### `TargetType#endpoint`计算属性生成`Endpoint`
 

@@ -49,19 +49,19 @@ public func DefaultAlamofireManager() -> Manager {
 
 public class AlamofireBackend: BackendType {
     let manager: Manager
-    let willSendRequest: ((Request, TargetType) -> Request)?
+    let willPerformRequest: ((Request, TargetType) -> Request)?
 
-    public init(manager: Manager = DefaultAlamofireManager(), willSendRequest: ((Request, TargetType) -> Request)? = nil) {
+    public init(manager: Manager = DefaultAlamofireManager(), willPerformRequest: ((Request, TargetType) -> Request)? = nil) {
         manager.startRequestsImmediately = false
 
         self.manager = manager
-        self.willSendRequest = willSendRequest
+        self.willPerformRequest = willPerformRequest
     }
 
     public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
         var alamoRequest = self.manager.request(request)
 
-        if let willSendRequest = self.willSendRequest {
+        if let willSendRequest = self.willPerformRequest {
             alamoRequest = willSendRequest(alamoRequest, target)
         }
 

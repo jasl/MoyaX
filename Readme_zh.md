@@ -13,7 +13,7 @@ MoyaX 虽然已经和 Moya 有极大的不同，但我仍在跟随原始项目�
 
 ## 基本使用
 
-### 声明 API
+### 声明 API 端点
 
 实现`TargetType`协议即可，其中包含了描述一个 API端点的必要信息，详情请见 [定义](https://github.com/jasl/MoyaX/blob/master/Source/MoyaX.swift#L4-L36)
 
@@ -174,7 +174,7 @@ var endpoint: Endpoint {
 
 - `backend: Backend`：指定后端
 - `plugins: [PluginType]`：插件，自带日志和网络状态插件，[参见源码](https://github.com/jasl/MoyaX/tree/master/Source/Plugins)
-- `willTransformToRequest: Endpoint -> Endpoint` 用于公共的对`Endpoint`的修饰，例如附加 Token
+- `willTransformToRequest: Endpoint -> Endpoint` 钩子，用于公共的对`Endpoint`修饰，例如附加 Token
 
 #### `request`方法
 
@@ -187,7 +187,7 @@ var endpoint: Endpoint {
 ##### 构造函数的可选参数
 
 - `manager: Manager` 指定 Alamofire 的 Manager 实例
-- `willSendRequest: (Request, TargetType) -> Request` 在请求发送前的预处理函数，完全暴露出了 Alamofire 的`Request`对象
+- `willPerformRequest: (Request, TargetType) -> Request` 在请求发送前的钩子，完全暴露出了 Alamofire 的`Request`对象
 
 #### `StubBackend`
 

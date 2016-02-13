@@ -160,46 +160,6 @@ class ProviderIntegrationTests: QuickSpec {
                         expect(log).to( contain("\"Content-Length\" = 43;") )
                     }
                 }
-
-                describe("a reactive provider with RACSignal") {
-                    var provider: ReactiveCocoaMoyaXProvider<GitHub>!
-                    beforeEach {
-                        provider = ReactiveCocoaMoyaXProvider<GitHub>()
-                    }
-
-                    it("returns some data for zen request") {
-                        var message: String?
-
-                        waitUntil { done in
-                            provider.request(GitHub.Zen).subscribeNext { response in
-                                if let response = response as? MoyaX.Response {
-                                    message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
-                                }
-
-                                done()
-                            }
-                        }
-
-                        expect(message) == zenMessage
-                    }
-
-                    it("returns some data for user profile request") {
-                        var message: String?
-
-                        waitUntil { done in
-                            let target: GitHub = .UserProfile("ashfurrow")
-                            provider.request(target).subscribeNext { response in
-                                if let response = response as? MoyaX.Response {
-                                    message = NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String
-                                }
-
-                                done()
-                            }
-                        }
-
-                        expect(message) == userMessage
-                    }
-                }
             }
 
             describe("a reactive provider with SignalProducer") {

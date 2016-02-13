@@ -31,9 +31,4 @@ public class ReactiveCocoaMoyaXProvider<Target: TargetType>: MoyaXGenericProvide
             }
         }
     }
-
-    @available(*, deprecated, message="This will be removed when ReactiveCocoa 4 becomes final. Please visit https://github.com/Moya/Moya/issues/298 for more information.")
-    public func request(token: Target, withCustomBackend backend: BackendType? = nil) -> RACSignal {
-        return request(token, withCustomBackend: backend).toRACSignal()
-    }
 }

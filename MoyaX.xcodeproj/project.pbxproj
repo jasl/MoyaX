@@ -101,10 +101,6 @@
 		0676A64A1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DE1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift */; };
 		0676A64D1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DE1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift */; };
 		0676A6501BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DE1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift */; };
-		0676A6531BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */; };
-		0676A6561BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */; };
-		0676A6591BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */; };
-		0676A65C1BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */; };
 		0676A65F1BFE80D3001C7F55 /* SignalProducer+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E01BFE80D3001C7F55 /* SignalProducer+MoyaX.swift */; };
 		0676A6621BFE80D3001C7F55 /* SignalProducer+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E01BFE80D3001C7F55 /* SignalProducer+MoyaX.swift */; };
 		0676A6651BFE80D3001C7F55 /* SignalProducer+MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E01BFE80D3001C7F55 /* SignalProducer+MoyaX.swift */; };
@@ -166,7 +162,6 @@
 		0676A5DB1BFE80D3001C7F55 /* NetworkActivityPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkActivityPlugin.swift; sourceTree = "<group>"; };
 		0676A5DC1BFE80D3001C7F55 /* NetworkLoggerPlugin.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkLoggerPlugin.swift; sourceTree = "<group>"; };
 		0676A5DE1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Provider+ReactiveCocoa.swift"; sourceTree = "<group>"; };
-		0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "RACSignal+MoyaX.swift"; sourceTree = "<group>"; };
 		0676A5E01BFE80D3001C7F55 /* SignalProducer+MoyaX.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SignalProducer+MoyaX.swift"; sourceTree = "<group>"; };
 		0676A5E11BFE80D3001C7F55 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		0676A5E41BFE80D3001C7F55 /* Provider+RxSwift.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Provider+RxSwift.swift"; sourceTree = "<group>"; };
@@ -330,7 +325,6 @@
 			isa = PBXGroup;
 			children = (
 				0676A5DE1BFE80D3001C7F55 /* Provider+ReactiveCocoa.swift */,
-				0676A5DF1BFE80D3001C7F55 /* RACSignal+MoyaX.swift */,
 				0676A5E01BFE80D3001C7F55 /* SignalProducer+MoyaX.swift */,
 				231DFAD0D18D299B7004A728 /* StubBackend+MoyaX.swift */,
 			);
@@ -1120,7 +1114,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0676A6561BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */,
 				0676A5F61BFE80D3001C7F55 /* Error.swift in Sources */,
 				0676A6021BFE80D3001C7F55 /* Image.swift in Sources */,
 				0676A6321BFE80D3001C7F55 /* NetworkActivityPlugin.swift in Sources */,
@@ -1175,7 +1168,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0676A6531BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */,
 				0676A5F31BFE80D3001C7F55 /* Error.swift in Sources */,
 				0676A5FF1BFE80D3001C7F55 /* Image.swift in Sources */,
 				0676A62F1BFE80D3001C7F55 /* NetworkActivityPlugin.swift in Sources */,
@@ -1225,7 +1217,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0676A6591BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */,
 				0676A5F91BFE80D3001C7F55 /* Error.swift in Sources */,
 				0676A6051BFE80D3001C7F55 /* Image.swift in Sources */,
 				0676A6351BFE80D3001C7F55 /* NetworkActivityPlugin.swift in Sources */,
@@ -1275,7 +1266,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0676A65C1BFE80D3001C7F55 /* RACSignal+MoyaX.swift in Sources */,
 				0676A5FC1BFE80D3001C7F55 /* Error.swift in Sources */,
 				0676A6081BFE80D3001C7F55 /* Image.swift in Sources */,
 				0676A6381BFE80D3001C7F55 /* NetworkActivityPlugin.swift in Sources */,

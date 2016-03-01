@@ -163,9 +163,9 @@ class ProviderIntegrationTests: QuickSpec {
             }
 
             describe("a reactive provider with SignalProducer") {
-                var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+                var provider: ReactiveCocoaMoyaXGenericProvider<GitHub>!
                 beforeEach {
-                    provider = ReactiveCocoaMoyaXProvider<GitHub>()
+                    provider = ReactiveCocoaMoyaXGenericProvider<GitHub>()
                 }
 
                 it("returns some data for zen request") {

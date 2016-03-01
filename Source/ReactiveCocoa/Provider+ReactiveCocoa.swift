@@ -2,7 +2,7 @@ import Foundation
 import ReactiveCocoa
 
 /// Subclass of MoyaXProvider that returns SignalProducer instances when requests are made. Much better than using completion closures.
-public class ReactiveCocoaMoyaXProvider<Target: TargetType>: MoyaXGenericProvider<Target> {
+public class ReactiveCocoaMoyaXGenericProvider<Target: TargetType>: MoyaXGenericProvider<Target> {
 
     /// Initializes a reactive provider.
     public override init(backend: BackendType = AlamofireBackend(),

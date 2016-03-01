@@ -2,7 +2,7 @@ import Foundation
 import RxSwift
 
 /// Subclass of MoyaXProvider that returns Observable instances when requests are made. Much better than using completion closures.
-public class RxMoyaXProvider<Target: TargetType>: MoyaXGenericProvider<Target> {
+public class RxMoyaXGenericProvider<Target: TargetType>: MoyaXGenericProvider<Target> {
     /// Initializes a reactive provider.
     override public init(backend: BackendType = AlamofireBackend(),
                          plugins: [PluginType] = [],

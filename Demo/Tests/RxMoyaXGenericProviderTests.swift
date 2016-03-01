@@ -4,15 +4,14 @@ import MoyaX
 import RxSwift
 import Alamofire
 
-class RxSwiftMoyaXProviderSpec: QuickSpec {
+class RxMoyaXGenericProviderSpec: QuickSpec {
     override func spec() {
 
         describe("provider with Observable") {
-
-            var provider: RxMoyaXProvider<GitHub>!
+            var provider: RxMoyaXGenericProvider<GitHub>!
 
             beforeEach {
-                provider = RxMoyaXProvider(backend: StubBackend())
+                provider = RxMoyaXGenericProvider(backend: StubBackend())
             }
 
             it("returns a Response object") {
@@ -50,12 +49,12 @@ class RxSwiftMoyaXProviderSpec: QuickSpec {
         }
 
         describe("failing") {
-            var provider: RxMoyaXProvider<GitHub>!
+            var provider: RxMoyaXGenericProvider<GitHub>!
             beforeEach {
                 let backend = GenericStubBackend<GitHub>()
                 backend.stub(.Zen, response: .NetworkError(NSError(domain: "com.moya.error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Houston, we have a problem"])))
 
-                provider = RxMoyaXProvider<GitHub>(backend: backend)
+                provider = RxMoyaXGenericProvider<GitHub>(backend: backend)
             }
 
             it("returns the correct error message") {

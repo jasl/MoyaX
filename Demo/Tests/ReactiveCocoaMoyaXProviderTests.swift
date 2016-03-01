@@ -4,21 +4,21 @@ import ReactiveCocoa
 import MoyaX
 import Alamofire
 
-class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
+class ReactiveCocoaMoyaXGenericProviderSpec: QuickSpec {
     override func spec() {
-        var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+        var provider: ReactiveCocoaMoyaXGenericProvider<GitHub>!
         beforeEach {
             let backend = StubBackend()
-            provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
+            provider = ReactiveCocoaMoyaXGenericProvider<GitHub>(backend: backend)
         }
 
         describe("failing") {
-            var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+            var provider: ReactiveCocoaMoyaXGenericProvider<GitHub>!
             beforeEach {
                 let backend = GenericStubBackend<GitHub>()
                 backend.stub(.Zen, response: .NetworkError(NSError(domain: "com.moya.error", code: 0, userInfo: [NSLocalizedDescriptionKey: "Houston, we have a problem"])))
 
-                provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
+                provider = ReactiveCocoaMoyaXGenericProvider<GitHub>(backend: backend)
             }
 
             it("returns the correct error message") {
@@ -60,7 +60,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
             }
 
-            class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
+            class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXGenericProvider<Target> {
                 init(backend: BackendType,
                      plugins: [PluginType] = []) {
 
@@ -72,7 +72,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                 }
             }
 
-            var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+            var provider: ReactiveCocoaMoyaXGenericProvider<GitHub>!
             beforeEach {
                 TestCancellable.cancelled = false
 
@@ -139,7 +139,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     }
                 }
 
-                class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXProvider<Target> {
+                class TestProvider<Target: TargetType>: ReactiveCocoaMoyaXGenericProvider<Target> {
                     init(backend: BackendType,
                          plugins: [PluginType] = []) {
 
@@ -151,7 +151,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     }
                 }
 
-                var provider: ReactiveCocoaMoyaXProvider<GitHub>!
+                var provider: ReactiveCocoaMoyaXGenericProvider<GitHub>!
 
                 beforeEach {
                     TestCancellable.cancelled = false
@@ -180,7 +180,7 @@ class ReactiveCocoaMoyaXProviderSpec: QuickSpec {
                     testScheduler = TestScheduler()
 
                     let backend = ReactiveCocoaGenericStubBackend<GitHub>(scheduler: testScheduler)
-                    provider = ReactiveCocoaMoyaXProvider<GitHub>(backend: backend)
+                    provider = ReactiveCocoaMoyaXGenericProvider<GitHub>(backend: backend)
 
                     provider.request(.Zen).startWithNext { next in
                         response = next

@@ -53,7 +53,7 @@ public func beOfSameErrorType(expectedValue: Error) -> MatcherFunc<Error> {
                 }
             }
         } catch {
-            return false;
+            return false
         }
     }
 }

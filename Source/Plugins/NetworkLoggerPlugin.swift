@@ -90,7 +90,7 @@ private extension NetworkLoggerPlugin {
         output += [format(loggerId, date: date, identifier: "Response", message: response.description)]
 
         if let data = data where verbose == true {
-            if let stringData = String(data: responseDataFormatter?(data) ?? data , encoding: NSUTF8StringEncoding) {
+            if let stringData = String(data: responseDataFormatter?(data) ?? data, encoding: NSUTF8StringEncoding) {
                 output += [stringData]
             }
         }

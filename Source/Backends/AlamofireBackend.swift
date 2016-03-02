@@ -4,7 +4,7 @@ import Alamofire
 /// Internal token that can be used to cancel requests
 internal final class CancellableToken: Cancellable, CustomDebugStringConvertible {
     let cancelAction: () -> Void
-    let request : Request?
+    let request: Request?
     private(set) var isCancelled: Bool = false
 
     private var lock: OSSpinLock = OS_SPINLOCK_INIT
@@ -18,12 +18,12 @@ internal final class CancellableToken: Cancellable, CustomDebugStringConvertible
         cancelAction()
     }
 
-    init(action: () -> Void){
+    init(action: () -> Void) {
         self.cancelAction = action
         self.request = nil
     }
 
-    init(request : Request){
+    init(request: Request) {
         self.request = request
         self.cancelAction = {
             request.cancel()

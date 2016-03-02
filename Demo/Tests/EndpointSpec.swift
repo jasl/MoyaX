@@ -5,7 +5,7 @@ import Nimble
 
 extension MoyaX.ParameterEncoding: Equatable {}
 
-public func ==(lhs: MoyaX.ParameterEncoding, rhs: MoyaX.ParameterEncoding) -> Bool {
+public func == (lhs: MoyaX.ParameterEncoding, rhs: MoyaX.ParameterEncoding) -> Bool {
     switch (lhs, rhs) {
     case (.URL, .URL):
         return true

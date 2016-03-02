@@ -55,7 +55,7 @@ public struct StubAction: Equatable, Hashable {
     }
 }
 
-public func ==(lhs: StubAction, rhs: StubAction) -> Bool {
+public func == (lhs: StubAction, rhs: StubAction) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
 
@@ -69,7 +69,7 @@ internal final class StubCancellableToken: Cancellable {
         self.cancelAction = {}
     }
 
-    init(action: () -> Void){
+    init(action: () -> Void) {
         self.cancelAction = action
     }
 

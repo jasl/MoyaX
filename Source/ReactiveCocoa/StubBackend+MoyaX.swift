@@ -9,7 +9,7 @@ public class ReactiveCocoaStubBackend: StubBackend {
         super.init(defaultBehavior: defaultBehavior, defaultResponse: defaultResponse)
     }
 
-    override public func request(request: NSURLRequest, target: TargetType, completion: (response:NSHTTPURLResponse?, data:NSData?, error:NSError?) -> ()) -> Cancellable {
+    override public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
         guard let scheduler = self.scheduler else {
             return super.request(request, target: target, completion: completion)
         }
@@ -64,4 +64,3 @@ public class ReactiveCocoaGenericStubBackend<Target: TargetType>: ReactiveCocoaS
         self.removeStubTarget(target)
     }
 }
-

@@ -79,7 +79,7 @@ extension GitHub: TargetType {
 #### 结构体、类式
 
 ```swift
-struct ListingTopics: EndpointType {
+struct ListingTopics: TargetType {
     enum TypeFieldValue: String {
         case LastActived = "last_actived"
         case Recent = "recent"
@@ -166,7 +166,7 @@ var endpoint: Endpoint {
 
 #### ReactiveCocoa 和 RxSwift
 
-目前只实现了泛型版本的`Provider`，和 Moya 一样，对应的类为`ReactiveCocoaMoyaXProvider`和`RxMoyaXProvider`，使用方法同`MoyaXGenericProvider`
+目前只实现了泛型版本的`Provider`，和 Moya 一样，对应的类为`ReactiveCocoaMoyaXGenericProvider`和`RxMoyaXGenericProvider`，使用方法同`MoyaXGenericProvider`
 
 #### 构造函数的可选参数
 

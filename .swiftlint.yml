@@ -1,0 +1,15 @@
+disabled_rules:
+  - line_length
+  - file_length
+  - function_body_length
+  - type_body_length
+  - valid_docs
+excluded:
+  - Carthage
+  - Pods
+  - Demo/Pods
+variable_name:
+  excluded:
+    - GithubAPI
+    - GitHubProvider
+    - URLEscapedString

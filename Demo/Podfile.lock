@@ -38,7 +38,7 @@ PODS:
     - ReactiveCocoa/Core
     - Result (~> 1.0.2)
   - Result (1.0.2)
-  - RxSwift (2.2.0)
+  - RxSwift (2.3.0)
 
 DEPENDENCIES:
   - MoyaX (from `../`)
@@ -60,6 +60,6 @@ SPEC CHECKSUMS:
   Quick: a5221fc21788b6aeda934805e68b061839bc3165
   ReactiveCocoa: f7011630aee4deeb16352fcb1b50d6bde9db4f90
   Result: dd3dd71af3fa2e262f1a999e14fba2c25ec14f16
-  RxSwift: b8a749f2204c6c7a5c29b306a9c3bc11d5b87c5b
+  RxSwift: 0df59cc5edf28a31dbf83b049220b4b8e76b07c8
 
 COCOAPODS: 0.39.0

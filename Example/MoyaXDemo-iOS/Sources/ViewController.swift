@@ -20,7 +20,7 @@ class ViewController: UITableViewController {
             switch result {
             case let .Success(response):
                 do {
-                    let json: NSArray? = try response.mapJSON() as? NSArray
+                    let json: NSArray? = try NSJSONSerialization.JSONObjectWithData(response.data, options: .AllowFragments) as? NSArray
                     if let json = json {
                         // Presumably, you'd parse the JSON into a model object. This is just a demo, so we'll keep it as-is.
                         self.repos = json
@@ -54,7 +54,7 @@ class ViewController: UITableViewController {
         GitHubProvider.request(.Zen, completion: { result in
             var message = "Couldn't access API"
             if case let .Success(response) = result {
-                message = (try? response.mapString()) ?? message
+                message = (NSString(data: response.data, encoding: NSUTF8StringEncoding) as? String) ?? message
             }
 
             let alertController = UIAlertController(title: "Zen", message: message, preferredStyle: .Alert)

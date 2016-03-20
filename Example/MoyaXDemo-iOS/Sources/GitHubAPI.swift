@@ -13,7 +13,7 @@ private func JSONResponseDataFormatter(data: NSData) -> NSData {
     }
 }
 
-let GitHubProvider = MoyaXGenericProvider<GitHub>(plugins: [NetworkLoggerPlugin(verbose: true, responseDataFormatter: JSONResponseDataFormatter)])
+let GitHubProvider = MoyaXGenericProvider<GitHub>()
 
 // MARK: - Provider support
 
@@ -41,26 +41,12 @@ extension GitHub: TargetType {
             return "/users/\(name.URLEscapedString)/repos"
         }
     }
-    public var method: MoyaX.Method {
-        return .GET
-    }
     public var parameters: [String: AnyObject]? {
         switch self {
         case .UserRepositories(_):
             return ["sort": "pushed"]
         default:
             return nil
-        }
-    }
-
-    public var sampleData: NSData {
-        switch self {
-        case .Zen:
-            return "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!
-        case .UserProfile(let name):
-            return "{\"login\": \"\(name)\", \"id\": 100}".dataUsingEncoding(NSUTF8StringEncoding)!
-        case .UserRepositories(_):
-            return "[{\"name\": \"Repo Name\"}]".dataUsingEncoding(NSUTF8StringEncoding)!
         }
     }
 }

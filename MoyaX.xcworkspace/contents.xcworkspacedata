@@ -2,6 +2,9 @@
 <Workspace
    version = "1.0">
    <FileRef
+      location = "group:Demo/MoyaXDemo-iOS/MoyaXDemo-iOS.xcodeproj">
+   </FileRef>
+   <FileRef
       location = "group:MoyaX.xcodeproj">
    </FileRef>
 </Workspace>

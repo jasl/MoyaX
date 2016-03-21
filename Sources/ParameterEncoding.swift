@@ -66,9 +66,11 @@ public enum ParameterEncoding {
 internal extension ParameterEncoding {
 
     func encodeParametersToExistingMutableRequest(
-            var mutableURLRequest: NSMutableURLRequest,
+            mutableURLRequest: NSMutableURLRequest,
             parameters: [String: AnyObject]?)
                     -> (NSMutableURLRequest, NSError?) {
+        var mutableURLRequest = mutableURLRequest
+
         guard let parameters = parameters else { return (mutableURLRequest, nil) }
 
         var encodingError: NSError? = nil
@@ -128,7 +130,10 @@ internal extension ParameterEncoding {
                 let options = NSJSONWritingOptions()
                 let data = try NSJSONSerialization.dataWithJSONObject(parameters, options: options)
 
-                mutableURLRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                if mutableURLRequest.valueForHTTPHeaderField("Content-Type") == nil {
+                    mutableURLRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
+                }
+
                 mutableURLRequest.HTTPBody = data
             } catch {
                 encodingError = error as NSError
@@ -140,7 +145,11 @@ internal extension ParameterEncoding {
                         format: format,
                         options: options
                 )
-                mutableURLRequest.setValue("application/x-plist", forHTTPHeaderField: "Content-Type")
+
+                if mutableURLRequest.valueForHTTPHeaderField("Content-Type") == nil {
+                    mutableURLRequest.setValue("application/x-plist", forHTTPHeaderField: "Content-Type")
+                }
+
                 mutableURLRequest.HTTPBody = data
             } catch {
                 encodingError = error as NSError
@@ -223,7 +232,7 @@ internal extension ParameterEncoding {
             while index != string.endIndex {
                 let startIndex = index
                 let endIndex = index.advancedBy(batchSize, limit: string.endIndex)
-                let range = Range(start: startIndex, end: endIndex)
+                let range = startIndex ..< endIndex
 
                 let substring = string.substringWithRange(range)
 

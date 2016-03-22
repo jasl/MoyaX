@@ -65,7 +65,7 @@ public enum ParameterEncoding {
 
 internal extension ParameterEncoding {
 
-    func encodeParametersToExistingMutableRequest(
+    func encodeMutableRequest(
             mutableURLRequest: NSMutableURLRequest,
             parameters: [String: AnyObject]?)
                     -> (NSMutableURLRequest, NSError?) {

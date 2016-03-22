@@ -32,6 +32,6 @@ public struct Endpoint {
     }
 
     public var encodedMutableURLRequest: NSMutableURLRequest {
-        return self.parameterEncoding.encodeParametersToExistingMutableRequest(self.mutableURLRequest, parameters: self.parameters).0
+        return self.parameterEncoding.encodeMutableRequest(self.mutableURLRequest, parameters: self.parameters).0
     }
 }

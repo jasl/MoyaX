@@ -7,8 +7,6 @@ MoyaX 的目标是提供一个的 Moya 改进版本，并且功能上覆盖 Moya
 
 MoyaX 虽然已经和 Moya 有极大的不同，但我仍在跟随原始项目的变动，学习、吸取经验和好的部分。
 
-**注意：项目功能已完整，但因有可能发生API变动所以仍旧处于早期开发过程中，预计3月左右稳定接口，正式发布。**
-
 **非常、特别、强烈希望能够对设计、实现以及功能上提供反馈。**
 
 ## 基本使用
@@ -144,7 +142,7 @@ let provider = MoyaXGenericProvider<GitHub>()
 
 ```swift
 provider.request(.Zen) { result in
-    // `result` is either .Success(response) or .Failure(error)
+    // `result` is either .Response(response) or .Incomplete(error)
 }
 ```
 
@@ -166,15 +164,15 @@ var endpoint: Endpoint {
 
 #### ReactiveCocoa 和 RxSwift
 
-目前只实现了泛型版本的`Provider`，和 Moya 一样，对应的类为`ReactiveCocoaMoyaXGenericProvider`和`RxMoyaXGenericProvider`，使用方法同`MoyaXGenericProvider`
+ReactiveCocoa 和 RxSwift 的支持将被移除 MoyaX，以独立库的方式存在。
 
 #### 构造函数的可选参数
 
 `Provider`的构造函数可以接受如下几个可选参数：
 
 - `backend: Backend`：指定后端
-- `plugins: [PluginType]`：插件，自带日志和网络状态插件，[参见源码](https://github.com/jasl/MoyaX/tree/master/Source/Plugins)
-- `willTransformToRequest: Endpoint -> Endpoint` 钩子，用于公共的对`Endpoint`修饰，例如附加 Token
+- `middlewares: [MiddlewareType]`：插件，自带网络状态插件，[参见源码](https://github.com/jasl/MoyaX/tree/master/Source/Middlewares)
+- `prepareForEndpoint: Endpoint -> ()` 钩子，用于公共的对`Endpoint`修饰，例如附加 Token
 
 #### `request`方法
 
@@ -187,7 +185,8 @@ var endpoint: Endpoint {
 ##### 构造函数的可选参数
 
 - `manager: Manager` 指定 Alamofire 的 Manager 实例
-- `willPerformRequest: (Request, TargetType) -> Request` 在请求发送前的钩子，完全暴露出了 Alamofire 的`Request`对象
+- `willPerformRequest: (Endpoint, Alamofire.Request) -> ()` 在请求发送前的钩子，完全暴露出了 Alamofire 的`Request`对象
+- `didReceiveResponse: (Endpoint, Alamofire.Response) -> ()`响应后执行的钩子，完全暴露出了 Alamofire 的`Response<NSData, NSError>`对象
 
 #### `StubBackend`
 
@@ -216,9 +215,9 @@ var endpoint: Endpoint {
 - 可以设置请求头（即`headerFields`字典）。
 - 不再包含`sampleData`，如果需要使用 `TargetWithSampleType`来声明`Targets`，并且`sampleData`被`sampleResponse`取代，其直接接受 [`StubResponse`](https://github.com/jasl/MoyaX/blob/master/Source/Backends/StubBackend.swift#L12-L21)。
 
-### `Endpoint`取消泛型，并成为结构体
+### `Endpoint`取消泛型
 
-`Endpoint`的泛型并无意义，故取消。此外其用途是请求过程的中间数据，使用类开销大，也无需考虑线程问题，故改用结构体。
+`Endpoint`的泛型并无意义，故取消。
 
 ### 不再强制`TargetType`使用枚举声明
 
@@ -248,11 +247,11 @@ var endpoint: Endpoint {
 
 对`Endpoint`进行修饰，转化成`NSMutableRequest`，经过插件后交给`Backend`执行，同步返回用于取消请求的令牌`Cancellable`：
 
-`Enpoint` - `Provider#willTransformToRequest`闭包 -> `NSMutableURLRequest` - `plugins` - `Backend` -> `Cancellable`
+`Enpoint` - `Provider#prepareForEndpoint` - `middlewares` - `Backend` -> `Cancellable`
 
 ### 插件
 
-由于`Provider`已和 Alamofire 解耦，故处理请求时直接接受`NSMutableURLRequest`，更新方法签名为`PluginType#willSendRequest(request: NSMutableURLRequest, target: TargetType)`
+更改为 `Middleware`
 
 ## 为什么要魔改 Moya？
 

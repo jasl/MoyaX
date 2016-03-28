@@ -27,6 +27,5 @@ let package = Package(
   name: "MoyaX",
   dependencies: [
     .Package(url: "https://github.com/Alamofire/Alamofire.git", versions: Version(3, 0, 0)..<Version(4, 0, 0)),
-    .Package(url: "https://github.com/antitypical/Result.git", versions: Version(1, 0, 0)..<Version(2, 0, 0))
   ]
 )

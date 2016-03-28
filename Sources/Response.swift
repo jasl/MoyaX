@@ -1,9 +1,14 @@
 import Foundation
 
-public final class Response: CustomDebugStringConvertible, Equatable {
+public struct Response: CustomDebugStringConvertible {
+    public let response: NSURLResponse?
+
     public let statusCode: Int
     public let data: NSData
-    public let response: NSURLResponse?
+
+    public lazy var responseClass: ResponseClass = {
+        return ResponseClass(statusCode: self.statusCode)
+    }()
 
     public init(statusCode: Int, data: NSData, response: NSURLResponse? = nil) {
         self.statusCode = statusCode
@@ -20,56 +25,28 @@ public final class Response: CustomDebugStringConvertible, Equatable {
     }
 }
 
-public func == (lhs: Response, rhs: Response) -> Bool {
-    return lhs.statusCode == rhs.statusCode
-        && lhs.data == rhs.data
-        && lhs.response == rhs.response
-}
+public enum ResponseClass {
+    case Informational
+    case Success
+    case Redirection
+    case ClientError
+    case ServerError
+    case Undefined
 
-public extension Response {
-
-    /// Filters out responses that don't fall within the given range, generating errors when others are encountered.
-    public func filterStatusCodes(range: ClosedInterval<Int>) throws -> Response {
-        guard range.contains(statusCode) else {
-            throw Error.StatusCode(self)
+    public init(statusCode: Int) {
+        switch statusCode {
+        case 100 ..< 200:
+            self = .Informational
+        case 200 ..< 300:
+            self = .Success
+        case 300 ..< 400:
+            self = .Redirection
+        case 400 ..< 500:
+            self = .ClientError
+        case 500 ..< 600:
+            self = .ServerError
+        default:
+            self = .Undefined
         }
-        return self
-    }
-
-    public func filterStatusCode(code: Int) throws -> Response {
-        return try filterStatusCodes(code...code)
-    }
-
-    public func filterSuccessfulStatusCodes() throws -> Response {
-        return try filterStatusCodes(200...299)
-    }
-
-    public func filterSuccessfulStatusAndRedirectCodes() throws -> Response {
-        return try filterStatusCodes(200...399)
-    }
-
-    /// Maps data received from the signal into a UIImage.
-    func mapImage() throws -> Image {
-        guard let image = Image(data: data) else {
-            throw Error.ImageMapping(self)
-        }
-        return image
-    }
-
-    /// Maps data received from the signal into a JSON object.
-    func mapJSON() throws -> AnyObject {
-        do {
-            return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
-        } catch {
-            throw Error.Underlying(error)
-        }
-    }
-
-    /// Maps data received from the signal into a String.
-    func mapString() throws -> String {
-        guard let string = NSString(data: data, encoding: NSUTF8StringEncoding) else {
-            throw Error.StringMapping(self)
-        }
-        return string as String
     }
 }

@@ -4,6 +4,20 @@ public protocol TargetWithSampleType: TargetType {
     var sampleResponse: StubResponse { get }
 }
 
+internal final class StubCancellableToken: Cancellable {
+    private(set) var isCancelled = false
+
+    private var lock: OSSpinLock = OS_SPINLOCK_INIT
+
+    func cancel() {
+        OSSpinLockLock(&self.lock)
+        defer { OSSpinLockUnlock(&self.lock) }
+        if self.isCancelled { return }
+
+        self.isCancelled = true
+    }
+}
+
 public enum StubBehavior {
     case Immediate
     case Delayed(NSTimeInterval)
@@ -21,7 +35,7 @@ public enum StubResponse {
 }
 
 public struct StubRule {
-    public typealias ConditionalResponseClosure = (request: NSURLRequest, target: TargetType) -> StubResponse
+    public typealias ConditionalResponseClosure = (endpoint: Endpoint, target: TargetType?) -> StubResponse
     let URL: NSURL
     let behavior: StubBehavior?
     let conditionalResponse: ConditionalResponseClosure
@@ -57,30 +71,6 @@ public struct StubAction: Equatable, Hashable {
 
 public func == (lhs: StubAction, rhs: StubAction) -> Bool {
     return lhs.hashValue == rhs.hashValue
-}
-
-internal final class StubCancellableToken: Cancellable {
-    let cancelAction: () -> Void
-    private(set) var isCancelled = false
-
-    private var lock: OSSpinLock = OS_SPINLOCK_INIT
-
-    init() {
-        self.cancelAction = {}
-    }
-
-    init(action: () -> Void) {
-        self.cancelAction = action
-    }
-
-    func cancel() {
-        OSSpinLockLock(&self.lock)
-        defer { OSSpinLockUnlock(&self.lock) }
-        if self.isCancelled { return }
-
-        self.isCancelled = true
-        self.cancelAction()
-    }
 }
 
 public class StubBackend: BackendType {
@@ -125,14 +115,15 @@ public class StubBackend: BackendType {
         self.stubs.removeValueForKey(action)
     }
 
-    public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
-        let action = StubAction(URL: target.fullURL, method: target.method)
+    public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
+        let target = endpoint.target
+        let action = StubAction(URL: endpoint.URL, method: endpoint.method)
 
         var response = (target as? TargetWithSampleType)?.sampleResponse ?? self.defaultResponse
         var behavior = self.defaultBehavior
 
         if let stubRule = self.stubs[action] {
-            response = stubRule.conditionalResponse(request: request, target: target)
+            response = stubRule.conditionalResponse(endpoint: endpoint, target: target)
             behavior = stubRule.behavior ?? behavior
         }
 
@@ -144,6 +135,7 @@ public class StubBackend: BackendType {
         case .Delayed(let delay):
             let killTimeOffset = Int64(CDouble(delay) * CDouble(NSEC_PER_SEC))
             let killTime = dispatch_time(DISPATCH_TIME_NOW, killTimeOffset)
+
             dispatch_after(killTime, dispatch_get_main_queue()) {
                 self.stubResponse(action.URL, response: response, cancellableToken: cancellableToken, completion: completion)
             }
@@ -152,20 +144,21 @@ public class StubBackend: BackendType {
         return cancellableToken
     }
 
-    func stubResponse(URL: NSURL, response: StubResponse, cancellableToken: StubCancellableToken, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) {
+    func stubResponse(URL: NSURL, response: StubResponse, cancellableToken: StubCancellableToken, completion: Completion) {
         if cancellableToken.isCancelled {
-            completion(response: nil, data: nil, error: NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil))
+            completion(.Incomplete(Error.BackendResponse(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil))))
             return
         }
 
         switch response {
         case .NetworkResponse(let statusCode, let data):
-            let response = NSHTTPURLResponse(URL: URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
-            completion(response: response, data: data, error: nil)
+            let fakeNSHTTPResponse = NSHTTPURLResponse(URL: URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
+            let response = Response(statusCode: statusCode, data: data, response: fakeNSHTTPResponse)
+            completion(.Response(response))
         case .NetworkError(let error):
-            completion(response: nil, data: nil, error: error)
+            completion(.Incomplete(Error.BackendResponse(error)))
         case .NoStubError:
-            fatalError("\(String(URL)) not stubbed yet.")
+            fatalError("\(String(URL)) is not stubbed yet.")
         }
     }
 }

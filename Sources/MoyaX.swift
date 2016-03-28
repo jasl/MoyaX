@@ -1,5 +1,7 @@
 import Foundation
 
+public typealias Completion = Result<Response, Error> -> ()
+
 /// Protocol to define the base URL, path, method, parameters and sample data for a target.
 public protocol TargetType {
     var baseURL: NSURL { get }
@@ -35,15 +37,25 @@ public extension TargetType {
     }
 
     var endpoint: Endpoint {
-        return Endpoint(URL: self.fullURL, method: self.method, parameters: self.parameters, parameterEncoding: self.parameterEncoding, headerFields: self.headerFields)
+        return Endpoint(target: self)
     }
 }
 
-public protocol BackendType: class {
-    func request(request: NSURLRequest, target: TargetType, completion: ((response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ())) -> Cancellable
+public protocol MiddlewareType {
+    func willSendRequest(target: TargetType, endpoint: Endpoint)
+
+    func didReceiveResponse(target: TargetType, response: Result<Response, Error>)
 }
 
-/// Protocol to define the opaque type returned from a request
+
+public protocol BackendType: class {
+    func request(endpoint: Endpoint, completion: Completion) -> Cancellable
+}
+
 public protocol Cancellable {
     func cancel()
+}
+
+internal final class CancellableTokenForAborting: Cancellable {
+    func cancel() {}
 }

@@ -20,7 +20,6 @@ Pod::Spec.new do |s|
   s.framework = 'Foundation'
 
   s.dependency 'Alamofire', '~> 3.0'
-  s.dependency 'Result', '~> 1.0'
 
   s.source_files = 'Sources/**/*.swift'
 end

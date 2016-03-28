@@ -1,7 +1,9 @@
 import Foundation
 
-/// Struct for reifying a target of the Target enum unto a concrete Endpoint.
-public struct Endpoint {
+public final class Endpoint {
+    public let target: TargetType?
+    public var perform = true
+
     public let URL: NSURL
     public let method: Method
 
@@ -9,18 +11,15 @@ public struct Endpoint {
     public var parameters: [String: AnyObject]
     public var headerFields: [String: String]
 
-    /// Main initializer for Endpoint.
-    public init(URL: NSURL,
-                method: Method = Method.GET,
-                parameters: [String: AnyObject] = [:],
-                parameterEncoding: ParameterEncoding = .URL,
-                headerFields: [String: String] = [:]) {
+    public init(target: TargetType) {
+        self.target = target
 
-        self.URL = URL
-        self.method = method
-        self.parameters = parameters
-        self.parameterEncoding = parameterEncoding
-        self.headerFields = headerFields
+        self.URL = target.fullURL
+        self.method = target.method
+
+        self.parameters = target.parameters
+        self.parameterEncoding = target.parameterEncoding
+        self.headerFields = target.headerFields
     }
 
     public var mutableURLRequest: NSMutableURLRequest {

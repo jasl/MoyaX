@@ -1,78 +1,54 @@
 import Foundation
-import Result
-
-/// Closure to be executed when a request has completed.
-public typealias Completion = (result: Result<Response, Error>) -> ()
 
 /// Request provider class. Requests should be made through this class only.
 public class MoyaXProvider {
-    /// Closure that defines the endpoints for the provider.
-    public typealias WillTransformToRequestClosure = Endpoint -> Endpoint
 
     public let backend: BackendType
-
-    public let willTransformToRequest: WillTransformToRequestClosure?
-
-    /// A list of plugins
-    /// e.g. for logging, network activity indicator or credentials
-    public let plugins: [PluginType]
+    public let middlewares: [MiddlewareType]
+    private let prepareForEndpoint: (Endpoint -> ())?
 
     /// Initializes a provider.
     public init(backend: BackendType = AlamofireBackend(),
-                plugins: [PluginType] = [],
-                willTransformToRequest: WillTransformToRequestClosure? = nil) {
+                middlewares: [MiddlewareType] = [],
+                prepareForEndpoint: (Endpoint -> ())? = nil) {
         self.backend = backend
-        self.plugins = plugins
-        self.willTransformToRequest = willTransformToRequest
+        self.middlewares = middlewares
+        self.prepareForEndpoint = prepareForEndpoint
     }
 
     /// Designated request-making method. Returns a Cancellable token to cancel the request later.
-    public func request(target: TargetType, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
-        var endpoint: Endpoint = target.endpoint
-        if let willTransformToRequest = self.willTransformToRequest {
-            endpoint = willTransformToRequest(endpoint)
+    public final func request(target: TargetType, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
+        let endpoint = target.endpoint
+
+        self.prepareForEndpoint?(endpoint)
+
+        self.middlewares.forEach { $0.willSendRequest(target, endpoint: endpoint) }
+
+        guard endpoint.perform else {
+            let error: Result<Response, Error> = .Incomplete(.Abort)
+            self.middlewares.forEach { $0.didReceiveResponse(target, response: error) }
+
+            return CancellableTokenForAborting()
         }
-
-        let request = endpoint.mutableURLRequest
-
-        self.plugins.forEach { $0.willSendRequest(request, target: target) }
 
         let backend = backend ?? self.backend
 
-        return backend.request(request, target: target) { (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) in
-            let result = convertResponseToResult(response, data: data, error: error)
+        return backend.request(endpoint) { response in
+            self.middlewares.forEach { $0.didReceiveResponse(target, response: response) }
 
-            // Inform all plugins about the response
-            self.plugins.forEach { $0.didReceiveResponse(result, target: target) }
-
-            completion(result: result)
+            completion(response)
         }
     }
 }
 
 public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
     public override init(backend: BackendType = AlamofireBackend(),
-                         plugins: [PluginType] = [],
-                         willTransformToRequest: WillTransformToRequestClosure? = nil) {
-        super.init(backend: backend, plugins: plugins, willTransformToRequest: willTransformToRequest)
+                         middlewares: [MiddlewareType] = [],
+                         prepareForEndpoint: (Endpoint -> ())? = nil) {
+        super.init(backend: backend, middlewares: middlewares, prepareForEndpoint: prepareForEndpoint)
     }
 
     public func request(target: Target, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
         return super.request(target, withCustomBackend: backend, completion: completion)
-    }
-}
-
-func convertResponseToResult(response: NSHTTPURLResponse?, data: NSData?, error: NSError?) ->
-        Result<Response, Error> {
-    switch (response, data, error) {
-    case let (.Some(response), .Some(data), .None):
-        let response = Response(statusCode: response.statusCode, data: data, response: response)
-        return .Success(response)
-    case let (_, _, .Some(error)):
-        let error = Error.Underlying(error)
-        return .Failure(error)
-    default:
-        let error = Error.Underlying(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil))
-        return .Failure(error)
     }
 }

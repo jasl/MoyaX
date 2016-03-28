@@ -1,13 +1,15 @@
 import Foundation
 import Alamofire
 
-/// Internal token that can be used to cancel requests
 internal final class CancellableToken: Cancellable, CustomDebugStringConvertible {
-    let cancelAction: () -> Void
-    let request: Request?
+    let request: Alamofire.Request
     private(set) var isCancelled: Bool = false
 
     private var lock: OSSpinLock = OS_SPINLOCK_INIT
+
+    init(request: Request) {
+        self.request = request
+    }
 
     func cancel() {
         OSSpinLockLock(&self.lock)
@@ -15,63 +17,74 @@ internal final class CancellableToken: Cancellable, CustomDebugStringConvertible
         if self.isCancelled { return }
 
         self.isCancelled = true
-        cancelAction()
-    }
-
-    init(action: () -> Void) {
-        self.cancelAction = action
-        self.request = nil
-    }
-
-    init(request: Request) {
-        self.request = request
-        self.cancelAction = {
-            request.cancel()
-        }
+        request.cancel()
     }
 
     var debugDescription: String {
-        if self.request == nil {
-            return "Empty Request"
-        }
-
         return request.debugDescription
     }
 }
 
-public func DefaultAlamofireManager() -> Manager {
-    let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
-    configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
-
-    let manager = Manager(configuration: configuration)
-    return manager
-}
-
 public class AlamofireBackend: BackendType {
-    let manager: Manager
-    let willPerformRequest: ((Request, TargetType) -> Request)?
+    public static let defaultManager: Manager = {
+        let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
+        configuration.timeoutIntervalForRequest = 4
 
-    public init(manager: Manager = DefaultAlamofireManager(), willPerformRequest: ((Request, TargetType) -> Request)? = nil) {
+        let manager = Manager(configuration: configuration)
         manager.startRequestsImmediately = false
 
+        return manager
+    }()
+
+    let manager: Alamofire.Manager
+    let willPerformRequest: ((Endpoint, Alamofire.Request) -> ())?
+    let didReceiveResponse: ((Endpoint, Alamofire.Response<NSData, NSError>) -> ())?
+
+    public init(manager: Manager = defaultManager,
+                willPerformRequest: ((Endpoint, Alamofire.Request) -> ())? = nil,
+                didReceiveResponse: ((Endpoint, Alamofire.Response<NSData, NSError>) -> ())? = nil) {
         self.manager = manager
         self.willPerformRequest = willPerformRequest
+        self.didReceiveResponse = didReceiveResponse
     }
 
-    public func request(request: NSURLRequest, target: TargetType, completion: (response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> ()) -> Cancellable {
-        var alamoRequest = self.manager.request(request)
+    public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
+        let alamofireRequest = self.manager.request(endpoint.encodedMutableURLRequest)
 
-        if let willSendRequest = self.willPerformRequest {
-            alamoRequest = willSendRequest(alamoRequest, target)
+        self.willPerformRequest?(endpoint, alamofireRequest)
+
+        alamofireRequest.responseData { alamofireResponse in
+            self.didReceiveResponse?(endpoint, alamofireResponse)
+
+            guard let rawResponse = alamofireResponse.response else {
+                if case let .Failure(error) = alamofireResponse.result {
+                    if error.code == -999 {
+                        completion(.Incomplete(Error.Cancelled))
+                    } else {
+                        completion(.Incomplete(Error.BackendUnexpect(error)))
+                    }
+                } else {
+                    let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil)
+                    completion(.Incomplete(Error.BackendUnexpect(error)))
+                }
+
+                return
+            }
+
+            switch alamofireResponse.result {
+            case let .Success(data):
+                let response = Response(statusCode: rawResponse.statusCode, data: data, response: rawResponse)
+                completion(.Response(response))
+            case let .Failure(error):
+                completion(.Incomplete(Error.BackendResponse(error)))
+            }
         }
 
-        // Perform the actual request
-        alamoRequest.response { (_, response: NSHTTPURLResponse?, data: NSData?, error: NSError?) -> () in
-            completion(response: response, data: data, error: error)
+        if !self.manager.startRequestsImmediately {
+            alamofireRequest.resume()
         }
 
-        alamoRequest.resume()
-
-        return CancellableToken(request: alamoRequest)
+        return CancellableToken(request: alamofireRequest)
     }
 }

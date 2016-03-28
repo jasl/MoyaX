@@ -3,26 +3,6 @@ import MoyaX
 
 // MARK: - Provider setup
 
-private func JSONResponseDataFormatter(data: NSData) -> NSData {
-    do {
-        let dataAsJSON = try NSJSONSerialization.JSONObjectWithData(data, options: [])
-        let prettyData =  try NSJSONSerialization.dataWithJSONObject(dataAsJSON, options: .PrettyPrinted)
-        return prettyData
-    } catch {
-        return data //fallback to original data if it cant be serialized
-    }
-}
-
-let GitHubProvider = MoyaXGenericProvider<GitHub>()
-
-// MARK: - Provider support
-
-private extension String {
-    var URLEscapedString: String {
-        return self.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())!
-    }
-}
-
 public enum GitHub {
     case Zen
     case UserProfile(String)
@@ -49,8 +29,4 @@ extension GitHub: TargetType {
             return nil
         }
     }
-}
-
-public func url(route: TargetType) -> String {
-    return route.baseURL.URLByAppendingPathComponent(route.path).absoluteString
 }

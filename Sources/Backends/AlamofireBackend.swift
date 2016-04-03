@@ -59,7 +59,7 @@ public class AlamofireBackend: BackendType {
 
             guard let rawResponse = alamofireResponse.response else {
                 if case let .Failure(error) = alamofireResponse.result {
-                    if error.code == -999 {
+                    if error.code == NSURLErrorCancelled {
                         completion(.Incomplete(Error.Cancelled))
                     } else {
                         completion(.Incomplete(Error.BackendUnexpect(error)))

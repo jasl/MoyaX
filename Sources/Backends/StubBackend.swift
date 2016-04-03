@@ -57,9 +57,9 @@ public struct StubRule {
 
 public struct StubAction: Equatable, Hashable {
     let URL: NSURL
-    let method: Method
+    let method: HTTPMethod
 
-    public init(URL: NSURL, method: Method) {
+    public init(URL: NSURL, method: HTTPMethod) {
         self.URL = URL
         self.method = method
     }

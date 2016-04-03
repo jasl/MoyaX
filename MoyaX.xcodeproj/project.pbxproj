@@ -21,7 +21,6 @@
 		231DF864482026CF0AB5A835 /* TestTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DFB79F13A39B5E2BB921D /* TestTarget.swift */; };
 		231DFA6AE1F8253EE449C88E /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF2946C3275013A4ED220 /* Result.swift */; };
 		231DFC73DF0CFB8A912A236B /* TestTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DFB79F13A39B5E2BB921D /* TestTarget.swift */; };
-		231DFCEE75CB559E546FB79F /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF62903EEE339E4B721FE /* ParameterEncoding.swift */; };
 		231DFD18CBB4E69F0C4FD26E /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF2946C3275013A4ED220 /* Result.swift */; };
 		231DFD37D9FCDDDD114D0C2C /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF2946C3275013A4ED220 /* Result.swift */; };
 		231DFFE1607D738BB6DD37CC /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF2946C3275013A4ED220 /* Result.swift */; };
@@ -36,8 +35,6 @@
 		C40F7DCB1C9D3AF400503176 /* StubBackend.swift in Sources */ = {isa = PBXBuildFile; fileRef = 31A9D7497DB1D0B8C3B77D81 /* StubBackend.swift */; };
 		C40F7DD01C9D3B6900503176 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF90015D0760FF10F8672 /* Provider.swift */; };
 		C40F7DD11C9D3B6900503176 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF90015D0760FF10F8672 /* Provider.swift */; };
-		C40F7DD31C9D3B6D00503176 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF62903EEE339E4B721FE /* ParameterEncoding.swift */; };
-		C40F7DD41C9D3B6E00503176 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF62903EEE339E4B721FE /* ParameterEncoding.swift */; };
 		C46231461CA1A9F300065E41 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49B9F2F1C9F2778006C3D63 /* Alamofire.framework */; };
 		C46231481CA1AA0300065E41 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49B9F171C9F2356006C3D63 /* Alamofire.framework */; };
 		C462314A1CA1AA1000065E41 /* Alamofire.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C49B9F0C1C9F22D4006C3D63 /* Alamofire.framework */; };
@@ -52,7 +49,6 @@
 		C49B9F3E1C9F2CBC006C3D63 /* MoyaX.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5D71BFE80D3001C7F55 /* MoyaX.swift */; };
 		C49B9F401C9F2CC4006C3D63 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0676A5E11BFE80D3001C7F55 /* Response.swift */; };
 		C49B9F411C9F2CC7006C3D63 /* Provider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF90015D0760FF10F8672 /* Provider.swift */; };
-		C49B9F421C9F2CCB006C3D63 /* ParameterEncoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 231DF62903EEE339E4B721FE /* ParameterEncoding.swift */; };
 		C49B9F431C9F2CF7006C3D63 /* MoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3021BE1C60200AD4789 /* MoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C49B9F441C9F2CF8006C3D63 /* MoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3021BE1C60200AD4789 /* MoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C49B9F451C9F2CF8006C3D63 /* MoyaX.h in Headers */ = {isa = PBXBuildFile; fileRef = 0630A3021BE1C60200AD4789 /* MoyaX.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -63,9 +59,6 @@
 		C49B9F631CA06769006C3D63 /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C49B9F171C9F2356006C3D63 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C49B9F701CA06773006C3D63 /* MoyaX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 554B0FB91BE7ED4D00F3D266 /* MoyaX.framework */; };
 		C49B9F731CA06773006C3D63 /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C49B9F0C1C9F22D4006C3D63 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		C4B7F3CB1CA14C75004E21FE /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F3CA1CA14C75004E21FE /* EndpointTests.swift */; };
-		C4B7F3CC1CA14C75004E21FE /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F3CA1CA14C75004E21FE /* EndpointTests.swift */; };
-		C4B7F3CD1CA14C75004E21FE /* EndpointTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4B7F3CA1CA14C75004E21FE /* EndpointTests.swift */; };
 		C4D8631B1CA32B7600A3443B /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D8631A1CA32B7600A3443B /* Endpoint.swift */; };
 		C4D8631C1CA32B7600A3443B /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D8631A1CA32B7600A3443B /* Endpoint.swift */; };
 		C4D8631D1CA32B7600A3443B /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = C4D8631A1CA32B7600A3443B /* Endpoint.swift */; };
@@ -162,7 +155,6 @@
 		0676A5E11BFE80D3001C7F55 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		091F0D341BDE998F009D0A49 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		231DF2946C3275013A4ED220 /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Result.swift; sourceTree = "<group>"; };
-		231DF62903EEE339E4B721FE /* ParameterEncoding.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ParameterEncoding.swift; sourceTree = "<group>"; };
 		231DF90015D0760FF10F8672 /* Provider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Provider.swift; sourceTree = "<group>"; };
 		231DFB79F13A39B5E2BB921D /* TestTarget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestTarget.swift; sourceTree = "<group>"; };
 		31A9D7497DB1D0B8C3B77D81 /* StubBackend.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StubBackend.swift; sourceTree = "<group>"; };
@@ -182,7 +174,6 @@
 		C49B9F781CA06773006C3D63 /* MoyaXTests tvOS.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MoyaXTests tvOS.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A889BB1C9EA95B000F8648 /* MoyaX.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = MoyaX.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C4A88A121C9EC480000F8648 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C4B7F3CA1CA14C75004E21FE /* EndpointTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; indentWidth = 4; lastKnownFileType = sourcecode.swift; path = EndpointTests.swift; sourceTree = "<group>"; tabWidth = 4; };
 		C4D8631A1CA32B7600A3443B /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
 		C4D8631F1CA32BB800A3443B /* Error.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Error.swift; sourceTree = "<group>"; };
 		C4D863251CA5C78F00A3443B /* ProviderTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProviderTests.swift; sourceTree = "<group>"; };
@@ -267,7 +258,6 @@
 				C4D8631F1CA32BB800A3443B /* Error.swift */,
 				0676A5E11BFE80D3001C7F55 /* Response.swift */,
 				231DF90015D0760FF10F8672 /* Provider.swift */,
-				231DF62903EEE339E4B721FE /* ParameterEncoding.swift */,
 				C4D8631A1CA32B7600A3443B /* Endpoint.swift */,
 				231DF2946C3275013A4ED220 /* Result.swift */,
 			);
@@ -344,7 +334,6 @@
 			children = (
 				C4A88A111C9EC42A000F8648 /* Supporting Files */,
 				231DF9C22C6CAD7F80FE4D1F /* Sources */,
-				C4B7F3CA1CA14C75004E21FE /* EndpointTests.swift */,
 				31A9DA439D1B83BC07F0ECB9 /* AlamofireBackendTests.swift */,
 				C4D863251CA5C78F00A3443B /* ProviderTests.swift */,
 			);
@@ -635,7 +624,6 @@
 				0676A6311BFE80D3001C7F55 /* NetworkActivityMiddleware.swift in Sources */,
 				C4D8631C1CA32B7600A3443B /* Endpoint.swift in Sources */,
 				0676A66D1BFE80D3001C7F55 /* Response.swift in Sources */,
-				C40F7DD31C9D3B6D00503176 /* ParameterEncoding.swift in Sources */,
 				C40F7DD01C9D3B6900503176 /* Provider.swift in Sources */,
 				C40F7DCA1C9D3AF300503176 /* StubBackend.swift in Sources */,
 				C4D863211CA32BB800A3443B /* Error.swift in Sources */,
@@ -656,7 +644,6 @@
 				31A9DEC310FF844D7ED8FEC9 /* AlamofireBackend.swift in Sources */,
 				31A9D5F2519B3CB583905D34 /* StubBackend.swift in Sources */,
 				C4D863201CA32BB800A3443B /* Error.swift in Sources */,
-				231DFCEE75CB559E546FB79F /* ParameterEncoding.swift in Sources */,
 				231DFD18CBB4E69F0C4FD26E /* Result.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -669,7 +656,6 @@
 				0676A6341BFE80D3001C7F55 /* NetworkActivityMiddleware.swift in Sources */,
 				C4D8631D1CA32B7600A3443B /* Endpoint.swift in Sources */,
 				0676A6701BFE80D3001C7F55 /* Response.swift in Sources */,
-				C40F7DD41C9D3B6E00503176 /* ParameterEncoding.swift in Sources */,
 				C40F7DD11C9D3B6900503176 /* Provider.swift in Sources */,
 				C40F7DCB1C9D3AF400503176 /* StubBackend.swift in Sources */,
 				C4D863221CA32BB800A3443B /* Error.swift in Sources */,
@@ -683,7 +669,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4D863261CA5C78F00A3443B /* ProviderTests.swift in Sources */,
-				C4B7F3CB1CA14C75004E21FE /* EndpointTests.swift in Sources */,
 				231DF864482026CF0AB5A835 /* TestTarget.swift in Sources */,
 				31A9DD5938E763CBB8037826 /* AlamofireBackendTests.swift in Sources */,
 			);
@@ -694,7 +679,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4D863271CA5C78F00A3443B /* ProviderTests.swift in Sources */,
-				C4B7F3CC1CA14C75004E21FE /* EndpointTests.swift in Sources */,
 				231DF3370FCDD5E5DA0DA259 /* TestTarget.swift in Sources */,
 				31A9DE0DCE2800773A76E03E /* AlamofireBackendTests.swift in Sources */,
 			);
@@ -705,7 +689,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				C4D863281CA5C78F00A3443B /* ProviderTests.swift in Sources */,
-				C4B7F3CD1CA14C75004E21FE /* EndpointTests.swift in Sources */,
 				231DFC73DF0CFB8A912A236B /* TestTarget.swift in Sources */,
 				31A9DA87030EEB404216E048 /* AlamofireBackendTests.swift in Sources */,
 			);
@@ -719,7 +702,6 @@
 				C49B9F401C9F2CC4006C3D63 /* Response.swift in Sources */,
 				C4D8631E1CA32B7600A3443B /* Endpoint.swift in Sources */,
 				C49B9F3A1C9F2C87006C3D63 /* StubBackend.swift in Sources */,
-				C49B9F421C9F2CCB006C3D63 /* ParameterEncoding.swift in Sources */,
 				C49B9F3E1C9F2CBC006C3D63 /* MoyaX.swift in Sources */,
 				C49B9F411C9F2CC7006C3D63 /* Provider.swift in Sources */,
 				C4D863231CA32BB800A3443B /* Error.swift in Sources */,

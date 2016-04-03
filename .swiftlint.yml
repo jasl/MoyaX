@@ -7,8 +7,3 @@ disabled_rules:
 excluded:
   - Carthage
   - Pods
-variable_name:
-  excluded:
-    - GithubAPI
-    - GitHubProvider
-    - URLEscapedString

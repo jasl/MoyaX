@@ -6,7 +6,7 @@ public enum HTTPMethod: String {
     case OPTIONS, GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT
 }
 
-public enum HTTPRequestBodyEncoding {
+public enum ParameterEncoding {
     case Form
     case FormWithMultipartData
     case JSON
@@ -26,8 +26,9 @@ public protocol TargetType {
     var method: HTTPMethod { get }
 
     var headerFields: [String: String] { get }
+
     var parameters: [String: AnyObject] { get }
-    var bodyEncoding: HTTPRequestBodyEncoding { get }
+    var parameterEncoding: ParameterEncoding { get }
 
     var fullURL: NSURL { get }
 
@@ -42,10 +43,11 @@ public extension TargetType {
     var headerFields: [String: String] {
         return [:]
     }
+
     var parameters: [String: AnyObject] {
         return [:]
     }
-    var bodyEncoding: HTTPRequestBodyEncoding {
+    var parameterEncoding: ParameterEncoding {
         return .Form
     }
 

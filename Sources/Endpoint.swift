@@ -6,17 +6,18 @@ public final class Endpoint {
 
     public let URL: NSURL
     public let method: HTTPMethod
-    public let bodyEncoding: HTTPRequestBodyEncoding
+
+    public var headerFields: [String: String]
 
     public var parameters: [String: AnyObject]
-    public var headerFields: [String: String]
+    public let parameterEncoding: ParameterEncoding
 
     public init(target: TargetType) {
         self.target = target
 
         self.URL = target.fullURL
         self.method = target.method
-        self.bodyEncoding = target.bodyEncoding
+        self.parameterEncoding = target.parameterEncoding
 
         self.parameters = target.parameters
         self.headerFields = target.headerFields

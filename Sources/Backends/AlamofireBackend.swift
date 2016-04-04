@@ -63,9 +63,9 @@ public class AlamofireBackend: BackendType {
         request.HTTPMethod = endpoint.method.rawValue
         request.allHTTPHeaderFields = endpoint.headerFields
 
-        switch endpoint.bodyEncoding {
+        switch endpoint.parameterEncoding {
         case .Form, .JSON:
-            let encodedRequest = self.encodeParameters(request, bodyEncoding: endpoint.bodyEncoding, parameters: endpoint.parameters).0
+            let encodedRequest = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters).0
             let alamofireRequest = self.manager.request(encodedRequest)
             cancellableToken.request = alamofireRequest
 
@@ -158,14 +158,14 @@ public class AlamofireBackend: BackendType {
         }
     }
 
-    private func encodeParameters(request: NSMutableURLRequest, bodyEncoding: HTTPRequestBodyEncoding, parameters: [String: AnyObject]) -> (NSMutableURLRequest, NSError?) {
-        switch bodyEncoding {
+    private func encodeParameters(request: NSMutableURLRequest, parameterEncoding: ParameterEncoding, parameters: [String: AnyObject]) -> (NSMutableURLRequest, NSError?) {
+        switch parameterEncoding {
         case .Form:
             return Alamofire.ParameterEncoding.URL.encode(request, parameters: parameters)
         case .JSON:
             return Alamofire.ParameterEncoding.JSON.encode(request, parameters: parameters)
         default:
-            return (request, BackendError.errorWithCode(.UnsupportHTTPBodyEncoding, failureReason: "\(bodyEncoding) can't encode by Alamofire's ParameterEncoding."))
+            return (request, BackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))
         }
     }
 }
@@ -175,7 +175,7 @@ public extension AlamofireBackend {
         public static let Domain = "me.jasl.moyax.backend.alamofire.error"
 
         public enum Code: Int {
-            case UnsupportHTTPBodyEncoding = -6000
+            case UnsupportParameterEncoding = -6000
             case EncodingComponentFailed = -6005
         }
 

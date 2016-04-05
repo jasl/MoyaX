@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-internal final class CancellableToken: Cancellable, CustomDebugStringConvertible {
+internal final class CancellableToken: Cancellable {
     internal(set) var request: Alamofire.Request?
     private(set) var isCancelled: Bool = false
 
@@ -23,7 +23,11 @@ internal final class CancellableToken: Cancellable, CustomDebugStringConvertible
     }
 
     var debugDescription: String {
-        return request.debugDescription
+        if let request = self.request {
+            return "CancellableToken for Request: \(request.debugDescription)."
+        } else {
+            return "CancellableToken without a Request, maybe an upload request?"
+        }
     }
 }
 

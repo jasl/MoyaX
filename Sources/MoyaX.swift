@@ -71,10 +71,15 @@ public protocol BackendType: class {
     func request(endpoint: Endpoint, completion: Completion) -> Cancellable
 }
 
-public protocol Cancellable {
+public protocol Cancellable: CustomDebugStringConvertible {
     func cancel()
+    var debugDescription: String { get }
 }
 
 internal final class CancellableTokenForAborting: Cancellable {
     func cancel() {}
+    
+    var debugDescription: String {
+        return "Stub CancellableToken for a aborting task."
+    }
 }

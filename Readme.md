@@ -25,17 +25,11 @@ MoyaX forked Moya originally, but with many rethinkings and refactors, MoyaX has
 
 There's a sample project in the `Example` directory. Have fun!
 
-
 ## Installation
 
 ### CocoaPods
 
 Just add `pod 'MoyaX'` to your Podfile and go!
-
-```rb
-pod 'MoyaX/RxSwift'
-pod 'MoyaX/ReactiveCocoa'
-```
 
 Then run `pod install`.
 
@@ -51,13 +45,12 @@ github "jasl/MoyaX"
 
 ### Declare a remote API (target)
 
-First, you can declare a `struct`, `class` or a `enum` and let it conform `TargetType` protocol to store remote API's informations.
+First, you can declare a `struct`, `class` or an `enum` and let it conform `TargetType` protocol to store remote API's informations.
 
-Sample:
 ```swift
 // This struct defined Github show user API
 struct GithubShowUser: TargetType {
-  // The username which should request
+  // The username which should requesting
   let name: String
   
   // Constructor
@@ -101,23 +94,24 @@ struct GithubShowUser: TargetType {
 
 You can access APIs through `MoyaXProvider`.
 
-Sample:
 ```swift
 // Initialize a MoyaXProvider
 let provider = MoyaXProvider()
 
 // Request an API
-provider.request(GithubShowUser(name: "jasl")) { (response) in
+provider.request(GithubShowUser(name: "jasl")) { response in
   switch response {
   
-  // The server has response
+  // The server has response, 4xx and 5xx goes here too
   case let .Response(response):
     let data = response.data
     let statusCode = response.statusCode
+    // Handle success here
     
   // Network failure (connectivity or timeout), the request had cancelled or aborted or other unexpect errors goes here
   case let .Incomplete(error):
     // error is an enum
+    // Handle error here
   }
 }
 ```

@@ -7,7 +7,7 @@ Pod::Spec.new do |s|
                   with more compile-time confidence.
                   EOS
   s.homepage         = 'https://github.com/jasl/MoyaX'
-  s.license          = {type: 'MIT', file: 'License.md'}
+  s.license          = {type: 'MIT', file: 'LICENSE'}
   s.author           = {'jasl' => 'jasl9187@hotmail', 'Ash Furrow' => 'ash@ashfurrow.com'}
   s.social_media_url = 'http://twitter.com/jasl9187'
   s.source           = {git: 'https://github.com/jasl/MoyaX.git', tag: s.version }

@@ -20,15 +20,49 @@
                ReferencedContainer = "container:MoyaX.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C49B9F481CA06761006C3D63"
+               BuildableName = "MoyaXTests iOS.xctest"
+               BlueprintName = "MoyaXTests iOS"
+               ReferencedContainer = "container:MoyaX.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
       buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
-      shouldUseLaunchSchemeArgsEnv = "YES">
+      shouldUseLaunchSchemeArgsEnv = "YES"
+      codeCoverageEnabled = "YES">
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "C49B9F481CA06761006C3D63"
+               BuildableName = "MoyaXTests iOS.xctest"
+               BlueprintName = "MoyaXTests iOS"
+               ReferencedContainer = "container:MoyaX.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "091F0D331BDE998F009D0A49"
+            BuildableName = "MoyaX.framework"
+            BlueprintName = "MoyaX iOS"
+            ReferencedContainer = "container:MoyaX.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <AdditionalOptions>
       </AdditionalOptions>
    </TestAction>

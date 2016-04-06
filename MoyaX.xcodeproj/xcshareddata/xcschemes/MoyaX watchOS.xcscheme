@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "554B10161BE7F11700F3D266"
+               BlueprintIdentifier = "C4A889BA1C9EA95B000F8648"
                BuildableName = "MoyaX.framework"
                BlueprintName = "MoyaX watchOS"
                ReferencedContainer = "container:MoyaX.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "554B10161BE7F11700F3D266"
+            BlueprintIdentifier = "C4A889BA1C9EA95B000F8648"
             BuildableName = "MoyaX.framework"
             BlueprintName = "MoyaX watchOS"
             ReferencedContainer = "container:MoyaX.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "554B10161BE7F11700F3D266"
+            BlueprintIdentifier = "C4A889BA1C9EA95B000F8648"
             BuildableName = "MoyaX.framework"
             BlueprintName = "MoyaX watchOS"
             ReferencedContainer = "container:MoyaX.xcodeproj">

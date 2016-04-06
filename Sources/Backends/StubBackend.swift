@@ -16,7 +16,7 @@ internal final class StubCancellableToken: Cancellable {
 
         self.isCancelled = true
     }
-    
+
     var debugDescription: String {
         return "CancellableToken for a stub request."
     }

@@ -2,7 +2,7 @@ import Foundation
 
 public final class Endpoint {
     public let target: TargetType?
-    public var perform = true
+    public var willPerform = true
 
     public let URL: NSURL
     public let method: HTTPMethod

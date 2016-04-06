@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-internal final class CancellableToken: Cancellable {
+internal final class AlamofireCancellableToken: Cancellable {
     internal(set) var request: Alamofire.Request?
     private(set) var isCancelled: Bool = false
 
@@ -61,7 +61,7 @@ public class AlamofireBackend: BackendType {
     }
 
     public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
-        let cancellableToken = CancellableToken()
+        let cancellableToken = AlamofireCancellableToken()
 
         let request = NSMutableURLRequest(URL: endpoint.URL)
         request.HTTPMethod = endpoint.method.rawValue

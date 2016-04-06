@@ -24,11 +24,11 @@ public class MoyaXProvider {
 
         self.middlewares.forEach { $0.willSendRequest(target, endpoint: endpoint) }
 
-        guard endpoint.perform else {
+        guard endpoint.willPerform else {
             let error: Result<Response, Error> = .Incomplete(.Abort)
             self.middlewares.forEach { $0.didReceiveResponse(target, response: error) }
 
-            return CancellableTokenForAborting()
+            return AbortingCancellableToken()
         }
 
         let backend = backend ?? self.backend

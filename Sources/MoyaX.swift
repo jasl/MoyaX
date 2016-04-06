@@ -76,9 +76,9 @@ public protocol Cancellable: CustomDebugStringConvertible {
     var debugDescription: String { get }
 }
 
-internal final class CancellableTokenForAborting: Cancellable {
+internal final class AbortingCancellableToken: Cancellable {
     func cancel() {}
-    
+
     var debugDescription: String {
         return "Stub CancellableToken for a aborting task."
     }

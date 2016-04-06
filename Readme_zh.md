@@ -5,6 +5,8 @@ MoyaX
 [![codecov.io](https://codecov.io/github/jasl/MoyaX/coverage.svg?branch=master)](https://codecov.io/github/jasl/MoyaX?branch=master)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 
+**MoyaX 所有特性已经冻结，但依旧在活跃开发中。**
+
 在开发App的时候，通常会使用 Alamofre 或者 NSURLSession 或是其他的网络库来调用服务器端的 API，为了方便使用，聪明的开发者会将 API 调用封装成类。
 
 MoyaX 正是将这一封装的最佳实践提取成框架，纯 Swift 编写，其包装了成熟的 [Alamofire](https://github.com/Alamofire/Alamofire)，来更简单的封装服务器端暴露的 API，特别是针对 Restful 风格的 API。此外，MoyaX 视 Stub 请求为一等公民，在开发过程中，你可以很容易的利用本地数据来模拟真实请求，减少对于后端开发的依赖，易于测试。 

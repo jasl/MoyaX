@@ -7,6 +7,8 @@ MoyaX - a fork of [Moya](https://github.com/Moya/Moya)
 
 [中文版本介绍](Readme_zh.md)
 
+**MoyaX all features are freezed, it's need to complete tests, documents and code reviews, please help!**
+
 You're a smart developer. You probably use Alamofire to abstract away access to NSURLSession and all those nasty details you don't really care about. But then, like lots of smart developers, you write ad hoc network abstraction layers. They are probably called "APIManager" or "NetworkModel", and they always end in tears.
 
 So the basic idea of Moya is that we want some network abstraction layer that sufficiently encapsulates actually calling Alamofire directly. It should be simple enough that common things are easy, but comprehensive enough that complicated things are also easy.

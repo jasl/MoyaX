@@ -7,13 +7,13 @@ public enum HTTPMethod: String {
 }
 
 public enum ParameterEncoding {
-    case Form
-    case FormWithMultipartData
+    case URL
+    case MultipartFormData
     case JSON
 }
 
 // http://www.iana.org/assignments/media-types/media-types.xhtml
-public enum MultipartData {
+public enum MultipartFormData {
     case Data(NSData, fileName: String, mimeType: String)
     case File(NSURL, fileName: String, mimeType: String)
     case Stream(NSInputStream, length: UInt64, fileName: String, mimeType: String)
@@ -48,7 +48,7 @@ public extension TargetType {
         return [:]
     }
     var parameterEncoding: ParameterEncoding {
-        return .Form
+        return .URL
     }
 
     var fullURL: NSURL {

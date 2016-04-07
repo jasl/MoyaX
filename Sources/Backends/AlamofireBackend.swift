@@ -68,7 +68,7 @@ public class AlamofireBackend: BackendType {
         request.allHTTPHeaderFields = endpoint.headerFields
 
         switch endpoint.parameterEncoding {
-        case .Form, .JSON:
+        case .URL, .JSON:
             let encodedRequest = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters).0
             let alamofireRequest = self.manager.request(encodedRequest)
             cancellableToken.request = alamofireRequest
@@ -79,12 +79,12 @@ public class AlamofireBackend: BackendType {
             if !self.manager.startRequestsImmediately {
                 alamofireRequest.resume()
             }
-        case .FormWithMultipartData:
+        case .MultipartFormData:
             var components: [(String, String)] = []
-            var multipartComponents: [String: MultipartData] = [:]
+            var multipartComponents: [String:MultipartFormData] = [:]
 
             for (key, value) in endpoint.parameters {
-                if let multipartData = value as? MultipartData {
+                if let multipartData = value as? MultipartFormData {
                     multipartComponents[key] = multipartData
                 } else {
                     components += Alamofire.ParameterEncoding.URL.queryComponents(key, value)
@@ -164,7 +164,7 @@ public class AlamofireBackend: BackendType {
 
     private func encodeParameters(request: NSMutableURLRequest, parameterEncoding: ParameterEncoding, parameters: [String: AnyObject]) -> (NSMutableURLRequest, NSError?) {
         switch parameterEncoding {
-        case .Form:
+        case .URL:
             return Alamofire.ParameterEncoding.URL.encode(request, parameters: parameters)
         case .JSON:
             return Alamofire.ParameterEncoding.JSON.encode(request, parameters: parameters)

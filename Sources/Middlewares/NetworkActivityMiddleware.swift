@@ -15,7 +15,7 @@ public final class NetworkActivityMiddleware: MiddlewareType {
         self.networkActivityClosure = networkActivityClosure
     }
 
-    // MARK: Plugin
+    // MARK: Middleware
 
     /// Called by the provider as soon as the request is about to start
     public func willSendRequest(target: TargetType, endpoint: Endpoint) {

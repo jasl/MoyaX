@@ -1,7 +1,10 @@
 import Foundation
 
+/// Endpoint is the intermediate representation for a target on requesting
 public final class Endpoint {
+    /// The raw target instance
     public let target: TargetType?
+    /// Set `false` will abort the request
     public var willPerform = true
 
     public let URL: NSURL

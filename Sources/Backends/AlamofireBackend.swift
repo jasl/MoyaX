@@ -31,7 +31,9 @@ internal final class AlamofireCancellableToken: Cancellable {
     }
 }
 
+/// The backend for Alamofire
 public class AlamofireBackend: BackendType {
+    /// Default Alamofire manager for backend.
     public static let defaultManager: Manager = {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
         configuration.HTTPAdditionalHeaders = Manager.defaultHTTPHeaders
@@ -43,13 +45,21 @@ public class AlamofireBackend: BackendType {
         return manager
     }()
 
+    /// The Alamofire manager.
     let manager: Alamofire.Manager
+    /// Called before starting request.
     let willPerformRequest: ((Endpoint, Alamofire.Request) -> ())?
+    /// Called on Alamofire's response closure.
     let didReceiveResponse: ((Endpoint, Alamofire.Response<NSData, NSError>) -> ())?
 
+    /// Default memory threshold used when encoding `MultipartFormData`.
     private static let MultipartFormDataEncodingMemoryThreshold: UInt64 = 10 * 1024 * 1024
+    /// Memory threshold used when encoding `MultipartFormData`
     let multipartFormDataEncodingMemoryThreshold: UInt64
 
+    /**
+       Constructor of the backend.
+    */
     public init(manager: Manager = defaultManager,
                 multipartFormDataEncodingMemoryThreshold: UInt64 = MultipartFormDataEncodingMemoryThreshold,
                 willPerformRequest: ((Endpoint, Alamofire.Request) -> ())? = nil,
@@ -60,6 +70,9 @@ public class AlamofireBackend: BackendType {
         self.didReceiveResponse = didReceiveResponse
     }
 
+    /**
+        Encodes the endpoint to Alamofire's Request and perform it.
+    */
     public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
         let cancellableToken = AlamofireCancellableToken()
 

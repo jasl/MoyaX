@@ -1,5 +1,6 @@
 import Foundation
 
+/// Used to store all response data returned from a completed request.
 public struct Response: CustomDebugStringConvertible {
     public let response: NSURLResponse?
 
@@ -25,6 +26,16 @@ public struct Response: CustomDebugStringConvertible {
     }
 }
 
+/**
+   The category for response status code
+
+   - Informational: status code in 100 to 199
+   - Success: status code in 200 to 299
+   - Redirection: status code in 300 to 399
+   - ClientError: status code in 400 to 499
+   - ServerError: status code in 500 to 599
+   - Undefined: other status code
+*/
 public enum ResponseClass {
     case Informational
     case Success

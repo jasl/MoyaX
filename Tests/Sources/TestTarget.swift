@@ -1,7 +1,7 @@
 import Foundation
 import MoyaX
 
-struct TestTarget: TargetType {
+struct TestTarget: Target {
     var baseURL: NSURL { return NSURL(string: "http://test.local")! }
     var path: String { return "foo/bar" }
 

@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-internal final class AlamofireCancellableToken: Cancellable {
+internal final class AlamofireCancellableToken: CancellableToken {
     internal(set) var request: Alamofire.Request?
     private(set) var isCancelled: Bool = false
 
@@ -32,7 +32,7 @@ internal final class AlamofireCancellableToken: Cancellable {
 }
 
 /// The backend for Alamofire
-public class AlamofireBackend: BackendType {
+public class AlamofireBackend: Backend {
     /// Default Alamofire manager for backend.
     public static let defaultManager: Manager = {
         let configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
@@ -73,7 +73,7 @@ public class AlamofireBackend: BackendType {
     /**
         Encodes the endpoint to Alamofire's Request and perform it.
     */
-    public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
+    public func request(endpoint: Endpoint, completion: Completion) -> CancellableToken {
         let cancellableToken = AlamofireCancellableToken()
 
         let request = NSMutableURLRequest(URL: endpoint.URL)

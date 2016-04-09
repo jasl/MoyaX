@@ -3,8 +3,8 @@ import Foundation
 /// Request provider class. Requests should be made through this class only.
 public class MoyaXProvider {
 
-    public let backend: BackendType
-    public let middlewares: [MiddlewareType]
+    public let backend: Backend
+    public let middlewares: [Middleware]
     private let prepareForEndpoint: (Endpoint -> ())?
 
     /**
@@ -15,8 +15,8 @@ public class MoyaXProvider {
        - Parameter prepareForEndpoint: a closure will be called on `request` method, mostly used for modifying endpoint,
                                        e.g: add an authentication header
     */
-    public init(backend: BackendType = AlamofireBackend(),
-                middlewares: [MiddlewareType] = [],
+    public init(backend: Backend = AlamofireBackend(),
+                middlewares: [Middleware] = [],
                 prepareForEndpoint: (Endpoint -> ())? = nil) {
         self.backend = backend
         self.middlewares = middlewares
@@ -45,7 +45,7 @@ public class MoyaXProvider {
 
         - Returns: The cancellable token for the request.
     */
-    public final func request(target: TargetType, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
+    public final func request(target: Target, withCustomBackend backend: Backend? = nil, completion: Completion) -> CancellableToken {
         let endpoint = target.endpoint
 
         self.prepareForEndpoint?(endpoint)
@@ -71,7 +71,7 @@ public class MoyaXProvider {
 
 /// Request provider class. Requests should be made through this class only.
 /// This is the generic provider that convenient for `enum` targets
-public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
+public class MoyaXGenericProvider<TargetType: Target>: MoyaXProvider {
 
     /**
        Initializes a provider.
@@ -81,8 +81,8 @@ public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
        - Parameter prepareForEndpoint: a closure will be called on `request` method, mostly used for modifying endpoint,
                                        e.g: add an authentication header
     */
-    public override init(backend: BackendType = AlamofireBackend(),
-                         middlewares: [MiddlewareType] = [],
+    public override init(backend: Backend = AlamofireBackend(),
+                         middlewares: [Middleware] = [],
                          prepareForEndpoint: (Endpoint -> ())? = nil) {
         super.init(backend: backend, middlewares: middlewares, prepareForEndpoint: prepareForEndpoint)
     }
@@ -109,7 +109,7 @@ public class MoyaXGenericProvider<Target: TargetType>: MoyaXProvider {
 
         - Returns: The cancellable token for the request.
     */
-    public func request(target: Target, withCustomBackend backend: BackendType? = nil, completion: Completion) -> Cancellable {
+    public func request(target: TargetType, withCustomBackend backend: Backend? = nil, completion: Completion) -> CancellableToken {
         return super.request(target, withCustomBackend: backend, completion: completion)
     }
 }

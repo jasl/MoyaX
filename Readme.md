@@ -45,11 +45,11 @@ github "jasl/MoyaX"
 
 ### Declare a remote API (target)
 
-First, you can declare a `struct`, `class` or an `enum` and let it conform `TargetType` protocol to store remote API's informations.
+First, you can declare a `struct`, `class` or an `enum` and let it conform `Target` protocol to store remote API's informations.
 
 ```swift
 // This struct defined Github show user API
-struct GithubShowUser: TargetType {
+struct GithubShowUser: Target {
   // The username which should requesting
   let name: String
   

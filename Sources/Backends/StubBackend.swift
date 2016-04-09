@@ -1,10 +1,10 @@
 import Foundation
 
-public protocol TargetWithSampleType: TargetType {
+public protocol TargetWithSampleType: Target {
     var sampleResponse: StubResponse { get }
 }
 
-internal final class StubCancellableToken: Cancellable {
+internal final class StubCancellableToken: CancellableToken {
     private(set) var isCancelled = false
 
     private var lock: OSSpinLock = OS_SPINLOCK_INIT
@@ -39,7 +39,7 @@ public enum StubResponse {
 }
 
 public struct StubRule {
-    public typealias ConditionalResponseClosure = (endpoint: Endpoint, target: TargetType?) -> StubResponse
+    public typealias ConditionalResponseClosure = (endpoint: Endpoint, target: Target?) -> StubResponse
     let URL: NSURL
     let behavior: StubBehavior?
     let conditionalResponse: ConditionalResponseClosure
@@ -77,7 +77,7 @@ public func == (lhs: StubAction, rhs: StubAction) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
 
-public class StubBackend: BackendType {
+public class StubBackend: Backend {
     internal var stubs: [StubAction: StubRule]
 
     public let defaultBehavior: StubBehavior
@@ -90,20 +90,20 @@ public class StubBackend: BackendType {
         self.defaultResponse = defaultResponse
     }
 
-    public func stubTarget(target: TargetType, rule: StubRule) {
+    public func stubTarget(target: Target, rule: StubRule) {
         let action = StubAction(URL: target.fullURL, method: target.method)
         let rule = rule
 
         self.stubs[action] = rule
     }
 
-    public func stubTarget(target: TargetType, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
+    public func stubTarget(target: Target, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
         let rule = StubRule(URL: target.fullURL, behavior: behavior, conditionalResponse: conditionalResponse)
 
         self.stubTarget(target, rule: rule)
     }
 
-    public func stubTarget(target: TargetType, behavior: StubBehavior? = nil, response: StubResponse) {
+    public func stubTarget(target: Target, behavior: StubBehavior? = nil, response: StubResponse) {
         let rule = StubRule(URL: target.fullURL, behavior: behavior, response: response)
 
         self.stubTarget(target, rule: rule)
@@ -113,13 +113,13 @@ public class StubBackend: BackendType {
         self.stubs = [:]
     }
 
-    public func removeStubTarget(target: TargetType) {
+    public func removeStubTarget(target: Target) {
         let action = StubAction(URL: target.fullURL, method: target.method)
 
         self.stubs.removeValueForKey(action)
     }
 
-    public func request(endpoint: Endpoint, completion: Completion) -> Cancellable {
+    public func request(endpoint: Endpoint, completion: Completion) -> CancellableToken {
         let target = endpoint.target
         let action = StubAction(URL: endpoint.URL, method: endpoint.method)
 
@@ -167,20 +167,20 @@ public class StubBackend: BackendType {
     }
 }
 
-public class GenericStubBackend<Target: TargetType>: StubBackend {
+public class GenericStubBackend<TargetType: Target>: StubBackend {
     public override init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
         super.init(defaultBehavior: defaultBehavior, defaultResponse: defaultResponse)
     }
 
-    public func stub(target: Target, behavior: StubBehavior? = nil, response: StubResponse) {
+    public func stub(target: TargetType, behavior: StubBehavior? = nil, response: StubResponse) {
         self.stubTarget(target, behavior: behavior, response: response)
     }
 
-    public func stub(target: Target, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
+    public func stub(target: TargetType, behavior: StubBehavior? = nil, conditionalResponse: StubRule.ConditionalResponseClosure) {
         self.stubTarget(target, behavior: behavior, conditionalResponse: conditionalResponse)
     }
 
-    public func removeStub(target: Target) {
+    public func removeStub(target: TargetType) {
         self.removeStubTarget(target)
     }
 }

@@ -45,11 +45,11 @@ MoyaX 的基本使用仅需两步。
 
 ### 声明服务器端 API
 
-只需要声明一个类、结构体、枚举，使其实现 `TargetType` 协议，如：
+只需要声明一个类、结构体、枚举，使其实现 `Target` 协议，如：
 
 ```swift
 // 这个结构体封装了 Github 的返回指定用户信息的 API
-struct GithubShowUser: TargetType {
+struct GithubShowUser: Target {
   // 要请求的用户的用户名
   let name: String
   

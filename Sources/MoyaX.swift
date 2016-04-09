@@ -48,7 +48,7 @@ public enum MultipartFormData {
 }
 
 /// Protocol to define the base URL, path, method, parameters and etc. for a target.
-public protocol TargetType {
+public protocol Target {
     /// Required
     var baseURL: NSURL { get }
     /// Required
@@ -73,7 +73,7 @@ public protocol TargetType {
     var endpoint: Endpoint { get }
 }
 
-public extension TargetType {
+public extension Target {
     var method: HTTPMethod {
         return .GET
     }
@@ -99,7 +99,7 @@ public extension TargetType {
 }
 
 /// Protocol to define a middleware that can be regiestered to provider
-public protocol MiddlewareType {
+public protocol Middleware {
     /**
         Will be called before the endpoint be passed to backend.
 
@@ -107,7 +107,7 @@ public protocol MiddlewareType {
             - target: The target instance which being requested
             - endpoint: The intermediate representation of target, modify it will cause side-effect
     */
-    func willSendRequest(target: TargetType, endpoint: Endpoint)
+    func willSendRequest(target: Target, endpoint: Endpoint)
 
     /**
         Will be called before calling completion closure.
@@ -116,22 +116,22 @@ public protocol MiddlewareType {
             - target: The target instance which being requested
             - response: The result of the request
     */
-    func didReceiveResponse(target: TargetType, response: Result<Response, Error>)
+    func didReceiveResponse(target: Target, response: Result<Response, Error>)
 }
 
 /// Protocol to define a backend which handle transform endpoint to request and perform it.
-public protocol BackendType: class {
-    func request(endpoint: Endpoint, completion: Completion) -> Cancellable
+public protocol Backend: class {
+    func request(endpoint: Endpoint, completion: Completion) -> CancellableToken
 }
 
 /// Protocol to define the opaque type returned from a request
-public protocol Cancellable: CustomDebugStringConvertible {
+public protocol CancellableToken: CustomDebugStringConvertible {
     func cancel()
     var debugDescription: String { get }
 }
 
 /// A fake Cancellable implementation for request which aborted by setting `endpoint.shouldPerform = false`
-internal final class AbortingCancellableToken: Cancellable {
+internal final class AbortingCancellableToken: CancellableToken {
     func cancel() {}
 
     var debugDescription: String {

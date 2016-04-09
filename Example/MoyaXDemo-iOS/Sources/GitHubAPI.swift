@@ -9,7 +9,7 @@ public enum GitHub {
     case UserRepositories(String)
 }
 
-extension GitHub: TargetType {
+extension GitHub: Target {
     public var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
     public var path: String {
         switch self {

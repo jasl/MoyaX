@@ -83,9 +83,9 @@ struct GithubShowUser: Target {
   	 return [:]
   }
   
-  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .Form，即以 HTTP 表单方式提交 parameters
+  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .URL，即以 HTTP 表单方式提交 parameters
   var parameterEncoding: ParameterEncoding {
-  	 return .Form
+  	 return .URL
   }
 }
 ```

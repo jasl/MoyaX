@@ -80,12 +80,12 @@ struct GithubShowUser: Target {
   
   // Optional, default is empty
   var parameters: [String: AnyObject] {
-  	 return [:]
+    return [:]
   }
   
-  // Optional, default is .Form, means submit parameters using form-data
+  // Optional, default is .URL, means submit parameters using `x-www-form-urlencoded`
   var parameterEncoding: ParameterEncoding {
-  	 return .Form
+    return .URL
   }
 }
 ```

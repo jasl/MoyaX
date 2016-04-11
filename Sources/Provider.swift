@@ -5,7 +5,7 @@ public class MoyaXProvider {
 
     public let backend: Backend
     public let middlewares: [Middleware]
-    private let prepareForEndpoint: (Endpoint -> ())?
+    public let prepareForEndpoint: (Endpoint -> ())?
 
     /**
        Initializes a provider.
@@ -21,6 +21,21 @@ public class MoyaXProvider {
         self.backend = backend
         self.middlewares = middlewares
         self.prepareForEndpoint = prepareForEndpoint
+    }
+
+    /**
+       Initializes a provider by copying a existing one.
+
+       - Parameter backend: Using new backend instead of existing configuration.
+       - Parameter middlewares: Using new middlewares instead of existing configuration.
+       - Parameter prepareForEndpoint: Using new `prepareForEndpoint` hook instead of existing configuration.
+    */
+    public func copy(backend: Backend? = nil,
+                     middlewares: [Middleware]? = nil,
+                     prepareForEndpoint: (Endpoint -> ())? = nil) -> MoyaXProvider {
+        return MoyaXProvider(backend: backend ?? self.backend,
+                             middlewares: middlewares ?? self.middlewares,
+                             prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
     }
 
     /**
@@ -85,6 +100,21 @@ public class MoyaXGenericProvider<TargetType: Target>: MoyaXProvider {
                          middlewares: [Middleware] = [],
                          prepareForEndpoint: (Endpoint -> ())? = nil) {
         super.init(backend: backend, middlewares: middlewares, prepareForEndpoint: prepareForEndpoint)
+    }
+
+    /**
+       Initializes a provider by copying a existing one.
+
+       - Parameter backend: Using new backend instead of existing configuration.
+       - Parameter middlewares: Using new middlewares instead of existing configuration.
+       - Parameter prepareForEndpoint: Using new `prepareForEndpoint` hook instead of existing configuration.
+    */
+    public override func copy(backend: Backend? = nil,
+                              middlewares: [Middleware]? = nil,
+                              prepareForEndpoint: (Endpoint -> ())? = nil) -> MoyaXGenericProvider<TargetType> {
+        return MoyaXGenericProvider<TargetType>(backend: backend ?? self.backend,
+                                                middlewares: middlewares ?? self.middlewares,
+                                                prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
     }
 
     /**

@@ -41,6 +41,8 @@ MoyaX 提供了以下功能：
 
 ## 基本使用
 
+详细的介绍请参阅 [MoyaX Guides](Documentation/Guides_zh.md)。
+
 MoyaX 的基本使用仅需两步。
 
 ### 声明服务器端 API

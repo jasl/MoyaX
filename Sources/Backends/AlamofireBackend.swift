@@ -81,7 +81,7 @@ public class AlamofireBackend: Backend {
         request.allHTTPHeaderFields = endpoint.headerFields
 
         switch endpoint.parameterEncoding {
-        case .URL, .JSON:
+        case .URL, .JSON, .Custom:
             let encodedRequest = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters).0
             let alamofireRequest = self.manager.request(encodedRequest)
             cancellableToken.request = alamofireRequest
@@ -181,6 +181,8 @@ public class AlamofireBackend: Backend {
             return Alamofire.ParameterEncoding.URL.encode(request, parameters: parameters)
         case .JSON:
             return Alamofire.ParameterEncoding.JSON.encode(request, parameters: parameters)
+        case .Custom(let encodingClosure):
+            return encodingClosure(request.URLRequest, parameters)
         default:
             return (request, BackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))
         }

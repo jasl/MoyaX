@@ -24,11 +24,14 @@ public enum HTTPMethod: String {
     - MultipartFormData: Encodes parameters to `multipart/form-data` for uploads within an HTTP or HTTPS body.
     - JSON: Encodes parameters by using `NSJSONSerialization`, which is set as the body of the request.
             The `Content-Type` HTTP header field of an encoded request is set to `application/json`.
+    - Custom: Uses the associated closure value to construct a new request given an existing request and
+              parameters.
 */
 public enum ParameterEncoding {
     case URL
     case MultipartFormData
     case JSON
+    case Custom((NSMutableURLRequest, [String: AnyObject]) -> (NSMutableURLRequest, NSError?))
 }
 
 /**

@@ -32,7 +32,7 @@ public enum StubResponse {
     case NetworkResponse(Int, NSData)
 
     /// The network failed to send the request, or failed to retrieve a response (eg a timeout).
-    case NetworkError(NSError)
+    case NetworkError(ErrorType)
 
     /// You usually don't need this, It's will raise a fetalError
     case NoStubError

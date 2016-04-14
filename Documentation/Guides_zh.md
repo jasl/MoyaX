@@ -292,7 +292,7 @@ struct GithubZen: Target {
   // 实现 Target 协议，这里省略
 }
 
-extension GithubZen: SampleWithTarget {
+extension GithubZen: TargetWithSample {
   var sampleResponse: StubResponse {   	 
     return .NetworkResponse(200,
                             "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!)

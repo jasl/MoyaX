@@ -1,6 +1,6 @@
 import Foundation
 
-public protocol TargetWithSampleType: Target {
+public protocol TargetWithSample: Target {
     var sampleResponse: StubResponse { get }
 }
 
@@ -123,7 +123,7 @@ public class StubBackend: Backend {
         let target = endpoint.target
         let action = StubAction(URL: endpoint.URL, method: endpoint.method)
 
-        var response = (target as? TargetWithSampleType)?.sampleResponse ?? self.defaultResponse
+        var response = (target as? TargetWithSample)?.sampleResponse ?? self.defaultResponse
         var behavior = self.defaultBehavior
 
         if let stubRule = self.stubs[action] {

@@ -1,6 +1,7 @@
-# MoyaX Guides
+MoyaX Guides
+====
 
-*注：MoyaX 的大部分公开的数据结构和方法均有代码文档，可以在 XCode 中快速查阅。*
+*注：MoyaX 的大部分公开的数据结构和方法均有代码文档，可以在 XCode 中快速查阅，另有[使用技巧](HowTo_zh.md)。*
 
 MoyaX 由三部分组成：
 

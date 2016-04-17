@@ -38,12 +38,16 @@ end
 
 desc 'Build for Carthage'
 lane :carthage_lint do
-  sh('cd .. && carthage build --no-skip-current && cd fastlane')
+  Dir.chdir '..' do
+    sh "carthage build --no-skip-current --verbose"
+  end
 end
 
 desc 'Lint for Cocoapods'
 lane :pod_lint do
-  sh('cd .. && pod lib lint && cd fastlane')
+  Dir.chdir '..' do
+    sh('pod lib lint --verbose')
+  end
 end
 
 desc 'Lint'
@@ -55,7 +59,9 @@ end
 desc 'Release new version'
 lane :release do |options|
   target_version = options[:version]
-  abort 'The version is missed. Use `fastlane release version:{version_number}`.' if target_version.nil?
+  unless target_version || !!(/^\d+\.\d+\.\d+$/ =~ target_version)
+    abort 'The version is missed. Use `fastlane release version:{version_number}`.'
+  end
 
   ensure_git_branch
   ensure_git_status_clean

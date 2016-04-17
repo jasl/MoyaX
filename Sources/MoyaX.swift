@@ -34,22 +34,6 @@ public enum ParameterEncoding {
     case Custom((NSMutableURLRequest, [String: AnyObject]) -> (NSMutableURLRequest, NSError?))
 }
 
-/**
-    Used to create a multipart form data object for parameters.
-
-    File name and MIME type is required for all cases.
-    For information on MIME type, see http://www.iana.org/assignments/media-types/media-types.xhtml
-
-    - Data: For NSData
-    - File: For NSURL of a file
-    - Stream: For NSInputStream
-*/
-public enum MultipartFormData {
-    case Data(NSData, fileName: String, mimeType: String)
-    case File(NSURL, fileName: String, mimeType: String)
-    case Stream(NSInputStream, length: UInt64, fileName: String, mimeType: String)
-}
-
 /// Protocol to define the base URL, path, method, parameters and etc. for a target.
 public protocol Target {
     /// Required
@@ -139,5 +123,84 @@ internal final class AbortingCancellableToken: CancellableToken {
 
     var debugDescription: String {
         return "Stub CancellableToken for a aborting task."
+    }
+}
+
+/// type of MultipartFormData
+public protocol MultipartFormData {}
+
+/**
+    Helps to encode multipart-form-data's body part from the data.
+
+    The body part data will be encoded using the following format:
+
+    - `Content-Disposition: form-data; name=#{name}; filename=#{filename}` (HTTP Header)
+    - `Content-Type: #{mimeType}` (HTTP Header)
+    - Encoded file data
+    - Multipart form boundary
+*/
+public struct DataForMultipartFormData: MultipartFormData {
+    let data: NSData
+    let fileName: String?
+    let mimeType: String?
+
+    /**
+        - parameter data: The data to encode into the multipart form data.
+    */
+    init(data: NSData) {
+        self.data = data
+
+        self.fileName = nil
+        self.mimeType = nil
+    }
+
+    /**
+        - parameter data:     The data to encode into the multipart form data.
+        - parameter name:     The name to associate with the data in the `Content-Disposition` HTTP header.
+        - parameter fileName: The filename to associate with the data in the `Content-Disposition` HTTP header.
+        - parameter mimeType: The MIME type to associate with the data in the `Content-Type` HTTP header.
+    */
+    init(data: NSData, fileName: String, mimeType: String) {
+        self.data = data
+        self.fileName = fileName
+        self.mimeType = mimeType
+    }
+}
+
+/**
+    Helps to encode multipart-form-data's body part from the file.
+
+    The body part data will be encoded using the following format:
+
+    - Content-Disposition: form-data; name=#{name}; filename=#{filename} (HTTP Header)
+    - Content-Type: #{mimeType} (HTTP Header)
+    - Encoded file data
+    - Multipart form boundary
+*/
+public struct FileURLForMultipartFormData: MultipartFormData {
+    let fileURL: NSURL
+    let fileName: String?
+    let mimeType: String?
+
+    /**
+        - parameter fileURL: The URL of the file whose content will be encoded into the multipart form data.
+    */
+    init(fileURL: NSURL) {
+        self.fileURL = fileURL
+
+        self.fileName = nil
+        self.mimeType = nil
+    }
+
+    /**
+        - parameter fileURL:  The URL of the file whose content will be encoded into the multipart form data.
+        - parameter name:     The name to associate with the file content in the `Content-Disposition` HTTP header.
+        - parameter fileName: The filename to associate with the file content in the `Content-Disposition` HTTP header.
+        - parameter mimeType: The MIME type to associate with the file content in the `Content-Type` HTTP header.
+    */
+    init(fileURL: NSURL, fileName: String, mimeType: String) {
+        self.fileURL = fileURL
+        self.fileName = fileName
+        self.mimeType = mimeType
     }
 }

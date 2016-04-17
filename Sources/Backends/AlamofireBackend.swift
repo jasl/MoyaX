@@ -1,7 +1,7 @@
 import Foundation
 import Alamofire
 
-internal final class AlamofireCancellableToken: CancellableToken {
+final class AlamofireCancellableToken: CancellableToken {
     internal(set) var request: Alamofire.Request?
     private(set) var isCancelled: Bool = false
 
@@ -27,6 +27,30 @@ internal final class AlamofireCancellableToken: CancellableToken {
             return "CancellableToken for Request: \(request.debugDescription)."
         } else {
             return "CancellableToken without a Request, maybe an upload request?"
+        }
+    }
+}
+
+protocol AlamofireMultipartFormDataEncodable: MultipartFormData {
+    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String)
+}
+
+extension DataForMultipartFormData: AlamofireMultipartFormDataEncodable {
+    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
+        if let fileName = self.fileName, mimeType = self.mimeType {
+            multipartFormData.appendBodyPart(data: self.data, name: name, fileName: fileName, mimeType: mimeType)
+        } else {
+            multipartFormData.appendBodyPart(data: self.data, name: name)
+        }
+    }
+}
+
+extension FileURLForMultipartFormData: AlamofireMultipartFormDataEncodable {
+    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
+        if let fileName = self.fileName, mimeType = self.mimeType {
+            multipartFormData.appendBodyPart(fileURL: self.fileURL, name: name, fileName: fileName, mimeType: mimeType)
+        } else {
+            multipartFormData.appendBodyPart(fileURL: self.fileURL, name: name)
         }
     }
 }
@@ -94,10 +118,10 @@ public class AlamofireBackend: Backend {
             }
         case .MultipartFormData:
             var components: [(String, String)] = []
-            var multipartComponents: [String:MultipartFormData] = [:]
+            var multipartComponents: [String:AlamofireMultipartFormDataEncodable] = [:]
 
             for (key, value) in endpoint.parameters {
-                if let multipartData = value as? MultipartFormData {
+                if let multipartData = value as? AlamofireMultipartFormDataEncodable {
                     multipartComponents[key] = multipartData
                 } else {
                     components += Alamofire.ParameterEncoding.URL.queryComponents(key, value)
@@ -111,14 +135,7 @@ public class AlamofireBackend: Backend {
                 }
 
                 for (key, value) in multipartComponents {
-                    switch value {
-                    case let .Data(data, fileName, mimeType):
-                        multipartFormData.appendBodyPart(data: data, name: key, fileName: fileName, mimeType: mimeType)
-                    case let .File(fileURL, fileName, mimeType):
-                        multipartFormData.appendBodyPart(fileURL: fileURL, name: key, fileName: fileName, mimeType: mimeType)
-                    case let .Stream(stream, length, fileName, mimeType):
-                        multipartFormData.appendBodyPart(stream: stream, length: length, name: key, fileName: fileName, mimeType: mimeType)
-                    }
+                    value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
                 }
             }, encodingMemoryThreshold: self.multipartFormDataEncodingMemoryThreshold,
                 encodingCompletion: { result in

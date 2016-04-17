@@ -126,11 +126,14 @@ internal final class AbortingCancellableToken: CancellableToken {
     }
 }
 
-/// type of MultipartFormData
-public protocol MultipartFormData {}
+/**
+    Protocol to define a MultipartFormData parameter.
+    The implementation must be a class because the value of Target#parameters is AnyObject.
+*/
+public protocol MultipartFormData: class {}
 
 /**
-    Helps to encode multipart-form-data's body part from the data.
+    Class to define a MultipartFormData parameter from a data.
 
     The body part data will be encoded using the following format:
 
@@ -139,7 +142,7 @@ public protocol MultipartFormData {}
     - Encoded file data
     - Multipart form boundary
 */
-public struct DataForMultipartFormData: MultipartFormData {
+public class DataForMultipartFormData: MultipartFormData {
     let data: NSData
     let fileName: String?
     let mimeType: String?
@@ -147,7 +150,7 @@ public struct DataForMultipartFormData: MultipartFormData {
     /**
         - parameter data: The data to encode into the multipart form data.
     */
-    init(data: NSData) {
+    public init(data: NSData) {
         self.data = data
 
         self.fileName = nil
@@ -160,7 +163,7 @@ public struct DataForMultipartFormData: MultipartFormData {
         - parameter fileName: The filename to associate with the data in the `Content-Disposition` HTTP header.
         - parameter mimeType: The MIME type to associate with the data in the `Content-Type` HTTP header.
     */
-    init(data: NSData, fileName: String, mimeType: String) {
+    public init(data: NSData, fileName: String, mimeType: String) {
         self.data = data
         self.fileName = fileName
         self.mimeType = mimeType
@@ -168,7 +171,7 @@ public struct DataForMultipartFormData: MultipartFormData {
 }
 
 /**
-    Helps to encode multipart-form-data's body part from the file.
+    Class to define a MultipartFormData parameter from a file.
 
     The body part data will be encoded using the following format:
 
@@ -177,7 +180,7 @@ public struct DataForMultipartFormData: MultipartFormData {
     - Encoded file data
     - Multipart form boundary
 */
-public struct FileURLForMultipartFormData: MultipartFormData {
+public class FileURLForMultipartFormData: MultipartFormData {
     let fileURL: NSURL
     let fileName: String?
     let mimeType: String?
@@ -185,7 +188,7 @@ public struct FileURLForMultipartFormData: MultipartFormData {
     /**
         - parameter fileURL: The URL of the file whose content will be encoded into the multipart form data.
     */
-    init(fileURL: NSURL) {
+    public init(fileURL: NSURL) {
         self.fileURL = fileURL
 
         self.fileName = nil
@@ -198,7 +201,7 @@ public struct FileURLForMultipartFormData: MultipartFormData {
         - parameter fileName: The filename to associate with the file content in the `Content-Disposition` HTTP header.
         - parameter mimeType: The MIME type to associate with the file content in the `Content-Type` HTTP header.
     */
-    init(fileURL: NSURL, fileName: String, mimeType: String) {
+    public init(fileURL: NSURL, fileName: String, mimeType: String) {
         self.fileURL = fileURL
         self.fileName = fileName
         self.mimeType = mimeType

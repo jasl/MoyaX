@@ -4,6 +4,8 @@ MoyaX
 [![Build Status](https://travis-ci.org/jasl/MoyaX.svg?branch=master)](https://travis-ci.org/jasl/MoyaX)
 [![codecov.io](https://codecov.io/github/jasl/MoyaX/coverage.svg?branch=master)](https://codecov.io/github/jasl/MoyaX?branch=master)
 [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+[![CocoaPods Compatible](https://img.shields.io/cocoapods/v/MoyaX.svg)](https://img.shields.io/cocoapods/v/MoyaX.svg)
+[![Platform](https://img.shields.io/cocoapods/p/Alamofire.svg?style=flat)](http://cocoadocs.org/docsets/MoyaX)
 
 **MoyaX 所有特性已经冻结，仍需要补全测试、文档以及代码审查。**
 
@@ -28,6 +30,11 @@ MoyaX 提供了以下功能：
 - 方便的 Stub 请求
 - 文件上传
 - 暴露 Alamofire 的 `Request` 对象，方便使用 Alamofire 的 `delegate` 和高级功能
+
+## 要求
+
+- iOS 8.0+ / Mac OS X 10.9+ / tvOS 9.0+ / watchOS 2.0+
+- Xcode 7.3+
 
 ## 安装
 

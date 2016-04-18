@@ -130,7 +130,7 @@ internal final class AbortingCancellableToken: CancellableToken {
     Protocol to define a MultipartFormData parameter.
     The implementation must be a class because the value of Target#parameters is AnyObject.
 */
-public protocol MultipartFormData: class {}
+public protocol MultipartFormData: class, CustomStringConvertible, CustomDebugStringConvertible {}
 
 /**
     Class to define a MultipartFormData parameter from a data.
@@ -167,6 +167,23 @@ public class DataForMultipartFormData: MultipartFormData {
         self.data = data
         self.fileName = fileName
         self.mimeType = mimeType
+    }
+
+    public var description: String {
+        var str = "#<DataForMultipartFormData length=\"\(self.data.length)\""
+        if let fileName = self.fileName {
+            str += " fileName=\"\(fileName)\""
+        }
+        if let mimeType = self.mimeType {
+            str += " mimeType=\"\(mimeType)\""
+        }
+        str += ">"
+
+        return str
+    }
+
+    public var debugDescription: String {
+        return description
     }
 }
 
@@ -205,5 +222,22 @@ public class FileURLForMultipartFormData: MultipartFormData {
         self.fileURL = fileURL
         self.fileName = fileName
         self.mimeType = mimeType
+    }
+
+    public var description: String {
+        var str = "#<FileURLForMultipartFormData fileURL=\"\(self.fileURL)\""
+        if let fileName = self.fileName {
+            str += " fileName=\"\(fileName)\""
+        }
+        if let mimeType = self.mimeType {
+            str += " mimeType=\"\(mimeType)\""
+        }
+        str += ">"
+
+        return str
+    }
+
+    public var debugDescription: String {
+        return description
     }
 }

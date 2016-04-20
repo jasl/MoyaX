@@ -11,8 +11,12 @@ internal final class StubCancellableToken: CancellableToken {
 
     func cancel() {
         OSSpinLockLock(&self.lock)
-        defer { OSSpinLockUnlock(&self.lock) }
-        if self.isCancelled { return }
+        defer {
+            OSSpinLockUnlock(&self.lock)
+        }
+        if self.isCancelled {
+            return
+        }
 
         self.isCancelled = true
     }
@@ -47,7 +51,8 @@ public struct StubRule {
     public init(URL: NSURL, behavior: StubBehavior? = nil, response: StubResponse) {
         self.URL = URL
         self.behavior = behavior
-        self.conditionalResponse = { (_, _) in
+        self.conditionalResponse = {
+            (_, _) in
             return response
         }
     }
@@ -78,7 +83,7 @@ public func == (lhs: StubAction, rhs: StubAction) -> Bool {
 }
 
 public class StubBackend: Backend {
-    internal var stubs: [StubAction: StubRule]
+    internal var stubs: [StubAction:StubRule]
 
     public let defaultBehavior: StubBehavior
     public let defaultResponse: StubResponse
@@ -167,7 +172,7 @@ public class StubBackend: Backend {
     }
 }
 
-public class GenericStubBackend<TargetType: Target>: StubBackend {
+public class GenericStubBackend<TargetType:Target>: StubBackend {
     public override init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
         super.init(defaultBehavior: defaultBehavior, defaultResponse: defaultResponse)
     }

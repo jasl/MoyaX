@@ -7,6 +7,7 @@ public typealias Completion = Result<Response, Error> -> ()
     HTTP method definitions.
     See https://tools.ietf.org/html/rfc7231#section-4.3
 */
+
 public enum HTTPMethod: String {
     case OPTIONS, GET, HEAD, POST, PUT, PATCH, DELETE, TRACE, CONNECT
 }
@@ -27,11 +28,12 @@ public enum HTTPMethod: String {
     - Custom: Uses the associated closure value to construct a new request given an existing request and
               parameters.
 */
+
 public enum ParameterEncoding {
     case URL
     case MultipartFormData
     case JSON
-    case Custom((NSMutableURLRequest, [String: AnyObject]) -> (NSMutableURLRequest, NSError?))
+    case Custom((NSMutableURLRequest, [String:AnyObject]) -> (NSMutableURLRequest, NSError?))
 }
 
 /// Protocol to define the base URL, path, method, parameters and etc. for a target.
@@ -44,10 +46,10 @@ public protocol Target {
     var method: HTTPMethod { get }
 
     /// Optional, default is `[:]`
-    var headerFields: [String: String] { get }
+    var headerFields: [String:String] { get }
 
     /// Optional, default is `[:]`
-    var parameters: [String: AnyObject] { get }
+    var parameters: [String:AnyObject] { get }
     /// Optional, default is `.URL`, for multipart uploading, use `.MultipartFormData`
     var parameterEncoding: ParameterEncoding { get }
 
@@ -65,11 +67,11 @@ public extension Target {
         return .GET
     }
 
-    var headerFields: [String: String] {
+    var headerFields: [String:String] {
         return [:]
     }
 
-    var parameters: [String: AnyObject] {
+    var parameters: [String:AnyObject] {
         return [:]
     }
     var parameterEncoding: ParameterEncoding {
@@ -114,6 +116,7 @@ public protocol Backend: class {
 /// Protocol to define the opaque type returned from a request
 public protocol CancellableToken: CustomDebugStringConvertible {
     func cancel()
+
     var debugDescription: String { get }
 }
 
@@ -182,6 +185,10 @@ public class DataForMultipartFormData: MultipartFormData {
         return str
     }
 
+    /**
+        The textual representation used when written to an output stream, which includes the data's length,
+        as well as the file name and the MIME type if they have provided.
+    */
     public var debugDescription: String {
         return description
     }
@@ -214,7 +221,6 @@ public class FileURLForMultipartFormData: MultipartFormData {
 
     /**
         - parameter fileURL:  The URL of the file whose content will be encoded into the multipart form data.
-        - parameter name:     The name to associate with the file content in the `Content-Disposition` HTTP header.
         - parameter fileName: The filename to associate with the file content in the `Content-Disposition` HTTP header.
         - parameter mimeType: The MIME type to associate with the file content in the `Content-Type` HTTP header.
     */
@@ -224,6 +230,10 @@ public class FileURLForMultipartFormData: MultipartFormData {
         self.mimeType = mimeType
     }
 
+    /**
+        The textual representation used when written to an output stream, which includes the file's URL,
+        as well as the file name and the MIME type if they have provided.
+    */
     public var description: String {
         var str = "#<FileURLForMultipartFormData fileURL=\"\(self.fileURL)\""
         if let fileName = self.fileName {

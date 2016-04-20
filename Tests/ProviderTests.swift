@@ -17,7 +17,8 @@ class ProviderTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
+            _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
@@ -28,7 +29,8 @@ class ProviderTests: XCTestCase {
         let expectation = expectationWithDescription("do request")
 
         // When
-        provider.request(SimpliestTarget(path: self.path)) { closureResult in
+        provider.request(SimpliestTarget(path: self.path)) {
+            closureResult in
             result = closureResult
             expectation.fulfill()
         }

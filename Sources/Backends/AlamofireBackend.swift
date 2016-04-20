@@ -15,8 +15,12 @@ final class AlamofireCancellableToken: CancellableToken {
 
     func cancel() {
         OSSpinLockLock(&self.lock)
-        defer { OSSpinLockUnlock(&self.lock) }
-        if self.isCancelled { return }
+        defer {
+            OSSpinLockUnlock(&self.lock)
+        }
+        if self.isCancelled {
+            return
+        }
 
         self.isCancelled = true
         request?.cancel()
@@ -129,42 +133,46 @@ public class AlamofireBackend: Backend {
             }
 
             self.manager.upload(request,
-                multipartFormData: { multipartFormData in
-                for (key, value) in components {
-                    multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: key)
-                }
+                    multipartFormData: {
+                        multipartFormData in
+                        for (key, value) in components {
+                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: key)
+                        }
 
-                for (key, value) in multipartComponents {
-                    value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
-                }
-            }, encodingMemoryThreshold: self.multipartFormDataEncodingMemoryThreshold,
-                encodingCompletion: { result in
-                switch result {
-                case .Success(let request, _, _):
-                    if cancellableToken.isCancelled {
-                        completion(.Incomplete(Error.Cancelled))
-                        return
-                    }
+                        for (key, value) in multipartComponents {
+                            value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
+                        }
+                    },
+                    encodingMemoryThreshold: self.multipartFormDataEncodingMemoryThreshold,
+                    encodingCompletion: {
+                        result in
+                        switch result {
+                        case .Success(let request, _, _):
+                            if cancellableToken.isCancelled {
+                                completion(.Incomplete(Error.Cancelled))
+                                return
+                            }
 
-                    cancellableToken.request = request
+                            cancellableToken.request = request
 
-                    self.willPerformRequest?(endpoint, request)
-                    self.setResponseCompletion(request, endpoint: endpoint, completion: completion)
+                            self.willPerformRequest?(endpoint, request)
+                            self.setResponseCompletion(request, endpoint: endpoint, completion: completion)
 
-                    if !self.manager.startRequestsImmediately {
-                        request.resume()
-                    }
-                case .Failure(let error):
-                    completion(.Incomplete(Error.BackendBuildingRequest(error)))
-                }
-            })
+                            if !self.manager.startRequestsImmediately {
+                                request.resume()
+                            }
+                        case .Failure(let error):
+                            completion(.Incomplete(Error.BackendBuildingRequest(error)))
+                        }
+                    })
         }
 
         return cancellableToken
     }
 
     private func setResponseCompletion(request: Alamofire.Request, endpoint: Endpoint, completion: Completion) {
-        request.responseData { alamofireResponse in
+        request.responseData {
+            alamofireResponse in
             self.didReceiveResponse?(endpoint, alamofireResponse)
 
             guard let rawResponse = alamofireResponse.response else {
@@ -192,7 +200,7 @@ public class AlamofireBackend: Backend {
         }
     }
 
-    private func encodeParameters(request: NSMutableURLRequest, parameterEncoding: ParameterEncoding, parameters: [String: AnyObject]) -> (NSMutableURLRequest, NSError?) {
+    private func encodeParameters(request: NSMutableURLRequest, parameterEncoding: ParameterEncoding, parameters: [String:AnyObject]) -> (NSMutableURLRequest, NSError?) {
         switch parameterEncoding {
         case .URL:
             return Alamofire.ParameterEncoding.URL.encode(request, parameters: parameters)
@@ -201,39 +209,36 @@ public class AlamofireBackend: Backend {
         case .Custom(let encodingClosure):
             return encodingClosure(request.URLRequest, parameters)
         default:
-            return (request, BackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))
+            return (request, AlamofireBackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))
         }
     }
 }
 
-public extension AlamofireBackend {
-    public struct BackendError {
-        public static let Domain = "me.jasl.moyax.backend.alamofire.error"
+public struct AlamofireBackendError {
+    public static let Domain = "me.jasl.moyax.backend.alamofire.error"
 
-        public enum Code: Int {
-            case UnsupportParameterEncoding = -6000
-            case EncodingComponentFailed = -6005
-        }
+    public enum Code: Int {
+        case UnsupportParameterEncoding = -6000
+    }
 
-        /**
-            Creates an `NSError` with the given error code and failure reason.
-            - parameter code:          The error code.
-            - parameter failureReason: The failure reason.
-            - returns: An `NSError` with the given error code and failure reason.
-        */
-        public static func errorWithCode(code: Code, failureReason: String) -> NSError {
-            return errorWithCode(code.rawValue, failureReason: failureReason)
-        }
+    /**
+        Creates an `NSError` with the given error code and failure reason.
+        - parameter code:          The error code.
+        - parameter failureReason: The failure reason.
+        - returns: An `NSError` with the given error code and failure reason.
+    */
+    public static func errorWithCode(code: Code, failureReason: String) -> NSError {
+        return errorWithCode(code.rawValue, failureReason: failureReason)
+    }
 
-        /**
-            Creates an `NSError` with the given error code and failure reason.
-            - parameter code:          The error code.
-            - parameter failureReason: The failure reason.
-            - returns: An `NSError` with the given error code and failure reason.
-        */
-        public static func errorWithCode(code: Int, failureReason: String) -> NSError {
-            let userInfo = [NSLocalizedFailureReasonErrorKey: failureReason]
-            return NSError(domain: Domain, code: code, userInfo: userInfo)
-        }
+    /**
+        Creates an `NSError` with the given error code and failure reason.
+        - parameter code:          The error code.
+        - parameter failureReason: The failure reason.
+        - returns: An `NSError` with the given error code and failure reason.
+    */
+    public static func errorWithCode(code: Int, failureReason: String) -> NSError {
+        let userInfo = [NSLocalizedFailureReasonErrorKey: failureReason]
+        return NSError(domain: Domain, code: code, userInfo: userInfo)
     }
 }

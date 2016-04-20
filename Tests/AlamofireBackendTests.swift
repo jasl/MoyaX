@@ -21,7 +21,8 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
+            _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
@@ -32,7 +33,8 @@ class AlamofireBackendTests: XCTestCase {
         let expectation = expectationWithDescription("do request")
 
         // When
-        backend.request(self.endpoint) { closureResult in
+        backend.request(self.endpoint) {
+            closureResult in
             result = closureResult
             expectation.fulfill()
         }
@@ -54,7 +56,8 @@ class AlamofireBackendTests: XCTestCase {
 
     func testCancelRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
+            _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(2)
         }
 
@@ -65,7 +68,8 @@ class AlamofireBackendTests: XCTestCase {
         let expectation = expectationWithDescription("do request")
 
         // When
-        let cancellableToken = backend.request(self.endpoint) { closureResult in
+        let cancellableToken = backend.request(self.endpoint) {
+            closureResult in
             result = closureResult
             expectation.fulfill()
         }
@@ -92,17 +96,20 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequestWithHook() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
+            _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(1)
         }
 
         var calledWillPerformRequest = false
-        let willPerformRequest: (Endpoint, Alamofire.Request) -> () = { _, _ in
+        let willPerformRequest: (Endpoint, Alamofire.Request) -> () = {
+            _, _ in
             calledWillPerformRequest = true
         }
 
         var calledDidReceiveResponse = false
-        let didReceiveResponse: (Endpoint, Alamofire.Response<NSData, NSError>) -> () = { _, _ in
+        let didReceiveResponse: (Endpoint, Alamofire.Response<NSData, NSError>) -> () = {
+            _, _ in
             calledDidReceiveResponse = true
         }
 
@@ -113,7 +120,8 @@ class AlamofireBackendTests: XCTestCase {
         let expectation = expectationWithDescription("do request")
 
         // When
-        backend.request(self.endpoint) { closureResult in
+        backend.request(self.endpoint) {
+            closureResult in
             result = closureResult
             expectation.fulfill()
         }

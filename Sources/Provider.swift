@@ -34,8 +34,8 @@ public class MoyaXProvider {
                      middlewares: [Middleware]? = nil,
                      prepareForEndpoint: (Endpoint -> ())? = nil) -> MoyaXProvider {
         return MoyaXProvider(backend: backend ?? self.backend,
-                             middlewares: middlewares ?? self.middlewares,
-                             prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
+                middlewares: middlewares ?? self.middlewares,
+                prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
     }
 
     /**
@@ -65,19 +65,26 @@ public class MoyaXProvider {
 
         self.prepareForEndpoint?(endpoint)
 
-        self.middlewares.forEach { $0.willSendRequest(target, endpoint: endpoint) }
+        self.middlewares.forEach {
+            $0.willSendRequest(target, endpoint: endpoint)
+        }
 
         guard endpoint.willPerform else {
             let error: Result<Response, Error> = .Incomplete(.Aborted)
-            self.middlewares.forEach { $0.didReceiveResponse(target, response: error) }
+            self.middlewares.forEach {
+                $0.didReceiveResponse(target, response: error)
+            }
 
             return AbortingCancellableToken()
         }
 
         let backend = backend ?? self.backend
 
-        return backend.request(endpoint) { response in
-            self.middlewares.forEach { $0.didReceiveResponse(target, response: response) }
+        return backend.request(endpoint) {
+            response in
+            self.middlewares.forEach {
+                $0.didReceiveResponse(target, response: response)
+            }
 
             completion(response)
         }
@@ -86,7 +93,7 @@ public class MoyaXProvider {
 
 /// Request provider class. Requests should be made through this class only.
 /// This is the generic provider that convenient for `enum` targets
-public class MoyaXGenericProvider<TargetType: Target>: MoyaXProvider {
+public class MoyaXGenericProvider<TargetType:Target>: MoyaXProvider {
 
     /**
        Initializes a provider.
@@ -113,8 +120,8 @@ public class MoyaXGenericProvider<TargetType: Target>: MoyaXProvider {
                               middlewares: [Middleware]? = nil,
                               prepareForEndpoint: (Endpoint -> ())? = nil) -> MoyaXGenericProvider<TargetType> {
         return MoyaXGenericProvider<TargetType>(backend: backend ?? self.backend,
-                                                middlewares: middlewares ?? self.middlewares,
-                                                prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
+                middlewares: middlewares ?? self.middlewares,
+                prepareForEndpoint: prepareForEndpoint ?? self.prepareForEndpoint)
     }
 
     /**

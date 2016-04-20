@@ -10,9 +10,9 @@ public final class Endpoint {
     public let URL: NSURL
     public let method: HTTPMethod
 
-    public var headerFields: [String: String]
+    public var headerFields: [String:String]
 
-    public var parameters: [String: AnyObject]
+    public var parameters: [String:AnyObject]
     public let parameterEncoding: ParameterEncoding
 
     public init(target: Target) {

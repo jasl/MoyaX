@@ -14,12 +14,12 @@ struct WildcardTarget: Target {
     let baseURL = NSURL(string: "https://httpbin.org")!
     var path: String
     var method: HTTPMethod
-    var headerFields: [String: String]
-    var parameters: [String: AnyObject]
+    var headerFields: [String:String]
+    var parameters: [String:AnyObject]
     var parameterEncoding: ParameterEncoding
 
-    init(path: String, method: HTTPMethod = .GET, headerFields: [String: String] = [:],
-         parameters: [String: AnyObject] = [:], parameterEncoding: ParameterEncoding = .URL) {
+    init(path: String, method: HTTPMethod = .GET, headerFields: [String:String] = [:],
+         parameters: [String:AnyObject] = [:], parameterEncoding: ParameterEncoding = .URL) {
         self.path = path
         self.method = method
         self.headerFields = headerFields

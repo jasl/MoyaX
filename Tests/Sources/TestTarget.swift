@@ -1,11 +1,29 @@
 import Foundation
 import MoyaX
 
-struct TestTarget: Target {
-    var baseURL: NSURL { return NSURL(string: "http://test.local")! }
-    var path: String { return "foo/bar" }
+struct SimpliestTarget: Target {
+    let baseURL = NSURL(string: "https://httpbin.org")!
+    let path: String
 
-    var method: HTTPMethod { return .GET }
-    var parameters: [String: AnyObject] { return ["Nemesis": "Harvey"] }
-    var headerFields: [String: String] { return ["Title": "Dominar"] }
+    init(path: String = "get") {
+        self.path = path
+    }
+}
+
+struct WildcardTarget: Target {
+    let baseURL = NSURL(string: "https://httpbin.org")!
+    var path: String
+    var method: HTTPMethod
+    var headerFields: [String: String]
+    var parameters: [String: AnyObject]
+    var parameterEncoding: ParameterEncoding
+
+    init(path: String, method: HTTPMethod = .GET, headerFields: [String: String] = [:],
+         parameters: [String: AnyObject] = [:], parameterEncoding: ParameterEncoding = .URL) {
+        self.path = path
+        self.method = method
+        self.headerFields = headerFields
+        self.parameters = parameters
+        self.parameterEncoding = parameterEncoding
+    }
 }

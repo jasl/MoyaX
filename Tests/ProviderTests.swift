@@ -4,6 +4,7 @@ import OHHTTPStubs
 
 class ProviderTests: XCTestCase {
     let data = "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!
+    let path = "/test"
 
     override func setUp() {
         super.setUp()
@@ -16,7 +17,7 @@ class ProviderTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/foo/bar"}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
@@ -27,7 +28,7 @@ class ProviderTests: XCTestCase {
         let expectation = expectationWithDescription("do request")
 
         // When
-        provider.request(TestTarget()) { closureResult in
+        provider.request(SimpliestTarget(path: self.path)) { closureResult in
             result = closureResult
             expectation.fulfill()
         }

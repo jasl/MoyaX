@@ -5,12 +5,13 @@ import Alamofire
 
 class AlamofireBackendTests: XCTestCase {
     let data = "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!
+    let path = "/test"
     var endpoint: Endpoint!
     var backend: AlamofireBackend!
 
     override func setUp() {
         super.setUp()
-        self.endpoint = Endpoint(target: TestTarget())
+        self.endpoint = Endpoint(target: SimpliestTarget(path: self.path))
     }
 
     override func tearDown() {
@@ -20,7 +21,7 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/foo/bar"}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
@@ -53,7 +54,7 @@ class AlamofireBackendTests: XCTestCase {
 
     func testCancelRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/foo/bar"}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(2)
         }
 
@@ -91,7 +92,7 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequestWithHook() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == "/foo/bar"}) { _ in
+        OHHTTPStubs.stubRequestsPassingTest({$0.URL!.path == self.path}) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(1)
         }
 

@@ -121,7 +121,7 @@ public protocol CancellableToken: CustomDebugStringConvertible {
 }
 
 /// A stub implementation for request which aborted by setting `endpoint.shouldPerform = false` or errored.
-internal final class AbortingCancellableToken: CancellableToken {
+internal final class IncompleteCancellableToken: CancellableToken {
     func cancel() {}
 
     var debugDescription: String {

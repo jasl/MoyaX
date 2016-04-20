@@ -71,11 +71,14 @@ public class MoyaXProvider {
 
         guard endpoint.willPerform else {
             let error: Result<Response, Error> = .Incomplete(.Aborted)
+
             self.middlewares.forEach {
                 $0.didReceiveResponse(target, response: error)
             }
 
-            return AbortingCancellableToken()
+            completion(error)
+
+            return IncompleteCancellableToken()
         }
 
         let backend = backend ?? self.backend

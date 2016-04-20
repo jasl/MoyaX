@@ -11,7 +11,7 @@ import Foundation
     = Underlying: Uncategoried errors
 */
 public enum Error: ErrorType {
-    case BackendBuildingRequest(ErrorType)
+    case BackendBuildRequest(ErrorType)
     case BackendResponse(ErrorType)
     case BackendUnexpect(ErrorType)
     case Aborted

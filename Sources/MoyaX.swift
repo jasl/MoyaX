@@ -120,12 +120,12 @@ public protocol CancellableToken: CustomDebugStringConvertible {
     var debugDescription: String { get }
 }
 
-/// A fake Cancellable implementation for request which aborted by setting `endpoint.shouldPerform = false`
+/// A stub implementation for request which aborted by setting `endpoint.shouldPerform = false` or errored.
 internal final class AbortingCancellableToken: CancellableToken {
     func cancel() {}
 
     var debugDescription: String {
-        return "Stub CancellableToken for a aborting task."
+        return "Stub CancellableToken for a incomplete task."
     }
 }
 
@@ -162,7 +162,6 @@ public class DataForMultipartFormData: MultipartFormData {
 
     /**
         - parameter data:     The data to encode into the multipart form data.
-        - parameter name:     The name to associate with the data in the `Content-Disposition` HTTP header.
         - parameter fileName: The filename to associate with the data in the `Content-Disposition` HTTP header.
         - parameter mimeType: The MIME type to associate with the data in the `Content-Type` HTTP header.
     */

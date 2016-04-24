@@ -120,15 +120,6 @@ public protocol CancellableToken: CustomDebugStringConvertible {
     var debugDescription: String { get }
 }
 
-/// A stub implementation for request which aborted by setting `endpoint.shouldPerform = false` or errored.
-internal final class IncompleteCancellableToken: CancellableToken {
-    func cancel() {}
-
-    var debugDescription: String {
-        return "Stub CancellableToken for a incomplete task."
-    }
-}
-
 /**
     Protocol to define a MultipartFormData parameter.
     The implementation must be a class because the value of Target#parameters is AnyObject.

@@ -110,12 +110,7 @@ public class AlamofireBackend: Backend {
 
         switch endpoint.parameterEncoding {
         case .URL, .JSON, .Custom:
-            let (encodedRequest, error) = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters)
-            if let error = error {
-                completion(.Incomplete(Error.BackendBuildRequest(error)))
-                return IncompleteCancellableToken()
-            }
-
+            let encodedRequest = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters).0
             let alamofireRequest = self.manager.request(encodedRequest)
             cancellableToken.request = alamofireRequest
 

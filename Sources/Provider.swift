@@ -69,18 +69,6 @@ public class MoyaXProvider {
             $0.willSendRequest(target, endpoint: endpoint)
         }
 
-        guard endpoint.willPerform else {
-            let error: Result<Response, Error> = .Incomplete(.Aborted)
-
-            self.middlewares.forEach {
-                $0.didReceiveResponse(target, response: error)
-            }
-
-            completion(error)
-
-            return IncompleteCancellableToken()
-        }
-
         let backend = backend ?? self.backend
 
         return backend.request(endpoint) {

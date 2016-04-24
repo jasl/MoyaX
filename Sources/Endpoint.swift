@@ -4,8 +4,6 @@ import Foundation
 public final class Endpoint {
     /// The raw target instance
     public let target: Target?
-    /// Set `false` will abort the request
-    public var willPerform = true
 
     public let URL: NSURL
     public let method: HTTPMethod

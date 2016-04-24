@@ -24,7 +24,7 @@ public class MoyaXProvider {
     }
 
     /**
-       Initializes a provider by copying a existing one.
+       Dupplicate the provider.
 
        - Parameter backend: Using new backend instead of existing configuration.
        - Parameter middlewares: Using new middlewares instead of existing configuration.
@@ -101,7 +101,7 @@ public class MoyaXGenericProvider<TargetType:Target>: MoyaXProvider {
     }
 
     /**
-       Initializes a provider by copying a existing one.
+       Dupplicate the provider.
 
        - Parameter backend: Using new backend instead of existing configuration.
        - Parameter middlewares: Using new middlewares instead of existing configuration.

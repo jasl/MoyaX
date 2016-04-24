@@ -121,26 +121,15 @@ public class AlamofireBackend: Backend {
                 alamofireRequest.resume()
             }
         case .MultipartFormData:
-            var components: [(String, String)] = []
-            var multipartComponents: [String:AlamofireMultipartFormDataEncodable] = [:]
-
-            for (key, value) in endpoint.parameters {
-                if let multipartData = value as? AlamofireMultipartFormDataEncodable {
-                    multipartComponents[key] = multipartData
-                } else {
-                    components += Alamofire.ParameterEncoding.URL.queryComponents(key, value)
-                }
-            }
-
             self.manager.upload(request,
                     multipartFormData: {
                         multipartFormData in
-                        for (key, value) in components {
-                            multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: key)
-                        }
-
-                        for (key, value) in multipartComponents {
-                            value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
+                        for (key, value) in endpoint.parameters {
+                            if let value = value as? AlamofireMultipartFormDataEncodable {
+                                value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
+                            } else {
+                                multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: key)
+                            }
                         }
                     },
                     encodingMemoryThreshold: self.multipartFormDataEncodingMemoryThreshold,

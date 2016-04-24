@@ -1,7 +1,7 @@
 import Foundation
 
 /// Used to store all response data returned from a completed request.
-public struct Response: CustomDebugStringConvertible {
+public class Response: CustomDebugStringConvertible {
     public let response: NSURLResponse?
 
     public let statusCode: Int

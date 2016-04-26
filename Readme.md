@@ -93,7 +93,7 @@ struct GithubShowUser: Target {
     return [:]
   }
   
-  // Optional, default is .URL, means submit parameters using `x-www-form-urlencoded`
+  // Optional, default is .URL, means submitting parameters using `x-www-form-urlencoded`
   var parameterEncoding: ParameterEncoding {
     return .URL
   }
@@ -118,7 +118,7 @@ provider.request(GithubShowUser(name: "jasl")) { response in
     let statusCode = response.statusCode
     // Handle success here
     
-  // Network failure (connectivity or timeout), the request had cancelled or aborted or other unexpect errors goes here
+  // Network failure (connectivity or timeout), the request had cancelled or other unexpected errors goes here
   case let .Incomplete(error):
     // error is an enum
     // Handle error here
@@ -143,7 +143,7 @@ struct UploadingTarget: Target {
 
   var parameters: [String: AnyObject] {
     return [
-      // MoyaX provides some placeholders for MultipartFormdata
+      // MoyaX provides some placeholders for MultipartFormData
       "photo1": FileForMultipartFormData(fileURL: photoFileURL, filename: 'photo1.jpg', mimeType: 'image/jpeg'),
       "photo2": DataForMultipartFormData(data: photoData, filename: 'photo2.jpg', mimeType: 'image/jpeg')
   }

@@ -3,8 +3,8 @@ import Foundation
 /**
     Errors on requesting a target.
 
-    - BackendBuildingRequest: Raised on making request object. e.g raised by serializing multipart failure
-    - BackendResponse: Raised on backend's completion of a request. e.g raised by request timeout
+    - BackendBuildRequest: Raised on making request object. e.g serializing multipart form data failure
+    - BackendResponse: Raised on backend's completion of a request. e.g timeout
     - BackendUnexpect: All other errors raised by backend
     - Cancelled: Raised by `cancellableToken.cancel()`
     = Underlying: Uncategoried errors

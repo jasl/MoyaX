@@ -124,13 +124,7 @@ public class AlamofireBackend: Backend {
             self.manager.upload(request,
                     multipartFormData: {
                         multipartFormData in
-                        for (key, value) in endpoint.parameters {
-                            if let value = value as? AlamofireMultipartFormDataEncodable {
-                                value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
-                            } else {
-                                multipartFormData.appendBodyPart(data: value.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!, name: key)
-                            }
-                        }
+                        self.encodeMultipartFormData(to: multipartFormData, parameters: endpoint.parameters)
                     },
                     encodingMemoryThreshold: self.multipartFormDataEncodingMemoryThreshold,
                     encodingCompletion: {
@@ -200,6 +194,51 @@ public class AlamofireBackend: Backend {
         default:
             return (request, AlamofireBackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))
         }
+    }
+
+    private func encodeMultipartFormData(to multipartFormData: Alamofire.MultipartFormData, parameters: [String: AnyObject]) {
+        var components: [(String, AnyObject)] = []
+
+        for key in parameters.keys.sort(<) {
+            let value = parameters[key]!
+            components += self.flattenQueryComponents(key, value)
+        }
+
+        for (key, value) in components {
+            switch value {
+            case let value as AlamofireMultipartFormDataEncodable:
+                value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
+            case let value as String:
+                let data = self.escape(value).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+                multipartFormData.appendBodyPart(data: data, name: key)
+            default:
+                continue
+            }
+        }
+    }
+
+    private func flattenQueryComponents(key: String, _ value: AnyObject) -> [(String, AnyObject)] {
+        var components: [(String, AnyObject)] = []
+
+        if let dictionary = value as? [String: AnyObject] {
+            for (nestedKey, value) in dictionary {
+                components += flattenQueryComponents("\(key)[\(nestedKey)]", value)
+            }
+        } else if let array = value as? [AnyObject] {
+            for value in array {
+                components += flattenQueryComponents("\(key)[]", value)
+            }
+        } else if let placeholder = value as? AlamofireMultipartFormDataEncodable {
+            components.append((escape(key), placeholder))
+        } else {
+            components.append((escape(key), escape("\(value)")))
+        }
+
+        return components
+    }
+
+    private func escape(string: String) -> String {
+        return Alamofire.ParameterEncoding.URL.escape(string)
     }
 }
 

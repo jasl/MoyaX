@@ -109,7 +109,7 @@ public class AlamofireBackend: Backend {
         request.allHTTPHeaderFields = endpoint.headerFields
 
         switch endpoint.parameterEncoding {
-        case .URL, .JSON, .Custom:
+        case .url, .json, .custom:
             let encodedRequest = self.encodeParameters(request, parameterEncoding: endpoint.parameterEncoding, parameters: endpoint.parameters).0
             let alamofireRequest = self.manager.request(encodedRequest)
             cancellableToken.request = alamofireRequest
@@ -120,7 +120,7 @@ public class AlamofireBackend: Backend {
             if !self.manager.startRequestsImmediately {
                 alamofireRequest.resume()
             }
-        case .MultipartFormData:
+        case .multipartFormData:
             self.manager.upload(request,
                     multipartFormData: {
                         multipartFormData in
@@ -132,7 +132,7 @@ public class AlamofireBackend: Backend {
                         switch result {
                         case .Success(let request, _, _):
                             if cancellableToken.isCancelled {
-                                completion(.Incomplete(Error.Cancelled))
+                                completion(.incomplete(Error.cancelled))
                                 return
                             }
 
@@ -145,7 +145,7 @@ public class AlamofireBackend: Backend {
                                 request.resume()
                             }
                         case .Failure(let error):
-                            completion(.Incomplete(Error.BackendBuildRequest(error)))
+                            completion(.incomplete(Error.backendBuildRequest(error)))
                         }
                     })
         }
@@ -161,13 +161,13 @@ public class AlamofireBackend: Backend {
             guard let rawResponse = alamofireResponse.response else {
                 if case let .Failure(error) = alamofireResponse.result {
                     if error.code == NSURLErrorCancelled {
-                        completion(.Incomplete(Error.Cancelled))
+                        completion(.incomplete(Error.cancelled))
                     } else {
-                        completion(.Incomplete(Error.BackendUnexpect(error)))
+                        completion(.incomplete(Error.backendUnexpect(error)))
                     }
                 } else {
                     let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil)
-                    completion(.Incomplete(Error.BackendUnexpect(error)))
+                    completion(.incomplete(Error.backendUnexpect(error)))
                 }
 
                 return
@@ -176,20 +176,20 @@ public class AlamofireBackend: Backend {
             switch alamofireResponse.result {
             case let .Success(data):
                 let response = Response(statusCode: rawResponse.statusCode, data: data, response: rawResponse)
-                completion(.Response(response))
+                completion(.response(response))
             case let .Failure(error):
-                completion(.Incomplete(Error.BackendResponse(error)))
+                completion(.incomplete(Error.backendResponse(error)))
             }
         }
     }
 
     private func encodeParameters(request: NSMutableURLRequest, parameterEncoding: ParameterEncoding, parameters: [String:AnyObject]) -> (NSMutableURLRequest, NSError?) {
         switch parameterEncoding {
-        case .URL:
+        case .url:
             return Alamofire.ParameterEncoding.URL.encode(request, parameters: parameters)
-        case .JSON:
+        case .json:
             return Alamofire.ParameterEncoding.JSON.encode(request, parameters: parameters)
-        case .Custom(let encodingClosure):
+        case .custom(let encodingClosure):
             return encodingClosure(request.URLRequest, parameters)
         default:
             return (request, AlamofireBackendError.errorWithCode(.UnsupportParameterEncoding, failureReason: "\(parameterEncoding) can't encode by Alamofire's ParameterEncoding."))

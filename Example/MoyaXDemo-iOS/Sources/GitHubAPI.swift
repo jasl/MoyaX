@@ -4,26 +4,26 @@ import MoyaX
 // MARK: - Provider setup
 
 public enum GitHub {
-    case Zen
-    case UserProfile(String)
-    case UserRepositories(String)
+    case zen
+    case userProfile(String)
+    case userRepositories(String)
 }
 
 extension GitHub: Target {
     public var baseURL: NSURL { return NSURL(string: "https://api.github.com")! }
     public var path: String {
         switch self {
-        case .Zen:
+        case .zen:
             return "/zen"
-        case .UserProfile(let name):
+        case .userProfile(let name):
             return "/users/\(name.URLEscapedString)"
-        case .UserRepositories(let name):
+        case .userRepositories(let name):
             return "/users/\(name.URLEscapedString)/repos"
         }
     }
     public var parameters: [String: AnyObject]? {
         switch self {
-        case .UserRepositories(_):
+        case .userRepositories(_):
             return ["sort": "pushed"]
         default:
             return nil

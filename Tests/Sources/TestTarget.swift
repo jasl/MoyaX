@@ -18,8 +18,8 @@ struct WildcardTarget: Target {
     var parameters: [String:AnyObject]
     var parameterEncoding: ParameterEncoding
 
-    init(path: String, method: HTTPMethod = .GET, headerFields: [String:String] = [:],
-         parameters: [String:AnyObject] = [:], parameterEncoding: ParameterEncoding = .URL) {
+    init(path: String, method: HTTPMethod = .get, headerFields: [String:String] = [:],
+         parameters: [String:AnyObject] = [:], parameterEncoding: ParameterEncoding = .url) {
         self.path = path
         self.method = method
         self.headerFields = headerFields

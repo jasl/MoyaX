@@ -30,9 +30,9 @@ struct UpdateUserProfile: Target {
     return "/users/\(self.id)"
   }
 
-  // 根据 API 要求来设定，记得只有 .POST .PUT .PATCH 方式请求才可以使用上传
+  // 根据 API 要求来设定，记得只有 .post .put .patch 方式请求才可以使用上传
   var method: HTTPMethod {
-    return .PATCH
+    return .patch
   }
 
   // 可以省略，额外的 HTTP 请求头信息，默认为空
@@ -50,7 +50,7 @@ struct UpdateUserProfile: Target {
 
   // 以 multipart/form-data 方式提交 parameters
   var parameterEncoding: ParameterEncoding {
-     return .MultipartFormData
+     return .multipartFormData
   }
 }
 ```

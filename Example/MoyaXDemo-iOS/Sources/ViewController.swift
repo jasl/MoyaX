@@ -14,13 +14,13 @@ class ViewController: UITableViewController {
     // MARK: - API Stuff
 
     func downloadRepositories(username: String) {
-        self.provider.request(.UserRepositories(username), completion: { result in
+        self.provider.request(.userRepositories(username), completion: { result in
 
             var success = true
             var message = "Unable to fetch from GitHub"
 
             switch result {
-            case let .Response(response):
+            case let .response(response):
                 do {
                     guard let json = try response.mapJSON() as? [[String: AnyObject]] else {
                         success = false
@@ -33,7 +33,7 @@ class ViewController: UITableViewController {
                 }
 
                 self.tableView.reloadData()
-            case let .Incomplete(error):
+            case let .incomplete(error):
                 guard let error = error as? CustomStringConvertible else {
                     break
                 }
@@ -53,9 +53,9 @@ class ViewController: UITableViewController {
     }
 
     func downloadZen() {
-        self.provider.request(.Zen, completion: { result in
+        self.provider.request(.zen, completion: { result in
             var message = "Couldn't access API"
-            if case let .Response(response) = result {
+            if case let .response(response) = result {
                 message = (try? response.mapString()) ?? message
             }
 

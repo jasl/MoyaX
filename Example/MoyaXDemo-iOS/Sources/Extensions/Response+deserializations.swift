@@ -7,14 +7,14 @@ extension Response {
         do {
             return try NSJSONSerialization.JSONObjectWithData(data, options: .AllowFragments)
         } catch {
-            throw Error.Underlying(error)
+            throw Error.underlying(error)
         }
     }
 
     /// Maps data received from the signal into a String.
     func mapString() throws -> String {
         guard let string = NSString(data: data, encoding: NSUTF8StringEncoding) else {
-            throw Error.Underlying(NSError(domain: "MoyaX.Demo", code: -1001, userInfo: nil))
+            throw Error.underlying(NSError(domain: "MoyaX.Demo", code: -1001, userInfo: nil))
         }
         return string as String
     }

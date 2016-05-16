@@ -47,9 +47,9 @@ struct GithubShowUser: Target {
     return "/users/\(name)"
   }
 
-  // 可以省略，API 的请求方式，默认为 .GET
+  // 可以省略，API 的请求方式，默认为 .get
   var method: HTTPMethod {
-    return .GET
+    return .get
   }
 
   // 可以省略，额外的 HTTP 请求头信息，默认为空
@@ -62,9 +62,9 @@ struct GithubShowUser: Target {
      return [:]
   }
 
-  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .URL，即以 HTTP 表单方式提交 parameters
+  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .url，即以 HTTP 表单方式提交 parameters
   var parameterEncoding: ParameterEncoding {
-     return .URL
+     return .url
   }
 }
 ```
@@ -74,9 +74,9 @@ struct GithubShowUser: Target {
 ```swift
 // 使用枚举声明 API 列表
 enum MyService {
-  case Zen
-  case ShowUser(id: Int)
-  case CreateUser(firstName: String, lastName: String)
+  case zen
+  case showUser(id: Int)
+  case createUser(firstName: String, lastName: String)
 }
 
 // 实现 Target 协议
@@ -98,13 +98,13 @@ extension MyService: Target {
     }
   }
     
-  // 可以省略，API 的请求方式，默认为 .GET
+  // 可以省略，API 的请求方式，默认为 .get
   var method: HTTPMethod {
     switch self {
-    case .Zen, .ShowUser:
-      return .GET
-    case .CreateUser:
-      return .POST
+    case .zen, .showUser:
+      return .get
+    case .createUser:
+      return .post
     }
   }
     
@@ -116,16 +116,16 @@ extension MyService: Target {
   // 可以省略，HTTP 请求的表单数据，默认为空
   var parameters: [String: AnyObject] {
     switch self {
-    case .Zen, .ShowUser:
+    case .zen, .showUser:
       return [:]
-    case .CreateUser(let firstName, let lastName):
+    case .createUser(let firstName, let lastName):
       return ["first_name": firstName, "last_name": lastName]
     }
   }
 
-  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .URL，即以 HTTP 表单方式提交 parameters
+  // 可以省略，HTTP 请求的表单数据的编码方式，默认为 .url，即以 HTTP 表单方式提交 parameters
   var parameterEncoding: ParameterEncoding {
-     return .URL
+     return .url
   }
 }
 ```
@@ -150,7 +150,7 @@ provider.request(GithubShowUser(name: "jasl")) { response in
   switch response {
 
   // 服务器有返回结果，注意服务器返回 4xx、5xx 也走这里
-  case let .Response(response):
+  case let .response(response):
     // 服务器端返回的数据，为 NSData
     let data = response.data
     // 服务器端返回的状态码
@@ -158,7 +158,7 @@ provider.request(GithubShowUser(name: "jasl")) { response in
     // 在这里处理响应
 
   // 网络原因（连通性或者超时）服务器没有返回结果、请求被取消或者其他异常
-  case let .Incomplete(error):
+  case let .incomplete(error):
     // 在这里处理请求失败，error 是一个枚举
   }
 }
@@ -207,9 +207,9 @@ class LoggerMiddleware: Middleware {
   // 这个方法会在处理响应的回调闭包前被调用
   func didReceiveResponse(target: Target, response: Result<Response, Error>) {
     switch response {
-    case let .Response(response):
+    case let .response(response):
       logger.info("Received response(\(response.statusCode ?? 0)) from \(response.response!.URL?.absoluteString ?? String()).")
-    case .Incomplete(_):
+    case .incomplete(_):
       logger.error("Got error")
     }
   }
@@ -295,7 +295,7 @@ struct GithubZen: Target {
 
 extension GithubZen: TargetWithSample {
   var sampleResponse: StubResponse {   	 
-    return .NetworkResponse(200,
+    return .networkResponse(200,
                             "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!)
   }  
 }
@@ -316,7 +316,7 @@ provider.request(GithubZen()) { response in
 
   // 服务器有返回结果，注意服务器返回 4xx、5xx 也走这里
   // 因为是 Stub 的，这里的值和在 sampleResponse 设置的一样
-  case let .Response(response):
+  case let .response(response):
     // 服务器端返回的数据，为 NSData
     let data = response.data
     // 服务器端返回的状态码
@@ -324,7 +324,7 @@ provider.request(GithubZen()) { response in
     // 在这里处理响应
 
   // 网络原因（连通性或者超时）服务器没有返回结果、请求被取消或者其他异常
-  case let .Incomplete(error):
+  case let .incomplete(error):
     // 在这里处理请求失败，error 是一个枚举
   }
 }
@@ -336,14 +336,14 @@ provider.request(GithubZen()) { response in
 
 在初始化时，你也可以定制默认的行为和默认响应：
 
-- `defaultBehavior`：默认为 `.Immediate`，即立即响应，你还可以设置 `Delayed(NSTimeInterval)` 来延迟一段时间响应（默认真实环境）
-- `defaultResponse`：默认为 `.NoStubError`，当没有实现 `TargetWithSample` 时，并且也没有在 `StubBackend` stub Target时，程序将崩溃退出
+- `defaultBehavior`：默认为 `.immediate`，即立即响应，你还可以设置 `.delayed(NSTimeInterval)` 来延迟一段时间响应（默认真实环境）
+- `defaultResponse`：默认为 `.noStubError`，当没有实现 `TargetWithSample` 时，并且也没有在 `StubBackend` stub Target时，程序将崩溃退出
 
 #### 在 `StubBackend` 端 stub Target
 
 你也可以在 `StubBackend` 这端 stub 一个 Target，你可以定制：
 
-- `behavior`：响应的行为，默认为立即响应 `.Immediate`，也可以设置 `Delayed(NSTimeInterval)` 来延迟一段时间响应（默认真实环境）
+- `behavior`：响应的行为，默认为立即响应 `.immediate`，也可以设置 `.delayed(NSTimeInterval)` 来延迟一段时间响应（默认真实环境）
 - `conditionalResponse`：签名为 `(endpoint: Endpoint, target: Target?) -> StubResponse` 的闭包，允许你在运行时根据请求来定制响应 
 
 ```swift
@@ -353,10 +353,10 @@ let stubBackend = StubBackend()
 stubBackend.stubTarget(target, behavior: .Delayed(2), conditionalResponse: { endpoint, target in
   // 这里我们设定随机数为偶数返回结果，为奇数抛出网络异常
   if arc4random() % 2 == 0 {
-    return .NetworkResponse(200,
+    return .networkResponse(200,
                             "Half measures are as bad as nothing at all.".dataUsingEncoding(NSUTF8StringEncoding)!)
   } else {
-  	 return .NetworkError(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil))
+  	 return .networkError(NSError(domain: NSURLErrorDomain, code: NSURLErrorUnknown, userInfo: nil))
   }
 }
 
@@ -367,7 +367,7 @@ provider.request(target) { response
   switch response {
 
   // 上文取随机数为偶数的时候执行这里
-  case let .Response(response):
+  case let .response(response):
     // 服务器端返回的数据，为 NSData
     let data = response.data
     // 服务器端返回的状态码
@@ -375,7 +375,7 @@ provider.request(target) { response
     // 在这里处理响应
 
   // 上文取随机数为奇数的时候执行这里
-  case let .Incomplete(error):
+  case let .incomplete(error):
     // 在这里处理请求失败，这里 error 的值为 .BackendResponse
   }
 }

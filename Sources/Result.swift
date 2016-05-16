@@ -33,15 +33,15 @@ import Foundation
                provided by the server as well as the error that caused the failure.
 */
 public enum Result<Value, Error:ErrorType> {
-    case Response(Value)
-    case Incomplete(Error)
+    case response(Value)
+    case incomplete(Error)
 
     /// Returns `true` if the result is a success, `false` otherwise.
     public var isSuccess: Bool {
         switch self {
-        case .Response:
+        case .response:
             return true
-        case .Incomplete:
+        case .incomplete:
             return false
         }
     }
@@ -54,9 +54,9 @@ public enum Result<Value, Error:ErrorType> {
     /// Returns the associated value if the result is a success, `nil` otherwise.
     public var value: Value? {
         switch self {
-        case .Response(let value):
+        case .response(let value):
             return value
-        case .Incomplete:
+        case .incomplete:
             return nil
         }
     }
@@ -64,9 +64,9 @@ public enum Result<Value, Error:ErrorType> {
     /// Returns the associated error value if the result is a failure, `nil` otherwise.
     public var error: Error? {
         switch self {
-        case .Response:
+        case .response:
             return nil
-        case .Incomplete(let error):
+        case .incomplete(let error):
             return error
         }
     }
@@ -79,9 +79,9 @@ extension Result: CustomStringConvertible {
     /// success or failure.
     public var description: String {
         switch self {
-        case .Response:
+        case .response:
             return "SUCCESS"
-        case .Incomplete:
+        case .incomplete:
             return "FAILURE"
         }
     }
@@ -94,9 +94,9 @@ extension Result: CustomDebugStringConvertible {
     /// success or failure in addition to the value or error.
     public var debugDescription: String {
         switch self {
-        case .Response(let value):
+        case .response(let value):
             return "SUCCESS: \(value)"
-        case .Incomplete(let error):
+        case .incomplete(let error):
             return "FAILURE: \(error)"
         }
     }

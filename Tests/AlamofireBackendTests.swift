@@ -44,7 +44,7 @@ class AlamofireBackendTests: XCTestCase {
         //Then
         if let result = result {
             switch result {
-            case .Response:
+            case .response:
                 break
             default:
                 XCTFail("the request should be success.")
@@ -81,8 +81,8 @@ class AlamofireBackendTests: XCTestCase {
         // Then
         if let result = result {
             switch result {
-            case let .Incomplete(error):
-                guard case .Cancelled = error else {
+            case let .incomplete(error):
+                guard case .cancelled = error else {
                     XCTFail("error should be MoyaX.Error.Cancelled")
                     break
                 }
@@ -131,7 +131,7 @@ class AlamofireBackendTests: XCTestCase {
         // Then
         if let result = result {
             switch result {
-            case .Response:
+            case .response:
                 break
             default:
                 XCTFail("the request should be success.")

@@ -27,19 +27,19 @@ internal final class StubCancellableToken: CancellableToken {
 }
 
 public enum StubBehavior {
-    case Immediate
-    case Delayed(NSTimeInterval)
+    case immediate
+    case delayed(NSTimeInterval)
 }
 
 public enum StubResponse {
     /// The network returned a response, including status code and data.
-    case NetworkResponse(Int, NSData)
+    case networkResponse(Int, NSData)
 
     /// The network failed to send the request, or failed to retrieve a response (eg a timeout).
-    case NetworkError(ErrorType)
+    case networkError(ErrorType)
 
     /// You usually don't need this, It's will raise a fetalError
-    case NoStubError
+    case noStubError
 }
 
 public struct StubRule {
@@ -88,7 +88,7 @@ public class StubBackend: Backend {
     public let defaultBehavior: StubBehavior
     public let defaultResponse: StubResponse
 
-    public init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
+    public init(defaultBehavior: StubBehavior = .immediate, defaultResponse: StubResponse = .noStubError) {
         self.stubs = [:]
 
         self.defaultBehavior = defaultBehavior
@@ -139,9 +139,9 @@ public class StubBackend: Backend {
         let cancellableToken = StubCancellableToken()
 
         switch behavior {
-        case .Immediate:
+        case .immediate:
             self.stubResponse(action.URL, response: response, cancellableToken: cancellableToken, completion: completion)
-        case .Delayed(let delay):
+        case .delayed(let delay):
             let killTimeOffset = Int64(CDouble(delay) * CDouble(NSEC_PER_SEC))
             let killTime = dispatch_time(DISPATCH_TIME_NOW, killTimeOffset)
 
@@ -155,25 +155,25 @@ public class StubBackend: Backend {
 
     func stubResponse(URL: NSURL, response: StubResponse, cancellableToken: StubCancellableToken, completion: Completion) {
         if cancellableToken.isCancelled {
-            completion(.Incomplete(Error.BackendResponse(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil))))
+            completion(.incomplete(Error.backendResponse(NSError(domain: NSURLErrorDomain, code: NSURLErrorCancelled, userInfo: nil))))
             return
         }
 
         switch response {
-        case .NetworkResponse(let statusCode, let data):
+        case .networkResponse(let statusCode, let data):
             let fakeNSHTTPResponse = NSHTTPURLResponse(URL: URL, statusCode: statusCode, HTTPVersion: nil, headerFields: nil)
             let response = Response(statusCode: statusCode, data: data, response: fakeNSHTTPResponse)
-            completion(.Response(response))
-        case .NetworkError(let error):
-            completion(.Incomplete(Error.BackendResponse(error)))
-        case .NoStubError:
+            completion(.response(response))
+        case .networkError(let error):
+            completion(.incomplete(Error.backendResponse(error)))
+        case .noStubError:
             fatalError("\(String(URL)) is not stubbed yet.")
         }
     }
 }
 
 public class GenericStubBackend<TargetType:Target>: StubBackend {
-    public override init(defaultBehavior: StubBehavior = .Immediate, defaultResponse: StubResponse = .NoStubError) {
+    public override init(defaultBehavior: StubBehavior = .immediate, defaultResponse: StubResponse = .noStubError) {
         super.init(defaultBehavior: defaultBehavior, defaultResponse: defaultResponse)
     }
 

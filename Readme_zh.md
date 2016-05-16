@@ -79,7 +79,7 @@ struct GithubShowUser: Target {
   
   // 可以省略，API 的请求方式，默认为 .GET
   var method: HTTPMethod {
-    return .GET
+    return .get
   }
   
   // 可以省略，额外的 HTTP 请求头信息，默认为空
@@ -113,7 +113,7 @@ provider.request(GithubShowUser(name: "jasl")) { response in
   switch response {
   
   // 服务器有返回结果，注意服务器返回 4xx、5xx 也走这里
-  case let .Response(response):
+  case let .response(response):
     // 服务器端返回的数据，为 NSData
     let data = response.data
     // 服务器端返回的状态码
@@ -121,7 +121,7 @@ provider.request(GithubShowUser(name: "jasl")) { response in
     // 在这里处理响应
     
   // 网络原因（连通性或者超时）服务器没有返回结果、请求被取消或者其他异常
-  case let .Incomplete(error):
+  case let .incomplete(error):
     // 在这里处理请求失败，error 是一个枚举
   }
 }

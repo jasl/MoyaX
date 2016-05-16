@@ -80,7 +80,7 @@ struct GithubShowUser: Target {
   
   // Optional, default is .GET
   var method: HTTPMethod {
-    return .GET
+    return .get
   }
   
   // Optional, default is empty
@@ -95,7 +95,7 @@ struct GithubShowUser: Target {
   
   // Optional, default is .URL, means submitting parameters using `x-www-form-urlencoded`
   var parameterEncoding: ParameterEncoding {
-    return .URL
+    return .url
   }
 }
 ```
@@ -113,13 +113,13 @@ provider.request(GithubShowUser(name: "jasl")) { response in
   switch response {
   
   // The server has response, 4xx and 5xx goes here too
-  case let .Response(response):
+  case let .response(response):
     let data = response.data
     let statusCode = response.statusCode
     // Handle success here
     
   // Network failure (connectivity or timeout), the request had cancelled or other unexpected errors goes here
-  case let .Incomplete(error):
+  case let .incomplete(error):
     // error is an enum
     // Handle error here
   }
@@ -135,11 +135,11 @@ struct UploadingTarget: Target {
   let baseURL = NSURL(string: "https://httpbin.org")!
   let path = "post"
   
-  // Remember, .GET doesn't support uploading.
-  let method = HTTPMethod.POST
+  // Remember, .get doesn't support uploading.
+  let method = HTTPMethod.post
 
   // Encoding parameters by multipart/form-data
-  let parameterEncoding = ParameterEncoding.MultipartFormData
+  let parameterEncoding = ParameterEncoding.multipartFormData
 
   var parameters: [String: AnyObject] {
     return [

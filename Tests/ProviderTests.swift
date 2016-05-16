@@ -39,7 +39,7 @@ class ProviderTests: XCTestCase {
         // Then
         if let result = result {
             switch result {
-            case .Response:
+            case .response:
                 break
             default:
                 XCTFail("the request should be success.")

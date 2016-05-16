@@ -36,11 +36,11 @@ final class AlamofireCancellableToken: CancellableToken {
 }
 
 protocol AlamofireMultipartFormDataEncodable: MultipartFormData {
-    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String)
+    func encodeTo(multipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String)
 }
 
 extension DataForMultipartFormData: AlamofireMultipartFormDataEncodable {
-    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
+    func encodeTo(multipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
         if let fileName = self.fileName, mimeType = self.mimeType {
             multipartFormData.appendBodyPart(data: self.data, name: name, fileName: fileName, mimeType: mimeType)
         } else {
@@ -50,7 +50,7 @@ extension DataForMultipartFormData: AlamofireMultipartFormDataEncodable {
 }
 
 extension FileURLForMultipartFormData: AlamofireMultipartFormDataEncodable {
-    func encode(toAlamofireMultipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
+    func encodeTo(multipartFormData multipartFormData: Alamofire.MultipartFormData, forName name: String) {
         if let fileName = self.fileName, mimeType = self.mimeType {
             multipartFormData.appendBodyPart(fileURL: self.fileURL, name: name, fileName: fileName, mimeType: mimeType)
         } else {
@@ -207,7 +207,7 @@ public class AlamofireBackend: Backend {
         for (key, value) in components {
             switch value {
             case let value as AlamofireMultipartFormDataEncodable:
-                value.encode(toAlamofireMultipartFormData: multipartFormData, forName: key)
+                value.encodeTo(multipartFormData: multipartFormData, forName: key)
             case let value as String:
                 let data = self.escape(value).dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
                 multipartFormData.appendBodyPart(data: data, name: key)

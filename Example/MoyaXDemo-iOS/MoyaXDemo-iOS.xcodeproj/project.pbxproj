@@ -17,7 +17,8 @@
 		5EC197EF1A1BB16D00F4DFD4 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 5EC197EE1A1BB16D00F4DFD4 /* Images.xcassets */; };
 		5EC197F21A1BB16D00F4DFD4 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5EC197F01A1BB16D00F4DFD4 /* LaunchScreen.xib */; };
 		5EC198081A1BB24600F4DFD4 /* GitHubAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5EC198071A1BB24600F4DFD4 /* GitHubAPI.swift */; };
-		C4A889B51C9EA86E000F8648 /* MoyaX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C4A889B41C9EA86E000F8648 /* MoyaX.framework */; };
+		C422D5101CEBB842006A41A2 /* MoyaX.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C422D50F1CEBB842006A41A2 /* MoyaX.framework */; };
+		C422D5111CEBB854006A41A2 /* MoyaX.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C422D50F1CEBB842006A41A2 /* MoyaX.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		C4A889E01C9EB6E4000F8648 /* Alamofire.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = C4A889D11C9EB018000F8648 /* Alamofire.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -28,6 +29,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				C422D5111CEBB854006A41A2 /* MoyaX.framework in Copy Frameworks */,
 				C4A889E01C9EB6E4000F8648 /* Alamofire.framework in Copy Frameworks */,
 			);
 			name = "Copy Frameworks";
@@ -48,7 +50,7 @@
 		5EC197EE1A1BB16D00F4DFD4 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		5EC197F11A1BB16D00F4DFD4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		5EC198071A1BB24600F4DFD4 /* GitHubAPI.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GitHubAPI.swift; sourceTree = "<group>"; };
-		C4A889B41C9EA86E000F8648 /* MoyaX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MoyaX.framework; path = "../../build/Debug-iphoneos/MoyaX.framework"; sourceTree = "<group>"; };
+		C422D50F1CEBB842006A41A2 /* MoyaX.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MoyaX.framework; path = "../../../../../Library/Developer/Xcode/DerivedData/MoyaX-fjryzkwesvsbmygyoxqkknsanoti/Build/Products/Debug-iphoneos/MoyaX.framework"; sourceTree = "<group>"; };
 		C4A889D11C9EB018000F8648 /* Alamofire.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Alamofire.framework; path = ../../Carthage/Build/iOS/Alamofire.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -57,7 +59,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C4A889B51C9EA86E000F8648 /* MoyaX.framework in Frameworks */,
+				C422D5101CEBB842006A41A2 /* MoyaX.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -85,8 +87,8 @@
 		4EA28E847926FEF1338D42F3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C422D50F1CEBB842006A41A2 /* MoyaX.framework */,
 				C4A889D11C9EB018000F8648 /* Alamofire.framework */,
-				C4A889B41C9EA86E000F8648 /* MoyaX.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";

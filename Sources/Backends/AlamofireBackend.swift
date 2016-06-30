@@ -5,18 +5,19 @@ final class AlamofireCancellableToken: CancellableToken {
     internal(set) var request: Alamofire.Request?
     private(set) var isCancelled: Bool = false
 
-    private var lock: OSSpinLock = OS_SPINLOCK_INIT
+    private var lock: dispatch_semaphore_t = dispatch_semaphore_create(1)
 
-    init() {}
+    init() {
+    }
 
     init(request: Request) {
         self.request = request
     }
 
     func cancel() {
-        OSSpinLockLock(&self.lock)
+        dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER)
         defer {
-            OSSpinLockUnlock(&self.lock)
+            dispatch_semaphore_signal(lock)
         }
         if self.isCancelled {
             return
@@ -60,6 +61,7 @@ extension FileURLForMultipartFormData: AlamofireMultipartFormDataEncodable {
 }
 
 /// The backend for Alamofire
+
 public class AlamofireBackend: Backend {
     /// Default Alamofire manager for backend.
     public static let defaultManager: Manager = {
@@ -196,7 +198,7 @@ public class AlamofireBackend: Backend {
         }
     }
 
-    private func encodeMultipartFormData(to multipartFormData: Alamofire.MultipartFormData, parameters: [String: AnyObject]) {
+    private func encodeMultipartFormData(to multipartFormData: Alamofire.MultipartFormData, parameters: [String:AnyObject]) {
         var components: [(String, AnyObject)] = []
 
         for key in parameters.keys.sort(<) {
@@ -220,7 +222,7 @@ public class AlamofireBackend: Backend {
     private func flattenQueryComponents(key: String, _ value: AnyObject) -> [(String, AnyObject)] {
         var components: [(String, AnyObject)] = []
 
-        if let dictionary = value as? [String: AnyObject] {
+        if let dictionary = value as? [String:AnyObject] {
             for (nestedKey, value) in dictionary {
                 components += flattenQueryComponents("\(key)[\(nestedKey)]", value)
             }

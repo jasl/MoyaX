@@ -7,12 +7,12 @@ public protocol TargetWithSample: Target {
 internal final class StubCancellableToken: CancellableToken {
     private(set) var isCancelled = false
 
-    private var lock: OSSpinLock = OS_SPINLOCK_INIT
+    private var lock: dispatch_semaphore_t = dispatch_semaphore_create(1)
 
     func cancel() {
-        OSSpinLockLock(&self.lock)
+        dispatch_semaphore_wait(lock, DISPATCH_TIME_FOREVER)
         defer {
-            OSSpinLockUnlock(&self.lock)
+            dispatch_semaphore_signal(lock)
         }
         if self.isCancelled {
             return

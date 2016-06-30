@@ -17,8 +17,7 @@ class ProviderTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
-            _ in
+        stub(isPath(self.path)) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 

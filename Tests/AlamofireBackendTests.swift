@@ -21,8 +21,7 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
-            _ in
+        stub(isPath(self.path)) { _ in
             return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
@@ -56,9 +55,8 @@ class AlamofireBackendTests: XCTestCase {
 
     func testCancelRequest() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
-            _ in
-            return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(2)
+        stub(isPath(self.path)) { _ in
+            return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(2.0)
         }
 
         self.backend = AlamofireBackend()
@@ -96,9 +94,8 @@ class AlamofireBackendTests: XCTestCase {
 
     func testRequestWithHook() {
         // Given
-        OHHTTPStubs.stubRequestsPassingTest({ $0.URL!.path == self.path }) {
-            _ in
-            return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(1)
+        stub(isPath(self.path)) { _ in
+            return OHHTTPStubsResponse(data: self.data, statusCode: 200, headers: nil).responseTime(0.5)
         }
 
         var calledWillPerformRequest = false

@@ -34,7 +34,7 @@ class ProviderTests: XCTestCase {
             expectation.fulfill()
         }
 
-        waitForExpectationsWithTimeout(2, handler: nil)
+        waitForExpectationsWithTimeout(3, handler: nil)
         // Then
         if let result = result {
             switch result {

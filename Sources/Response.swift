@@ -1,14 +1,14 @@
 import Foundation
 
 /// Used to store all response data returned from a completed request.
-public class Response: CustomDebugStringConvertible {
+public struct Response: CustomDebugStringConvertible {
     public let response: NSURLResponse?
 
     public let statusCode: Int
     public let data: NSData
 
-    public lazy var responseClass: ResponseClass = {
-        return ResponseClass(statusCode: self.statusCode)
+    public lazy var responseClass: ResponseStatus = {
+        return ResponseStatus(statusCode: self.statusCode)
     }()
 
     public init(statusCode: Int, data: NSData, response: NSURLResponse? = nil) {
@@ -36,7 +36,7 @@ public class Response: CustomDebugStringConvertible {
    - serverError: status code in 500 to 599
    - undefined: other status code
 */
-public enum ResponseClass {
+public enum ResponseStatus {
     case informational
     case success
     case redirection

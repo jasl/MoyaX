@@ -51,9 +51,9 @@ Carthage users can point to this repository
 github "jasl/MoyaX"
 ```
 
-## Basic usage
+## Getting start
 
-### Abstract web API into a target
+### Abstract restful API into a target
 
 Using MoyaX starts with defining a target – it could be a `struct`, `class` or an `enum` that requires to conform to the `Target` protocol. Then, the rest of your app deals *only* with those targets. a Target is looks like:
 
@@ -100,7 +100,7 @@ struct GithubShowUser: Target {
 }
 ```
 
-### Make a request
+### Making a request
 
 You should access Targets through `MoyaXProvider`.
 
